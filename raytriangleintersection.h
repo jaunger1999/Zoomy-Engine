@@ -1,3 +1,8 @@
+#ifndef RAYLIB
+#define RAYLIB
+#include "Raylib.h"
+#endif
+
 struct CollisionRay {
 	float ox, oy, oz, ow;
 	float dx, dy, dz, dw;
@@ -19,3 +24,11 @@ struct Hit {
 } __declspec(aligned(16));
 
 typedef struct Hit Hit;
+
+typedef struct Triangle {
+	Vector3 a;
+	Vector3 b;
+	Vector3 c;
+} Triangle;
+
+ValidatedVector3 Intersect(Ray const ray, Triangle const triangle);

@@ -22,36 +22,28 @@
 #define RAYLIB
 
 #include "raylib.h"
+#include "raymath.h"
 #include "gamestate.h"
 #include "raytriangleintersection.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+
 #include <xmmintrin.h>
 #include <smmintrin.h>
 #include <x86gprintrin.h>
 
 
-//------------------------------------------------------------------------------------
 // Program main entry point
-//------------------------------------------------------------------------------------
 Vector3 position = { 0.0f, 0.0f, 0.0f };            // Set model position
 
 int main(void) {
 	// Initialization
-	//--------------------------------------------------------------------------------------
 	const int screenWidth  = 800;
-	const int screenHeight = 450;
+	int const screenHeight = 450;
 
 	InitWindow(screenWidth, screenHeight, "raylib [models] example - model animation");
-
-	// Define the camera to look into our 3d world
-	Camera camera = { 0 };
-	camera.position = (Vector3){ 10.0f, 10.0f, 10.0f }; // Camera position
-	camera.target   = (Vector3){  0.0f,  0.0f,  0.0f }; // Camera looking at point
-	camera.up       = (Vector3){  0.0f,  1.0f,  0.0f }; // Camera up vector (rotation towards target)
-	camera.fovy = 90.0f;                                // Camera field-of-view Y
-	camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
-
+	
 	Model level = LoadModel("resources/models/obj/my_cube.obj");
 	Model model = LoadModel("resources/models/iqm/guy.iqm");                    // Load the animated model mesh and basic data
 	Texture2D texture = LoadTexture("resources/models/iqm/guytex.png");         // Load model texture and set material
@@ -67,38 +59,46 @@ int main(void) {
 	int totalObjs = 1;
 	Object obj = (Object){ (Vector3){0,0,0},(Vector3){0,0,0},(Vector3){0,0,0}};
 	Object objs[] = { obj, obj };
-	const InputMap inputMap = {
-		GAMEPAD_BUTTON_RIGHT_FACE_DOWN,  //jump
-		GAMEPAD_BUTTON_LEFT_TRIGGER_1,   //crouch
-		GAMEPAD_BUTTON_RIGHT_FACE_LEFT,  //attack
-		GAMEPAD_BUTTON_RIGHT_TRIGGER_1,  //camera lock
+	InputMap const inputMap = {
+		GAMEPAD_BUTTON_RIGHT_FACE_DOWN,  // jump
+		GAMEPAD_BUTTON_LEFT_TRIGGER_1,   // crouch
+		GAMEPAD_BUTTON_RIGHT_FACE_LEFT,  // attack
+		GAMEPAD_BUTTON_RIGHT_TRIGGER_1,  // camera lock
 	};
-	//--------------------------------------------------------------------------------------
 
 	// Main game loop
 	while (!WindowShouldClose()) { // Detect window close button or ESC key
 		// Update
-		//----------------------------------------------------------------------------------
-		//UpdateCamera(&camera, CAMERA_FIRST_PERSON);
-        Input newInput = GetInputState(inputMap); 
+        	Input const newInput = GetInputState(inputMap); 
 
-		Object playerState = CreateNextGameState(newInput, objs, totalObjs);
+		Object const playerState = CreateNextGameState(newInput, objs, totalObjs);
 		objs[0] = playerState;
-        // Play animation when spacebar is held down
+	        // Play animation when spacebar is held down
 		if (IsKeyDown(KEY_SPACE)) {
 			animFrameCounter++;
-            UpdateModelAnimation(model, anims[0], animFrameCounter);
-            if (animFrameCounter >= anims[0].frameCount) animFrameCounter = 0;
-        }
-        //----------------------------------------------------------------------------------
+			UpdateModelAnimation(model, anims[0], animFrameCounter);
 
-        // Draw
-        //----------------------------------------------------------------------------------
-        BeginDrawing();
+			if (animFrameCounter >= anims[0].frameCount) {
+				animFrameCounter = 0;
+			}
+        	}
+
+		Camera const newCamera = {
+			(Vector3){ 10.0f, 10.0f, 10.0f }, // Camera position
+			playerState.position,             // Camera looking at point
+			(Vector3){  0.0f,  1.0f,  0.0f }, // Camera up vector (rotation towards target)
+			90.0f,                            // Camera field-of-view Y
+			CAMERA_PERSPECTIVE                // Camera mode type
+		};
+
+
+
+        	// Draw
+		BeginDrawing();
 
 			ClearBackground(RAYWHITE);
 
-			BeginMode3D(camera);
+			BeginMode3D(newCamera);
 				DrawModel(level, position, 1.0f, WHITE);
 
 				DrawModelEx(model, playerState.position, (Vector3){ 1.0f, 0.0f, 0.0f }, -90.0f, (Vector3){ 1.0f, 1.0f, 1.0f }, WHITE);
@@ -115,36 +115,33 @@ int main(void) {
 			DrawText("(c) Guy IQM 3D model by @culacant", screenWidth - 200, screenHeight - 20, 10, GRAY);
 
 		EndDrawing();
-		//----------------------------------------------------------------------------------
 	
 	}
 
     // De-Initialization
-    //--------------------------------------------------------------------------------------
     UnloadTexture(texture);                     // Unload texture
     UnloadModelAnimations(anims, animsCount);   // Unload model animations data
     UnloadModel(model);                         // Unload model
     CloseWindow();                              // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
 
     return 0;
 }
 
 Input GetInputState(InputMap inputMap) {
-	Vector2 movement             = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) };
-	Vector2 cameraMovement       = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y) };
+	Vector2 const movement             = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) };
+	Vector2 const cameraMovement       = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y) };
 
-	bool jumpButtonDown          = IsGamepadButtonDown(0, inputMap.jump);
-	bool crouchButtonDown        = IsGamepadButtonDown(0, inputMap.crouch);
-	bool attackButtonDown        = IsGamepadButtonDown(0, inputMap.attack);
-	bool cameraLockButtonDown    = IsGamepadButtonDown(0, inputMap.cameraLock);
+	bool const jumpButtonDown          = IsGamepadButtonDown(0, inputMap.jump);
+	bool const crouchButtonDown        = IsGamepadButtonDown(0, inputMap.crouch);
+	bool const attackButtonDown        = IsGamepadButtonDown(0, inputMap.attack);
+	bool const cameraLockButtonDown    = IsGamepadButtonDown(0, inputMap.cameraLock);
 
-	bool jumpButtonPressed       = IsGamepadButtonPressed(0, inputMap.jump);
-	bool crouchButtonPressed     = IsGamepadButtonPressed(0, inputMap.crouch);
-	bool attackButtonPressed     = IsGamepadButtonPressed(0, inputMap.attack);
-	bool cameraLockButtonPressed = IsGamepadButtonPressed(0, inputMap.cameraLock);
+	bool const jumpButtonPressed       = IsGamepadButtonPressed(0, inputMap.jump);
+	bool const crouchButtonPressed     = IsGamepadButtonPressed(0, inputMap.crouch);
+	bool const attackButtonPressed     = IsGamepadButtonPressed(0, inputMap.attack);
+	bool const cameraLockButtonPressed = IsGamepadButtonPressed(0, inputMap.cameraLock);
 
-        Input newInput = {
+        Input const newInput = {
 		movement,
 		cameraMovement,
 
@@ -172,39 +169,38 @@ Object CreateNextGameState(Input const input, Object const objs[], int const tot
     return object;
 }
 
-bool Intersect(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
-	const __m128 int_coef = _mm_set_ps(-1, -1, -1, 1); //This can be a parameter: it's a constant.
-	const __m128 o        = _mm_load_ps(&r.ox);
-	const __m128 d        = _mm_load_ps(&r.dx);
-	const __m128 n        = _mm_load_ps(&p.nx);
-	const __m128 det      = _mm_dp_ps(n, d, 0x7f);
-	const __m128 dett     = _mm_dp_ps(_mm_mul_ps(int_coef, n), o, 0xff);
-	const __m128 oldt     = _mm_load_ss(&h.t);
+ValidatedVector3 Intersect(Ray const ray, Triangle const triangle) {
+	Vector3 const edge1      = Vector3Subtract(triangle.b, triangle.a);
+	Vector3 const edge2      = Vector3Subtract(triangle.c, triangle.a);
+	Vector3 const rayCrossE2 = Vector3CrossProduct(ray.direction, edge2);
+	float const det          = Vector3DotProduct(edge1, rayCrossE2);
 	
-	if((_mm_movemask_ps(_mm_xor_ps(dett, _mm_sub_ss(_mm_mul_ss(oldt, det), dett)))&1) == 0) {
-		const __m128 detp = _mm_add_ps(_mm_mul_ps(o, det), _mm_mul_ps(dett, d));
-		const __m128 detu = _mm_dp_ps(detp, _mm_load_ps(&p.ux), 0xf1);
-		
-		if((_mm_movemask_ps(_mm_xor_ps(detu, _mm_sub_ss(det, detu)))&1) == 0) {
-			const __m128 on   = _mm_dp_ps(o, n, 0x77);
-			const __m128 tp   = _mm_sub_ps(d, on);
-			const __m128 detv = _mm_dp_ps(tp, _mm_load_ps(&p.vx), 0xf1);
-			
-			if((_mm_movemask_ps(_mm_xor_ps(detv, _mm_sub_ss(det, _mm_add_ss(detu, detv))))&1) == 0) {
-				//I can't find the function used in the paper but this seems to be the equivalent?
-				//I guess it doesn't matter because all I need is the collision anyway which we already have here.
-				const __m128 inv_det = _mm_rsqrt_ss(det);
-				
-				_mm_store_ss(&h.t,  _mm_mul_ss(dett, inv_det));
-				_mm_store_ss(&h.u,  _mm_mul_ss(detu, inv_det));
-				_mm_store_ss(&h.v,  _mm_mul_ss(detv, inv_det));
-				_mm_store_ps(&h.px, _mm_mul_ps(detp, 
-					_mm_shuffle_ps(inv_det, inv_det, 0)));
-				
-				return true;
-			}
-		}
+	if (det > -EPSILON && det < EPSILON) {
+		return (ValidatedVector3){ false };
 	}
 
-	return false;
+	float const invDet = 1.0f / det;
+	Vector3 const s    = Vector3Subtract(ray.position, triangle.a);
+	float const u      = invDet * Vector3DotProduct(s, rayCrossE2);
+
+	if (u < 0.0f || u > 1.0f) {		
+		return (ValidatedVector3){ false };
+	}
+
+	Vector3 const sCrossE1 = Vector3CrossProduct(s, edge1);
+	float const v          = invDet * Vector3DotProduct(edge2, sCrossE1);
+
+	if (v < 0.0f || u + v > 1.0f) {
+		return (ValidatedVector3){ false };
+	}
+
+	float const t = invDet * Vector3DotProduct(edge2, sCrossE1);
+
+	if (t > EPSILON) {
+		Vector3 const intersectionPoint = Vector3Add(ray.position, Vector3Scale(ray.direction, t));
+		return (ValidatedVector3){ true, intersectionPoint };
+	}
+	
+	// This means that there is a line intersection but not a ray intersection.
+	return (ValidatedVector3){ false };
 }
