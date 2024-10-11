@@ -36,62 +36,57 @@
 //------------------------------------------------------------------------------------
 Vector3 position = { 0.0f, 0.0f, 0.0f };            // Set model position
 
-int main(void)
-{
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+int main(void) {
+	// Initialization
+	//--------------------------------------------------------------------------------------
+	const int screenWidth  = 800;
+	const int screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "raylib [models] example - model animation");
+	InitWindow(screenWidth, screenHeight, "raylib [models] example - model animation");
 
-    // Define the camera to look into our 3d world
-    Camera camera = { 0 };
-    camera.position = (Vector3){ 10.0f, 10.0f, 10.0f }; // Camera position
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
-    camera.fovy = 45.0f;                                // Camera field-of-view Y
-    camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
+	// Define the camera to look into our 3d world
+	Camera camera = { 0 };
+	camera.position = (Vector3){ 10.0f, 10.0f, 10.0f }; // Camera position
+	camera.target   = (Vector3){  0.0f,  0.0f,  0.0f }; // Camera looking at point
+	camera.up       = (Vector3){  0.0f,  1.0f,  0.0f }; // Camera up vector (rotation towards target)
+	camera.fovy = 90.0f;                                // Camera field-of-view Y
+	camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
 
-    Model level = LoadModel("resources/models/obj/my_cube.obj");
-    Model model = LoadModel("resources/models/iqm/guy.iqm");                    // Load the animated model mesh and basic data
-    Texture2D texture = LoadTexture("resources/models/iqm/guytex.png");         // Load model texture and set material
-    SetMaterialTexture(&model.materials[0], MATERIAL_MAP_DIFFUSE, texture);     // Set model material map texture
-    
-    // Load animation data
-    int animsCount = 0;
-    ModelAnimation *anims = LoadModelAnimations("resources/models/iqm/guyanim.iqm", &animsCount);
-    int animFrameCounter = 0;
+	Model level = LoadModel("resources/models/obj/my_cube.obj");
+	Model model = LoadModel("resources/models/iqm/guy.iqm");                    // Load the animated model mesh and basic data
+	Texture2D texture = LoadTexture("resources/models/iqm/guytex.png");         // Load model texture and set material
+	SetMaterialTexture(&model.materials[0], MATERIAL_MAP_DIFFUSE, texture);     // Set model material map texture
+	
+	// Load animation data
+	int animsCount = 0;
+	ModelAnimation *anims = LoadModelAnimations("resources/models/iqm/guyanim.iqm", &animsCount);
+	int animFrameCounter = 0;
 
-    DisableCursor();                    // Catch cursor
-    SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
+	DisableCursor();                    // Catch cursor
+	SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
 	int totalObjs = 1;
 	Object obj = (Object){ (Vector3){0,0,0},(Vector3){0,0,0},(Vector3){0,0,0}};
-	Object objs[] = { obj };
-	Object gamestate;
-    //--------------------------------------------------------------------------------------
+	Object objs[] = { obj, obj };
+	const InputMap inputMap = {
+		GAMEPAD_BUTTON_RIGHT_FACE_DOWN,  //jump
+		GAMEPAD_BUTTON_LEFT_TRIGGER_1,   //crouch
+		GAMEPAD_BUTTON_RIGHT_FACE_LEFT,  //attack
+		GAMEPAD_BUTTON_RIGHT_TRIGGER_1,  //camera lock
+	};
+	//--------------------------------------------------------------------------------------
 
-    // Main game loop
-    while (!WindowShouldClose())        // Detect window close button or ESC key
-    {
-        // Update
-        //----------------------------------------------------------------------------------
-        //UpdateCamera(&camera, CAMERA_FIRST_PERSON);
-        Vector2 movement = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) };
-        Input input = {
-            movement,
-            { 0.0f, 0.0f },
-            false,
-            false,
-            false,
-            false
-        };
-	gamestate = CreateNextGameState(input, objs, totalObjs);
-	objs[0] = gamestate;
+	// Main game loop
+	while (!WindowShouldClose()) { // Detect window close button or ESC key
+		// Update
+		//----------------------------------------------------------------------------------
+		//UpdateCamera(&camera, CAMERA_FIRST_PERSON);
+        Input newInput = GetInputState(inputMap); 
+
+		Object playerState = CreateNextGameState(newInput, objs, totalObjs);
+		objs[0] = playerState;
         // Play animation when spacebar is held down
-        if (IsKeyDown(KEY_SPACE))
-        {
-            animFrameCounter++;
+		if (IsKeyDown(KEY_SPACE)) {
+			animFrameCounter++;
             UpdateModelAnimation(model, anims[0], animFrameCounter);
             if (animFrameCounter >= anims[0].frameCount) animFrameCounter = 0;
         }
@@ -101,46 +96,77 @@ int main(void)
         //----------------------------------------------------------------------------------
         BeginDrawing();
 
-            ClearBackground(RAYWHITE);
+			ClearBackground(RAYWHITE);
 
-            BeginMode3D(camera);
-                DrawModel(level, position, 1.0f, WHITE);
+			BeginMode3D(camera);
+				DrawModel(level, position, 1.0f, WHITE);
 
-                DrawModelEx(model, gamestate.position, (Vector3){ 1.0f, 0.0f, 0.0f }, -90.0f, (Vector3){ 1.0f, 1.0f, 1.0f }, WHITE);
+				DrawModelEx(model, playerState.position, (Vector3){ 1.0f, 0.0f, 0.0f }, -90.0f, (Vector3){ 1.0f, 1.0f, 1.0f }, WHITE);
 
-                for (int i = 0; i < model.boneCount; i++)
-                {
-                    DrawCube(anims[0].framePoses[animFrameCounter][i].translation, 0.2f, 0.2f, 0.2f, RED);
-                }
+				for (int i = 0; i < model.boneCount; i++) {
+					DrawCube(anims[0].framePoses[animFrameCounter][i].translation, 0.2f, 0.2f, 0.2f, RED);
+				}
 
-                DrawGrid(10, 1.0f);         // Draw a grid
+				DrawGrid(10, 1.0f);         // Draw a grid
 
-            EndMode3D();
+			EndMode3D();
 
-            DrawText("PRESS SPACE to PLAY MODEL ANIMATION", 10, 10, 20, MAROON);
-            DrawText("(c) Guy IQM 3D model by @culacant", screenWidth - 200, screenHeight - 20, 10, GRAY);
+			DrawText("PRESS SPACE to PLAY MODEL ANIMATION", 10, 10, 20, MAROON);
+			DrawText("(c) Guy IQM 3D model by @culacant", screenWidth - 200, screenHeight - 20, 10, GRAY);
 
-        EndDrawing();
-        //----------------------------------------------------------------------------------
-    }
+		EndDrawing();
+		//----------------------------------------------------------------------------------
+	
+	}
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
     UnloadTexture(texture);                     // Unload texture
     UnloadModelAnimations(anims, animsCount);   // Unload model animations data
     UnloadModel(model);                         // Unload model
-
-    CloseWindow();                  // Close window and OpenGL context
+    CloseWindow();                              // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 
     return 0;
 }
 
-Object CreateNextGameState(Input input, Object objs[], int totalObjs) {
+Input GetInputState(InputMap inputMap) {
+	Vector2 movement             = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) };
+	Vector2 cameraMovement       = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y) };
+
+	bool jumpButtonDown          = IsGamepadButtonDown(0, inputMap.jump);
+	bool crouchButtonDown        = IsGamepadButtonDown(0, inputMap.crouch);
+	bool attackButtonDown        = IsGamepadButtonDown(0, inputMap.attack);
+	bool cameraLockButtonDown    = IsGamepadButtonDown(0, inputMap.cameraLock);
+
+	bool jumpButtonPressed       = IsGamepadButtonPressed(0, inputMap.jump);
+	bool crouchButtonPressed     = IsGamepadButtonPressed(0, inputMap.crouch);
+	bool attackButtonPressed     = IsGamepadButtonPressed(0, inputMap.attack);
+	bool cameraLockButtonPressed = IsGamepadButtonPressed(0, inputMap.cameraLock);
+
+        Input newInput = {
+		movement,
+		cameraMovement,
+
+		jumpButtonDown,
+		crouchButtonDown,
+		attackButtonDown,
+		cameraLockButtonDown,
+
+		jumpButtonPressed,
+		crouchButtonPressed,
+		attackButtonPressed,
+		cameraLockButtonPressed
+        };
+
+	return newInput;
+}
+
+Object CreateNextGameState(Input const input, Object const objs[], int const totalObjs) {
     Object object;
-    Vector3 newVelocity = (Vector3) { input.movement.x, input.movement.y, objs[0].velocity.z };
-    object.position = (Vector3){ objs[0].position.x + newVelocity.x, objs[0].position.y + newVelocity.y, objs[0].velocity.z };
-    object.velocity = newVelocity;
+    Vector3 newVelocity = (Vector3){ input.movement.x, input.movement.y, objs[0].velocity.z };
+    object.position     = (Vector3){ objs[0].position.x + newVelocity.x, objs[0].position.y + newVelocity.y, objs[0].velocity.z };
+    object.velocity     = newVelocity;
     object.acceleration = objs[0].acceleration;
     
     return object;
@@ -169,16 +195,16 @@ bool Intersect(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
 				//I guess it doesn't matter because all I need is the collision anyway which we already have here.
 				const __m128 inv_det = _mm_rsqrt_ss(det);
 				
-				_mm_store_ss(&h.t, _mm_mul_ss(dett, inv_det));
-				_mm_store_ss(&h.u, _mm_mul_ss(detu, inv_det));
-				_mm_store_ss(&h.v, _mm_mul_ss(detv, inv_det));
-				_mm_store_ps(&h.px, _mm_mul_ps(detp,
-				
-				_mm_shuffle_ps(inv_det, inv_det, 0)));
+				_mm_store_ss(&h.t,  _mm_mul_ss(dett, inv_det));
+				_mm_store_ss(&h.u,  _mm_mul_ss(detu, inv_det));
+				_mm_store_ss(&h.v,  _mm_mul_ss(detv, inv_det));
+				_mm_store_ps(&h.px, _mm_mul_ps(detp, 
+					_mm_shuffle_ps(inv_det, inv_det, 0)));
 				
 				return true;
 			}
 		}
 	}
+
 	return false;
 }

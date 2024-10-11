@@ -3,13 +3,26 @@
 #include "raylib.h"
 #endif
 
+typedef struct InputMap {
+	GamepadButton jump;
+	GamepadButton crouch;
+	GamepadButton attack;
+	GamepadButton cameraLock;
+} InputMap;
+
 typedef struct Input {
-	Vector2 const movement;
-	Vector2 const camera;
-	bool const cameraLock;
-	bool const jump;
-	bool const attack;
-	bool const crouch;
+	Vector2 movement;
+	Vector2 camera;
+
+	bool jumpDown;
+	bool crouchDown;
+	bool attackDown;
+	bool cameraLockDown;
+
+	bool jumpPressed;
+	bool crouchPressed;
+	bool attackPressed;
+	bool cameraLockPressed;
 } Input;
 
 
@@ -24,4 +37,6 @@ typedef struct GameState {
 	Object objects[];
 } GameState;
 
- Object CreateNextGameState(Input, Object objs[], int totalObjs);
+Input GetInputState(InputMap inputMap);
+
+Object CreateNextGameState(Input const input, Object const objs[], int const totalObjs);
