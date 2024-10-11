@@ -128,18 +128,23 @@ int main(void) {
 }
 
 Input GetInputState(InputMap inputMap) {
-	Vector2 const movement             = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) };
-	Vector2 const cameraMovement       = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y) };
+	Vector2 const movement              = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) };
+	Vector2 const cameraMovement        = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y) };
 
-	bool const jumpButtonDown          = IsGamepadButtonDown(0, inputMap.jump);
-	bool const crouchButtonDown        = IsGamepadButtonDown(0, inputMap.crouch);
-	bool const attackButtonDown        = IsGamepadButtonDown(0, inputMap.attack);
-	bool const cameraLockButtonDown    = IsGamepadButtonDown(0, inputMap.cameraLock);
+	bool const jumpButtonDown           = IsGamepadButtonDown(0, inputMap.jump);
+	bool const crouchButtonDown         = IsGamepadButtonDown(0, inputMap.crouch);
+	bool const attackButtonDown         = IsGamepadButtonDown(0, inputMap.attack);
+	bool const cameraLockButtonDown     = IsGamepadButtonDown(0, inputMap.cameraLock);
 
-	bool const jumpButtonPressed       = IsGamepadButtonPressed(0, inputMap.jump);
-	bool const crouchButtonPressed     = IsGamepadButtonPressed(0, inputMap.crouch);
-	bool const attackButtonPressed     = IsGamepadButtonPressed(0, inputMap.attack);
-	bool const cameraLockButtonPressed = IsGamepadButtonPressed(0, inputMap.cameraLock);
+	bool const jumpButtonPressed        = IsGamepadButtonPressed(0, inputMap.jump);
+	bool const crouchButtonPressed      = IsGamepadButtonPressed(0, inputMap.crouch);
+	bool const attackButtonPressed      = IsGamepadButtonPressed(0, inputMap.attack);
+	bool const cameraLockButtonPressed  = IsGamepadButtonPressed(0, inputMap.cameraLock);
+
+	bool const jumpButtonReleased       = IsGamepadButtonReleased(0, inputMap.jump);
+	bool const crouchButtonReleased     = IsGamepadButtonReleased(0, inputMap.crouch);
+	bool const attackButtonReleased     = IsGamepadButtonReleased(0, inputMap.attack);
+	bool const cameraLockButtonReleased = IsGamepadButtonReleased(0, inputMap.cameraLock);
 
         Input const newInput = {
 		movement,
@@ -153,54 +158,64 @@ Input GetInputState(InputMap inputMap) {
 		jumpButtonPressed,
 		crouchButtonPressed,
 		attackButtonPressed,
-		cameraLockButtonPressed
+		cameraLockButtonPressed,
+
+		jumpButtonReleased,
+		crouchButtonReleased,
+		attackButtonReleased,
+		cameraLockButtonReleased
         };
 
 	return newInput;
 }
 
 Object CreateNextGameState(Input const input, Object const objs[], int const totalObjs) {
-    Object object;
     Vector3 newVelocity = (Vector3){ input.movement.x, input.movement.y, objs[0].velocity.z };
-    object.position     = (Vector3){ objs[0].position.x + newVelocity.x, objs[0].position.y + newVelocity.y, objs[0].velocity.z };
-    object.velocity     = newVelocity;
-    object.acceleration = objs[0].acceleration;
+    Object const object = {
+	    (Vector3){ objs[0].position.x + newVelocity.x, objs[0].position.y + newVelocity.y, objs[0].velocity.z },
+	    newVelocity,
+	    objs[0].acceleration
+    };
     
     return object;
 }
 
-ValidatedVector3 Intersect(Ray const ray, Triangle const triangle) {
+OptionVector3 WrapOptionVector3(Vector3 const vector) {
+	return (OptionVector3){ true, vector };
+}
+
+OptionVector3 Intersect(Ray const ray, Triangle const triangle) {
 	Vector3 const edge1      = Vector3Subtract(triangle.b, triangle.a);
 	Vector3 const edge2      = Vector3Subtract(triangle.c, triangle.a);
 	Vector3 const rayCrossE2 = Vector3CrossProduct(ray.direction, edge2);
 	float const det          = Vector3DotProduct(edge1, rayCrossE2);
 	
 	if (det > -EPSILON && det < EPSILON) {
-		return (ValidatedVector3){ false };
+		return (OptionVector3){ false };
 	}
-
+	
 	float const invDet = 1.0f / det;
 	Vector3 const s    = Vector3Subtract(ray.position, triangle.a);
 	float const u      = invDet * Vector3DotProduct(s, rayCrossE2);
-
+	
 	if (u < 0.0f || u > 1.0f) {		
-		return (ValidatedVector3){ false };
+		return (OptionVector3){ false };
 	}
-
+	
 	Vector3 const sCrossE1 = Vector3CrossProduct(s, edge1);
 	float const v          = invDet * Vector3DotProduct(edge2, sCrossE1);
-
+	
 	if (v < 0.0f || u + v > 1.0f) {
-		return (ValidatedVector3){ false };
+		return (OptionVector3){ false };
 	}
-
+	
 	float const t = invDet * Vector3DotProduct(edge2, sCrossE1);
-
+	
 	if (t > EPSILON) {
 		Vector3 const intersectionPoint = Vector3Add(ray.position, Vector3Scale(ray.direction, t));
-		return (ValidatedVector3){ true, intersectionPoint };
+		return (OptionVector3){ true, intersectionPoint };
 	}
 	
 	// This means that there is a line intersection but not a ray intersection.
-	return (ValidatedVector3){ false };
+	return (OptionVector3){ false };
 }

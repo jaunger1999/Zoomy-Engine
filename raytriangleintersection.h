@@ -31,4 +31,4 @@ typedef struct Triangle {
 	Vector3 c;
 } Triangle;
 
-ValidatedVector3 Intersect(Ray const ray, Triangle const triangle);
+OptionVector3 Intersect(Ray const ray, Triangle const triangle);

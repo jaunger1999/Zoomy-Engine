@@ -4,25 +4,31 @@
 #endif
 
 typedef struct InputMap {
-	GamepadButton jump;
-	GamepadButton crouch;
-	GamepadButton attack;
-	GamepadButton cameraLock;
+	GamepadButton const jump;
+	GamepadButton const crouch;
+	GamepadButton const attack;
+	GamepadButton const cameraLock;
 } InputMap;
 
 typedef struct Input {
-	Vector2 movement;
-	Vector2 camera;
+	Vector2 const movement;
+	Vector2 const camera;
 
-	bool jumpDown;
-	bool crouchDown;
-	bool attackDown;
-	bool cameraLockDown;
+	bool const jumpDown;
+	bool const crouchDown;
+	bool const attackDown;
+	bool const cameraLockDown;
 
-	bool jumpPressed;
-	bool crouchPressed;
-	bool attackPressed;
-	bool cameraLockPressed;
+	bool const jumpPressed;
+	bool const crouchPressed;
+	bool const attackPressed;
+	bool const cameraLockPressed;
+
+	bool const jumpReleased;
+	bool const crouchReleased;
+	bool const attackReleased;
+	bool const cameraLockReleased;
+
 } Input;
 
 
@@ -37,10 +43,12 @@ typedef struct GameState {
 	Object objects[];
 } GameState;
 
-typedef struct ValidatedVector3 {
-	bool valid;
-	Vector3 vector;
-} ValidatedVector3;
+typedef struct OptionVector3 {
+	bool const valid;
+	Vector3 const vector;
+} OptionVector3;
+
+OptionVector3 WrapVector3(Vector3 const vector);
 
 Input GetInputState(InputMap inputMap);
 
