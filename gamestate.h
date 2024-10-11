@@ -37,6 +37,11 @@ typedef struct GameState {
 	Object objects[];
 } GameState;
 
+typedef struct ValidatedVector3 {
+	bool valid;
+	Vector3 vector;
+} ValidatedVector3;
+
 Input GetInputState(InputMap inputMap);
 
 Object CreateNextGameState(Input const input, Object const objs[], int const totalObjs);
