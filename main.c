@@ -65,33 +65,31 @@ int main(void) {
 		GAMEPAD_BUTTON_RIGHT_FACE_LEFT,  // attack
 		GAMEPAD_BUTTON_RIGHT_TRIGGER_1,  // camera lock
 	};
+	Camera const newCamera = {
+		(Vector3){ 10.0f, 10.0f, 10.0f }, // Camera position
+		(Vector3){  0.0f,  0.0f,  0.0f }, // Camera looking at point
+		(Vector3){  0.0f,  1.0f,  0.0f }, // Camera up vector (rotation towards target)
+		90.0f,                            // Camera field-of-view Y
+		CAMERA_PERSPECTIVE                // Camera mode type
+	};
+
+	CameraState oldCameraState = {
+		FOLLOW,        // Behaviour
+		false,         // Incremented Rotations
+		newCamera      // Empty camera
+	};
 
 	// Main game loop
 	while (!WindowShouldClose()) { // Detect window close button or ESC key
 		// Update
-        	Input const newInput = GetInputState(inputMap); 
+		float delta = GetFrameTime();
+        	Input const input = GetInputState(inputMap); 
 
-		Object const playerState = CreateNextGameState(newInput, objs, totalObjs);
+		Object const playerState = GetNextPlayerGameState(input, objs, totalObjs, delta);
 		objs[0] = playerState;
-	        // Play animation when spacebar is held down
-		if (IsKeyDown(KEY_SPACE)) {
-			animFrameCounter++;
-			UpdateModelAnimation(model, anims[0], animFrameCounter);
-
-			if (animFrameCounter >= anims[0].frameCount) {
-				animFrameCounter = 0;
-			}
-        	}
-
-		Camera const newCamera = {
-			(Vector3){ 10.0f, 10.0f, 10.0f }, // Camera position
-			playerState.position,             // Camera looking at point
-			(Vector3){  0.0f,  1.0f,  0.0f }, // Camera up vector (rotation towards target)
-			90.0f,                            // Camera field-of-view Y
-			CAMERA_PERSPECTIVE                // Camera mode type
-		};
-
-
+		
+		CameraState const newCameraState = GetNextCameraState(oldCameraState, playerState, input, delta);
+		Camera const newCamera = newCameraState.camera;
 
         	// Draw
 		BeginDrawing();
@@ -113,9 +111,10 @@ int main(void) {
 
 			DrawText("PRESS SPACE to PLAY MODEL ANIMATION", 10, 10, 20, MAROON);
 			DrawText("(c) Guy IQM 3D model by @culacant", screenWidth - 200, screenHeight - 20, 10, GRAY);
-
 		EndDrawing();
-	
+		
+		// Give the next iteration of the loop access to the previous frame' state.
+		oldCameraState = newCameraState;
 	}
 
     // De-Initialization
@@ -146,7 +145,7 @@ Input GetInputState(InputMap inputMap) {
 	bool const attackButtonReleased     = IsGamepadButtonReleased(0, inputMap.attack);
 	bool const cameraLockButtonReleased = IsGamepadButtonReleased(0, inputMap.cameraLock);
 
-        Input const newInput = {
+        Input const input = {
 		movement,
 		cameraMovement,
 
@@ -166,10 +165,31 @@ Input GetInputState(InputMap inputMap) {
 		cameraLockButtonReleased
         };
 
-	return newInput;
+	return input;
 }
 
-Object CreateNextGameState(Input const input, Object const objs[], int const totalObjs) {
+CameraState GetNextCameraState(CameraState const cameraState, Object const playerState, Input const input, float const delta) {
+	Camera const camera = cameraState.camera;
+	Vector3 const newRelativePosition = Vector3RotateByAxisAngle(Vector3Subtract(camera.position, playerState.position), camera.up, delta * input.camera.x);
+	Vector3 const newPosition = Vector3Add(newRelativePosition, playerState.position);
+	Camera const newCamera = {
+		newPosition, // Camera position
+		playerState.position,             // Camera looking at point
+		(Vector3){  0.0f,  1.0f,  0.0f }, // Camera up vector (rotation towards target)
+		90.0f,                            // Camera field-of-view Y
+		CAMERA_PERSPECTIVE                // Camera mode type
+	};
+
+	CameraState const nextCameraState = {
+		cameraState.behaviour,
+		cameraState.incrementedRotations,
+		newCamera
+	};
+
+	return nextCameraState;
+}
+
+Object GetNextPlayerGameState(Input const input, Object const objs[], int const totalObjs, float const delta) {
     Vector3 newVelocity = (Vector3){ input.movement.x, input.movement.y, objs[0].velocity.z };
     Object const object = {
 	    (Vector3){ objs[0].position.x + newVelocity.x, objs[0].position.y + newVelocity.y, objs[0].velocity.z },
@@ -194,8 +214,8 @@ OptionVector3 Intersect(Ray const ray, Triangle const triangle) {
 		return (OptionVector3){ false };
 	}
 	
-	float const invDet = 1.0f / det;
 	Vector3 const s    = Vector3Subtract(ray.position, triangle.a);
+	float const invDet = 1.0f / det;
 	float const u      = invDet * Vector3DotProduct(s, rayCrossE2);
 	
 	if (u < 0.0f || u > 1.0f) {		

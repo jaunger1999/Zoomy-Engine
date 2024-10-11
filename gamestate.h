@@ -28,9 +28,7 @@ typedef struct Input {
 	bool const crouchReleased;
 	bool const attackReleased;
 	bool const cameraLockReleased;
-
 } Input;
-
 
 typedef struct Object {
 	Vector3 position;
@@ -43,6 +41,17 @@ typedef struct GameState {
 	Object objects[];
 } GameState;
 
+typedef enum {
+	FOLLOW = 0,
+	LOCK   = 1
+} CameraBehaviour;
+
+typedef struct CameraState {
+	CameraBehaviour behaviour;
+	bool incrementedRotations;
+	Camera camera;
+} CameraState;
+
 typedef struct OptionVector3 {
 	bool const valid;
 	Vector3 const vector;
@@ -52,4 +61,6 @@ OptionVector3 WrapVector3(Vector3 const vector);
 
 Input GetInputState(InputMap inputMap);
 
-Object CreateNextGameState(Input const input, Object const objs[], int const totalObjs);
+CameraState GetNextCameraState(CameraState const cameraState, Object const playerState, Input const input, float const delta);
+
+Object GetNextPlayerGameState(Input const input, Object const objs[], int const totalObjs, float const delta);
