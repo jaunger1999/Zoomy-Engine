@@ -3,6 +3,17 @@
 #include "raylib.h"
 #endif
 
+typedef enum {
+	PLAYER = 0
+} ObjectType;
+
+typedef enum {
+	FOLLOW = 0,
+	LOCK = 1,
+	BEHIND = 2,
+	TRIPOD = 3
+} CameraBehaviour;
+
 typedef struct InputMap {
 	GamepadButton const jump;
 	GamepadButton const crouch;
@@ -12,7 +23,10 @@ typedef struct InputMap {
 
 typedef struct Input {
 	Vector2 const movement;
-	Vector2 const camera;
+	Vector2 const cameraMovement;
+	
+	Vector2 const oldMovement;
+	Vector2 const oldCameraMovement;
 
 	bool const jumpDown;
 	bool const crouchDown;
@@ -31,23 +45,29 @@ typedef struct Input {
 } Input;
 
 typedef struct Object {
+	ObjectType type;
 	Vector3 position;
 	Vector3 velocity;
 	Vector3 acceleration;
 } Object;
+
+typedef struct Attributes {
+	float speed;
+	float acceleration;
+	float airSpeed;
+	float gravity;
+	float terminalVelocity;
+	float initJumpSpeed;
+} Attributes;
 
 typedef struct GameState {
 	int totalObjects;
 	Object objects[];
 } GameState;
 
-typedef enum {
-	FOLLOW = 0,
-	LOCK   = 1
-} CameraBehaviour;
-
 typedef struct CameraState {
 	CameraBehaviour behaviour;
+	float radiansPerSecond;
 	bool incrementedRotations;
 	Camera camera;
 } CameraState;
@@ -57,10 +77,12 @@ typedef struct OptionVector3 {
 	Vector3 const vector;
 } OptionVector3;
 
+Attributes GetAttributes(float const jumpHeight, float const timeToApex, float const movementSpeed, float const acceleration, float const terminalVelocity, float const neutralJumpDistance);
+
 OptionVector3 WrapVector3(Vector3 const vector);
 
-Input GetInputState(InputMap inputMap);
+Input GetInputState(InputMap const inputMap, Vector2 const oldMovement, Vector2 const oldCameraMovement, float const cameraYaw);
 
 CameraState GetNextCameraState(CameraState const cameraState, Object const playerState, Input const input, float const delta);
 
-Object GetNextPlayerGameState(Input const input, Object const objs[], int const totalObjs, float const delta);
+Object GetNextPlayerGameState(Input const input, Attributes attributes, Object const objs[], int const totalObjs, float const delta);

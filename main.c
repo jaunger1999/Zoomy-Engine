@@ -20,6 +20,7 @@
 ********************************************************************************************/
 
 #define RAYLIB
+#define STICK_SMASH_THRESHOLD 0.7f
 
 #include "raylib.h"
 #include "raymath.h"
@@ -38,6 +39,18 @@
 Vector3 position = { 0.0f, 0.0f, 0.0f };            // Set model position
 
 int main(void) {
+	Attributes playerAttributes = GetAttributes(
+			1.0f,  // jump height
+			0.5f,  // time to apex
+			5.0f,  // movement speed
+			1.0f, // acceleration
+			3.0f,  // terminal velocity
+			3.0f   // neutral jump distance
+		);
+	
+	Attributes attributes[1] = {
+		playerAttributes
+	};
 	// Initialization
 	const int screenWidth  = 800;
 	int const screenHeight = 450;
@@ -57,7 +70,7 @@ int main(void) {
 	DisableCursor();                    // Catch cursor
 	SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
 	int totalObjs = 1;
-	Object obj = (Object){ (Vector3){0,0,0},(Vector3){0,0,0},(Vector3){0,0,0}};
+	Object obj = (Object){ PLAYER, (Vector3){0,0,0},(Vector3){0,0,0},(Vector3){0,0,0}};
 	Object objs[] = { obj, obj };
 	InputMap const inputMap = {
 		GAMEPAD_BUTTON_RIGHT_FACE_DOWN,  // jump
@@ -65,8 +78,9 @@ int main(void) {
 		GAMEPAD_BUTTON_RIGHT_FACE_LEFT,  // attack
 		GAMEPAD_BUTTON_RIGHT_TRIGGER_1,  // camera lock
 	};
+
 	Camera const newCamera = {
-		(Vector3){ 10.0f, 10.0f, 10.0f }, // Camera position
+		(Vector3){  0.0f, 10.0f, 10.0f }, // Camera position
 		(Vector3){  0.0f,  0.0f,  0.0f }, // Camera looking at point
 		(Vector3){  0.0f,  1.0f,  0.0f }, // Camera up vector (rotation towards target)
 		90.0f,                            // Camera field-of-view Y
@@ -75,17 +89,25 @@ int main(void) {
 
 	CameraState oldCameraState = {
 		FOLLOW,        // Behaviour
+		10,            // Radians Per Second
 		false,         // Incremented Rotations
-		newCamera      // Empty camera
+		newCamera      // Camera 
 	};
+
+	Vector2 oldMovement = { 0 };
+	Vector2 oldCameraMovement = { 0 };
 
 	// Main game loop
 	while (!WindowShouldClose()) { // Detect window close button or ESC key
 		// Update
 		float delta = GetFrameTime();
-        	Input const input = GetInputState(inputMap); 
 
-		Object const playerState = GetNextPlayerGameState(input, objs, totalObjs, delta);
+		Vector2 const pPos = { objs[0].position.x, objs[0].position.z };
+		Vector2 const cPos = { oldCameraState.camera.position.x, oldCameraState.camera.position.z };
+		float const angle = Vector2LineAngle(pPos, cPos)  + PI / 2;
+        	Input const input = GetInputState(inputMap, oldMovement, oldCameraMovement, angle); // Player movement input is relative to this angle. 
+
+		Object const playerState = GetNextPlayerGameState(input, attributes[objs[0].type], objs, totalObjs, delta);
 		objs[0] = playerState;
 		
 		CameraState const newCameraState = GetNextCameraState(oldCameraState, playerState, input, delta);
@@ -115,6 +137,8 @@ int main(void) {
 		
 		// Give the next iteration of the loop access to the previous frame' state.
 		oldCameraState = newCameraState;
+		oldMovement = input.movement;
+		oldCameraMovement = input.cameraMovement;
 	}
 
     // De-Initialization
@@ -126,8 +150,9 @@ int main(void) {
     return 0;
 }
 
-Input GetInputState(InputMap inputMap) {
-	Vector2 const movement              = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) };
+Input GetInputState(InputMap const inputMap, Vector2 const oldMovement, Vector2 const oldCameraMovement, float const cameraYaw) {
+	Vector2 const rawMovement           = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) };
+	Vector2 const adjustedMovement      = Vector2Rotate(rawMovement, -cameraYaw);
 	Vector2 const cameraMovement        = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y) };
 
 	bool const jumpButtonDown           = IsGamepadButtonDown(0, inputMap.jump);
@@ -146,8 +171,11 @@ Input GetInputState(InputMap inputMap) {
 	bool const cameraLockButtonReleased = IsGamepadButtonReleased(0, inputMap.cameraLock);
 
         Input const input = {
-		movement,
+		adjustedMovement,
 		cameraMovement,
+		
+		oldMovement,
+		oldCameraMovement,
 
 		jumpButtonDown,
 		crouchButtonDown,
@@ -170,8 +198,12 @@ Input GetInputState(InputMap inputMap) {
 
 CameraState GetNextCameraState(CameraState const cameraState, Object const playerState, Input const input, float const delta) {
 	Camera const camera = cameraState.camera;
-	Vector3 const newRelativePosition = Vector3RotateByAxisAngle(Vector3Subtract(camera.position, playerState.position), camera.up, delta * input.camera.x);
-	Vector3 const newPosition = Vector3Add(newRelativePosition, playerState.position);
+
+	float const rotation              = delta * cameraState.radiansPerSecond * input.cameraMovement.x;
+	Vector3 const relativePosition    = Vector3Subtract(camera.position, playerState.position);
+	Vector3 const newRelativePosition = Vector3RotateByAxisAngle(relativePosition, camera.up, rotation);
+	Vector3 const newPosition         = Vector3Add(newRelativePosition, playerState.position);
+
 	Camera const newCamera = {
 		newPosition, // Camera position
 		playerState.position,             // Camera looking at point
@@ -182,6 +214,7 @@ CameraState GetNextCameraState(CameraState const cameraState, Object const playe
 
 	CameraState const nextCameraState = {
 		cameraState.behaviour,
+		cameraState.radiansPerSecond,
 		cameraState.incrementedRotations,
 		newCamera
 	};
@@ -189,19 +222,61 @@ CameraState GetNextCameraState(CameraState const cameraState, Object const playe
 	return nextCameraState;
 }
 
-Object GetNextPlayerGameState(Input const input, Object const objs[], int const totalObjs, float const delta) {
-    Vector3 newVelocity = (Vector3){ input.movement.x, input.movement.y, objs[0].velocity.z };
-    Object const object = {
-	    (Vector3){ objs[0].position.x + newVelocity.x, objs[0].position.y + newVelocity.y, objs[0].velocity.z },
-	    newVelocity,
-	    objs[0].acceleration
-    };
+Object GetNextPlayerGameState(Input const input, Attributes const attributes, Object const objs[], int const totalObjs, float const delta) {
+	Vector3 newVelocity;
+	Vector3 const toVelocity = (Vector3){ attributes.speed * input.movement.x, objs[0].velocity.y, attributes.speed * input.movement.y };
+
+	if (1 - Vector2LengthSqr(input.movement) < EPSILON && Vector2LengthSqr(input.oldMovement) < STICK_SMASH_THRESHOLD && abs(Vector3LengthSqr(objs[0].velocity)) < EPSILON) {
+		newVelocity = toVelocity;
+	}
+	else {
+		Vector3 const diff = Vector3Subtract(toVelocity, objs[0].velocity);
+		Vector3 const acceleration = 
+			Vector3Scale(
+				Vector3Normalize(diff),          // direction between our desired and current velocity.
+				attributes.acceleration * delta 
+			);
+
+		// We don't want to go past our target velocity so check if we'll go past by adding acceleration.
+		if (Vector3LengthSqr(diff) > Vector3LengthSqr(acceleration)) {
+			newVelocity = Vector3Add(objs[0].velocity, acceleration); 
+		}
+		else {
+			newVelocity = toVelocity;
+		}
+	}
+	
+	Vector3 const newPosition = Vector3Add(objs[0].position, Vector3Scale(newVelocity, delta));
+
+	Object const object = {
+		objs[0].type,
+		newPosition,
+		newVelocity,
+		objs[0].acceleration
+	};
     
-    return object;
+	return object;
 }
 
 OptionVector3 WrapOptionVector3(Vector3 const vector) {
 	return (OptionVector3){ true, vector };
+}
+
+Attributes GetAttributes(float const jumpHeight, float const timeToApex, float const movementSpeed, float const acceleration, float const terminalVelocity, float const neutralJumpDistance) {
+	float const gravity = (2 * jumpHeight) / (timeToApex * timeToApex);
+	float const initJumpSpeed = -sqrt(2 * gravity * jumpHeight);
+	float const airSpeed = neutralJumpDistance / (2 * timeToApex);
+
+	Attributes attributes = {
+		movementSpeed,
+		acceleration,
+		airSpeed,
+		gravity,
+		terminalVelocity,
+		initJumpSpeed
+	};
+
+	return attributes;
 }
 
 OptionVector3 Intersect(Ray const ray, Triangle const triangle) {
