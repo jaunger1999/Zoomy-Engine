@@ -31,4 +31,17 @@ typedef struct Triangle {
 	Vector3 c;
 } Triangle;
 
+typedef struct Face {
+	Vector3 n;
+	int a;
+	int b;
+	int c;
+} Face;
+
+typedef struct CollisionMesh {
+	int faceCount;
+	Vector3 *vertices;
+	Face *faces;
+} CollisionMesh;
+
 OptionVector3 Intersect(Ray const ray, Triangle const triangle);
