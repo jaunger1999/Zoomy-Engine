@@ -42,8 +42,8 @@ int main(void) {
 	Attributes playerAttributes = GetAttributes(
 			1.0f,  // jump height
 			0.5f,  // time to apex
-			5.0f,  // movement speed
-			1.0f, // acceleration
+			10.0f, // movement speed
+			10.0f, // acceleration
 			3.0f,  // terminal velocity
 			3.0f   // neutral jump distance
 		);
@@ -70,7 +70,7 @@ int main(void) {
 	DisableCursor();                    // Catch cursor
 	SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
 	int totalObjs = 1;
-	Object obj = (Object){ PLAYER, (Vector3){0,0,0},(Vector3){0,0,0},(Vector3){0,0,0}};
+	Object obj = (Object){ PLAYER, (Vector3){0,1,0},(Vector3){0,0,0},(Vector3){0,0,0}};
 	Object objs[] = { obj, obj };
 	InputMap const inputMap = {
 		GAMEPAD_BUTTON_RIGHT_FACE_DOWN,  // jump
@@ -82,7 +82,7 @@ int main(void) {
 	Camera const newCamera = {
 		(Vector3){  0.0f, 10.0f, 10.0f }, // Camera position
 		(Vector3){  0.0f,  0.0f,  0.0f }, // Camera looking at point
-		(Vector3){  0.0f,  1.0f,  0.0f }, // Camera up vector (rotation towards target)
+		(Vector3){  0.0f,  2.0f,  0.0f }, // Camera up vector (rotation towards target)
 		90.0f,                            // Camera field-of-view Y
 		CAMERA_PERSPECTIVE                // Camera mode type
 	};
@@ -224,10 +224,11 @@ CameraState GetNextCameraState(CameraState const cameraState, Object const playe
 
 Object GetNextPlayerGameState(Input const input, Attributes const attributes, Object const objs[], int const totalObjs, float const delta) {
 	Vector3 newVelocity;
+	Vector3 const gravity = (Vector3){ 0, -attributes.gravity * delta, 0 };
 	Vector3 const toVelocity = (Vector3){ attributes.speed * input.movement.x, objs[0].velocity.y, attributes.speed * input.movement.y };
 
 	if (1 - Vector2LengthSqr(input.movement) < EPSILON && Vector2LengthSqr(input.oldMovement) < STICK_SMASH_THRESHOLD && abs(Vector3LengthSqr(objs[0].velocity)) < EPSILON) {
-		newVelocity = toVelocity;
+		newVelocity = Vector3Add(toVelocity, gravity);
 	}
 	else {
 		Vector3 const diff = Vector3Subtract(toVelocity, objs[0].velocity);
@@ -242,7 +243,7 @@ Object GetNextPlayerGameState(Input const input, Attributes const attributes, Ob
 			newVelocity = Vector3Add(objs[0].velocity, acceleration); 
 		}
 		else {
-			newVelocity = toVelocity;
+			newVelocity = Vector3Add(toVelocity, gravity);
 		}
 	}
 	
