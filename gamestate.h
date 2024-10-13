@@ -3,6 +3,11 @@
 #include "raylib.h"
 #endif
 
+#ifndef COLLISION
+#define COLLISION
+#include "raytriangleintersection.h"
+#endif
+
 typedef enum {
 	PLAYER = 0
 } ObjectType;
@@ -72,10 +77,6 @@ typedef struct CameraState {
 	Camera camera;
 } CameraState;
 
-typedef struct OptionVector3 {
-	bool const valid;
-	Vector3 const vector;
-} OptionVector3;
 
 Attributes GetAttributes(float const jumpHeight, float const timeToApex, float const movementSpeed, float const acceleration, float const terminalVelocity, float const neutralJumpDistance);
 
@@ -85,4 +86,4 @@ Input GetInputState(InputMap const inputMap, Vector2 const oldMovement, Vector2 
 
 CameraState GetNextCameraState(CameraState const cameraState, Object const playerState, Input const input, float const delta);
 
-Object GetNextPlayerGameState(Input const input, Attributes attributes, Object const objs[], int const totalObjs, float const delta);
+Object GetNextPlayerGameState(Input const input, Attributes const attributes, CollisionMesh const mesh, Object const objs[], int const totalObjs, float const delta);

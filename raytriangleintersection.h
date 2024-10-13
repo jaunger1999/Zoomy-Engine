@@ -1,6 +1,6 @@
 #ifndef RAYLIB
 #define RAYLIB
-#include "Raylib.h"
+#include "raylib.h"
 #endif
 
 struct CollisionRay {
@@ -49,6 +49,12 @@ typedef struct CollisionMesh {
 	Vector3 *normals;
 	Face *faces;
 } CollisionMesh;
+
+typedef struct OptionVector3 {
+	bool const valid;
+	Vector3 const vector;
+} OptionVector3;
+
 
 OptionVector3 Intersect(Ray const ray, Triangle const triangle);
 

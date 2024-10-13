@@ -19,13 +19,24 @@
 *
 ********************************************************************************************/
 
-#define RAYLIB
 #define STICK_SMASH_THRESHOLD 0.7f
 
+#ifndef RAYLIB
+#define RAYLIB
 #include "raylib.h"
 #include "raymath.h"
-#include "gamestate.h"
+#endif
+
+#ifndef COLLISION 
+#define COLLISION
 #include "raytriangleintersection.h"
+#endif
+
+#ifndef GAMESTATE
+#define GAMESTATE
+#include "gamestate.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -111,7 +122,7 @@ int main(void) {
 		float const angle = Vector2LineAngle(pPos, cPos)  + PI / 2;
         	Input const input = GetInputState(inputMap, oldMovement, oldCameraMovement, angle); // Player movement input is relative to this angle. 
 
-		Object const playerState = GetNextPlayerGameState(input, attributes[objs[0].type], objs, totalObjs, delta);
+		Object const playerState = GetNextPlayerGameState(input, attributes[objs[0].type], cMesh, objs, totalObjs, delta);
 		objs[0] = playerState;
 		
 		CameraState const newCameraState = GetNextCameraState(oldCameraState, playerState, input, delta);
@@ -226,7 +237,7 @@ CameraState GetNextCameraState(CameraState const cameraState, Object const playe
 	return nextCameraState;
 }
 
-Object GetNextPlayerGameState(Input const input, Attributes const attributes, Object const objs[], int const totalObjs, float const delta) {
+Object GetNextPlayerGameState(Input const input, Attributes const attributes, CollisionMesh const mesh, Object const objs[], int const totalObjs, float const delta) {
 	Vector3 newVelocity;
 	Vector3 const gravity = (Vector3){ 0, -attributes.gravity * delta, 0 };
 	Vector3 const toVelocity = (Vector3){ attributes.speed * input.movement.x, objs[0].velocity.y, attributes.speed * input.movement.y };
@@ -239,7 +250,7 @@ Object GetNextPlayerGameState(Input const input, Attributes const attributes, Ob
 		Vector3 const acceleration = 
 			Vector3Scale(
 				Vector3Normalize(diff),          // direction between our desired and current velocity.
-				attributes.acceleration * delta 
+				attributes.acceleration * delta
 			);
 
 		// We don't want to go past our target velocity so check if we'll go past by adding acceleration.
@@ -298,7 +309,7 @@ OptionVector3 Intersect(Ray const ray, Triangle const triangle) {
 	float const invDet = 1.0f / det;
 	float const u      = invDet * Vector3DotProduct(s, rayCrossE2);
 	
-	if (u < 0.0f || u > 1.0f) {		
+	if (u < 0.0f || u > 1.0f) {
 		return (OptionVector3){ false };
 	}
 	
