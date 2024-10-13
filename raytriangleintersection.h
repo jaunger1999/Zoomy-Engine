@@ -32,16 +32,24 @@ typedef struct Triangle {
 } Triangle;
 
 typedef struct Face {
-	Vector3 n;
+	// These are all indices in our vertex and normal arrays
 	int a;
 	int b;
 	int c;
+
+	int nA;
+	int nB;
+	int nC;
+
 } Face;
 
 typedef struct CollisionMesh {
 	int faceCount;
 	Vector3 *vertices;
+	Vector3 *normals;
 	Face *faces;
 } CollisionMesh;
 
 OptionVector3 Intersect(Ray const ray, Triangle const triangle);
+
+CollisionMesh GetCollisionMesh(char const *fileDir);
