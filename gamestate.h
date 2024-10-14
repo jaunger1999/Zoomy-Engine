@@ -1,5 +1,7 @@
 #ifndef RAYLIB
 #define RAYLIB
+#define VECTOR3
+
 #include "raylib.h"
 #endif
 
