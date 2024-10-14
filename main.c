@@ -23,6 +23,8 @@
 
 #ifndef RAYLIB
 #define RAYLIB
+#define VECTOR3
+
 #include "raylib.h"
 #include "raymath.h"
 #endif
@@ -295,9 +297,9 @@ Attributes GetAttributes(float const jumpHeight, float const timeToApex, float c
 	return attributes;
 }
 
-OptionVector3 Intersect(Ray const ray, Triangle const triangle) {
-	Vector3 const edge1      = Vector3Subtract(triangle.b, triangle.a);
-	Vector3 const edge2      = Vector3Subtract(triangle.c, triangle.a);
+OptionVector3 Intersect(Ray const ray, Vector3 const a, Vector3 const b, Vector3 const c) {
+	Vector3 const edge1      = Vector3Subtract(b, a);
+	Vector3 const edge2      = Vector3Subtract(c, a);
 	Vector3 const rayCrossE2 = Vector3CrossProduct(ray.direction, edge2);
 	float const det          = Vector3DotProduct(edge1, rayCrossE2);
 	
@@ -305,7 +307,7 @@ OptionVector3 Intersect(Ray const ray, Triangle const triangle) {
 		return (OptionVector3){ false };
 	}
 	
-	Vector3 const s    = Vector3Subtract(ray.position, triangle.a);
+	Vector3 const s    = Vector3Subtract(ray.position, a);
 	float const invDet = 1.0f / det;
 	float const u      = invDet * Vector3DotProduct(s, rayCrossE2);
 	
