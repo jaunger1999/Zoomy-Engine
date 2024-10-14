@@ -1,5 +1,7 @@
 #ifndef RAYLIB
 #define RAYLIB
+#define VECTOR3
+
 #include "raylib.h"
 #endif
 
@@ -24,12 +26,6 @@ struct Hit {
 } __declspec(aligned(16));
 
 typedef struct Hit Hit;
-
-typedef struct Triangle {
-	Vector3 a;
-	Vector3 b;
-	Vector3 c;
-} Triangle;
 
 typedef struct Face {
 	// These are all indices in our vertex and normal arrays
@@ -56,6 +52,6 @@ typedef struct OptionVector3 {
 } OptionVector3;
 
 
-OptionVector3 Intersect(Ray const ray, Triangle const triangle);
+OptionVector3 Intersect(Ray const ray, Vector3 const a, Vector3 const b, Vector3 const c);
 
 CollisionMesh GetCollisionMesh(char const *fileDir);
