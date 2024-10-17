@@ -1,4 +1,8 @@
 #ifndef VECTOR2
+
+#define EPSILON 0.000001f
+typedef enum bool { false = 0, true = !false } bool;
+
 typedef struct Vector2 {
     float x;
     float y;

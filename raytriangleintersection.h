@@ -3,6 +3,7 @@
 #define VECTOR3
 
 #include "raylib.h"
+#include "raymath.h"
 #endif
 
 struct CollisionRay {
@@ -26,6 +27,14 @@ struct Hit {
 } __declspec(aligned(16));
 
 typedef struct Hit Hit;
+
+
+typedef struct Triangle {
+	Vector3 n;
+	Vector3 a;
+	Vector3 b;
+	Vector3 c;
+} Triangle;
 
 typedef struct Face {
 	// These are all indices in our vertex and normal arrays
