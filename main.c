@@ -85,7 +85,7 @@ int main(void) {
 	DisableCursor();                    // Catch cursor
 	SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
 	int totalObjs = 1;
-	Object obj = (Object){ PLAYER, (Vector3){0,1,0},(Vector3){0,0,0},(Vector3){0,0,0}};
+	Object obj = (Object){ PLAYER, (Vector3){7,7,0},(Vector3){0,0,0},(Vector3){0,0,0}};
 	Object objs[] = { obj, obj };
 	InputMap const inputMap = {
 		GAMEPAD_BUTTON_RIGHT_FACE_DOWN,  // jump
@@ -261,17 +261,39 @@ Object GetNextPlayerGameState(Input const input, Attributes const attributes, Co
 			newVelocity = Vector3Add(toVelocity, gravity);
 		}
 	}
-	
+
+	bool collision = false;
+
+	for (int i = 0; i < mesh.faceCount && !collision; i++) {
+		Vector3 const a = mesh.vertices[mesh.faces[i].a];
+		Vector3 const b = mesh.vertices[mesh.faces[i].b];
+		Vector3 const c = mesh.vertices[mesh.faces[i].c];
+		Ray     const r = (Ray){ objs[0].position, Vector3Scale(newVelocity, delta) };
+		OptionVector3 collisionVector = Intersect(r, a, b, c); 
+		collision = collisionVector.valid;
+	}
 	Vector3 const newPosition = Vector3Add(objs[0].position, Vector3Scale(newVelocity, delta));
 
-	Object const object = {
-		objs[0].type,
-		newPosition,
-		newVelocity,
-		objs[0].acceleration
-	};
-    
-	return object;
+	if (collision) {
+		Object const object = {
+			objs[0].type,
+			objs[0].position,
+			newVelocity,
+			objs[0].acceleration
+		};
+	    
+		return object;
+	}
+	else {
+		Object const object = {
+			objs[0].type,
+			newPosition,
+			newVelocity,
+			objs[0].acceleration
+		};
+	    
+		return object;
+	}
 }
 
 OptionVector3 WrapOptionVector3(Vector3 const vector) {

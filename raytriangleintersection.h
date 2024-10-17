@@ -56,7 +56,7 @@ typedef struct CollisionMesh {
 } CollisionMesh;
 
 typedef struct OptionVector3 {
-	bool const valid;
+	bool    const valid;
 	Vector3 const vector;
 } OptionVector3;
 
