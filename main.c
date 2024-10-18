@@ -82,10 +82,11 @@ int main(void) {
 	ModelAnimation *anims = LoadModelAnimations("resources/models/iqm/guyanim.iqm", &animsCount);
 	int animFrameCounter = 0;
 
+	printf("gravity: %f\n", playerAttributes.gravity);
 	DisableCursor();                    // Catch cursor
 	SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
 	int totalObjs = 1;
-	Object obj = (Object){ PLAYER, (Vector3){7,7,0},(Vector3){0,0,0},(Vector3){0,0,0}};
+	Object obj = (Object){ PLAYER, (Vector3){6.5f,7,0},(Vector3){0,0,0},(Vector3){0,0,0}};
 	Object objs[] = { obj, obj };
 	InputMap const inputMap = {
 		GAMEPAD_BUTTON_RIGHT_FACE_DOWN,  // jump
@@ -120,12 +121,12 @@ int main(void) {
 		Vector2 const pPos = { objs[0].position.x, objs[0].position.z };
 		Vector2 const cPos = { oldCameraState.camera.position.x, oldCameraState.camera.position.z };
 		float const angle = Vector2LineAngle(pPos, cPos)  + PI / 2;
-        	Input const input = GetInputState(inputMap, oldMovement, oldCameraMovement, angle); // Player movement input is relative to this angle. 
+        	Input const input = GetInputState(&inputMap, &oldMovement, &oldCameraMovement, angle); // Player movement input is relative to this angle. 
 
-		Object const playerState = GetNextPlayerGameState(input, attributes[objs[0].type], cMesh, objs, totalObjs, delta);
+		Object const playerState = GetNextPlayerGameState(&input, &attributes[objs[0].type], &cMesh, objs, totalObjs, delta);
 		objs[0] = playerState;
 		
-		CameraState const newCameraState = GetNextCameraState(oldCameraState, playerState, input, delta);
+		CameraState const newCameraState = GetNextCameraState(&oldCameraState, &playerState, &input, delta);
 		Camera const newCamera = newCameraState.camera;
 
         	// Draw
@@ -165,32 +166,32 @@ int main(void) {
     return 0;
 }
 
-Input GetInputState(InputMap const inputMap, Vector2 const oldMovement, Vector2 const oldCameraMovement, float const cameraYaw) {
+Input GetInputState(InputMap const * const inputMap, Vector2 const * const oldMovement, Vector2 const * const oldCameraMovement, float const cameraYaw) {
 	Vector2 const rawMovement           = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) };
 	Vector2 const adjustedMovement      = Vector2Rotate(rawMovement, -cameraYaw);
 	Vector2 const cameraMovement        = { GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X),  GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y) };
 
-	bool const jumpButtonDown           = IsGamepadButtonDown(0, inputMap.jump);
-	bool const crouchButtonDown         = IsGamepadButtonDown(0, inputMap.crouch);
-	bool const attackButtonDown         = IsGamepadButtonDown(0, inputMap.attack);
-	bool const cameraLockButtonDown     = IsGamepadButtonDown(0, inputMap.cameraLock);
+	bool const jumpButtonDown           = IsGamepadButtonDown(0, inputMap->jump);
+	bool const crouchButtonDown         = IsGamepadButtonDown(0, inputMap->crouch);
+	bool const attackButtonDown         = IsGamepadButtonDown(0, inputMap->attack);
+	bool const cameraLockButtonDown     = IsGamepadButtonDown(0, inputMap->cameraLock);
 
-	bool const jumpButtonPressed        = IsGamepadButtonPressed(0, inputMap.jump);
-	bool const crouchButtonPressed      = IsGamepadButtonPressed(0, inputMap.crouch);
-	bool const attackButtonPressed      = IsGamepadButtonPressed(0, inputMap.attack);
-	bool const cameraLockButtonPressed  = IsGamepadButtonPressed(0, inputMap.cameraLock);
+	bool const jumpButtonPressed        = IsGamepadButtonPressed(0, inputMap->jump);
+	bool const crouchButtonPressed      = IsGamepadButtonPressed(0, inputMap->crouch);
+	bool const attackButtonPressed      = IsGamepadButtonPressed(0, inputMap->attack);
+	bool const cameraLockButtonPressed  = IsGamepadButtonPressed(0, inputMap->cameraLock);
 
-	bool const jumpButtonReleased       = IsGamepadButtonReleased(0, inputMap.jump);
-	bool const crouchButtonReleased     = IsGamepadButtonReleased(0, inputMap.crouch);
-	bool const attackButtonReleased     = IsGamepadButtonReleased(0, inputMap.attack);
-	bool const cameraLockButtonReleased = IsGamepadButtonReleased(0, inputMap.cameraLock);
+	bool const jumpButtonReleased       = IsGamepadButtonReleased(0, inputMap->jump);
+	bool const crouchButtonReleased     = IsGamepadButtonReleased(0, inputMap->crouch);
+	bool const attackButtonReleased     = IsGamepadButtonReleased(0, inputMap->attack);
+	bool const cameraLockButtonReleased = IsGamepadButtonReleased(0, inputMap->cameraLock);
 
         Input const input = {
 		adjustedMovement,
 		cameraMovement,
 		
-		oldMovement,
-		oldCameraMovement,
+		*oldMovement,
+		*oldCameraMovement,
 
 		jumpButtonDown,
 		crouchButtonDown,
@@ -211,74 +212,75 @@ Input GetInputState(InputMap const inputMap, Vector2 const oldMovement, Vector2 
 	return input;
 }
 
-CameraState GetNextCameraState(CameraState const cameraState, Object const playerState, Input const input, float const delta) {
-	Camera const camera = cameraState.camera;
+CameraState GetNextCameraState(CameraState const * const cameraState, Object const * const playerState, Input const * const input, float const delta) {
+	Camera const camera = cameraState->camera;
 
-	float const rotation              = delta * cameraState.radiansPerSecond * input.cameraMovement.x;
-	Vector3 const relativePosition    = Vector3Subtract(camera.position, playerState.position);
+	float const rotation              = delta * cameraState->radiansPerSecond * input->cameraMovement.x;
+	Vector3 const relativePosition    = Vector3Subtract(camera.position, playerState->position);
 	Vector3 const newRelativePosition = Vector3RotateByAxisAngle(relativePosition, camera.up, rotation);
-	Vector3 const newPosition         = Vector3Add(newRelativePosition, playerState.position);
+	Vector3 const newPosition         = Vector3Add(newRelativePosition, playerState->position);
 
 	Camera const newCamera = {
 		newPosition, // Camera position
-		playerState.position,             // Camera looking at point
+		playerState->position,             // Camera looking at point
 		(Vector3){  0.0f,  1.0f,  0.0f }, // Camera up vector (rotation towards target)
 		90.0f,                            // Camera field-of-view Y
 		CAMERA_PERSPECTIVE                // Camera mode type
 	};
 
 	CameraState const nextCameraState = {
-		cameraState.behaviour,
-		cameraState.radiansPerSecond,
-		cameraState.incrementedRotations,
+		cameraState->behaviour,
+		cameraState->radiansPerSecond,
+		cameraState->incrementedRotations,
 		newCamera
 	};
 
 	return nextCameraState;
 }
 
-Object GetNextPlayerGameState(Input const input, Attributes const attributes, CollisionMesh const mesh, Object const objs[], int const totalObjs, float const delta) {
+Object GetNextPlayerGameState(Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, Object const objs[], int const totalObjs, float const delta) {
 	Vector3 newVelocity;
-	Vector3 const gravity = (Vector3){ 0, -attributes.gravity * delta, 0 };
-	Vector3 const toVelocity = (Vector3){ attributes.speed * input.movement.x, objs[0].velocity.y, attributes.speed * input.movement.y };
+	Vector3 const gravity = (Vector3){ 0, -attributes->gravity * delta, 0 };
+	Vector3 const toVelocity = (Vector3){ attributes->speed * input->movement.x, objs[0].velocity.y, attributes->speed * input->movement.y };
 
-	if (1 - Vector2LengthSqr(input.movement) < EPSILON && Vector2LengthSqr(input.oldMovement) < STICK_SMASH_THRESHOLD && abs(Vector3LengthSqr(objs[0].velocity)) < EPSILON) {
+	if (1 - Vector2LengthSqr(input->movement) < EPSILON && Vector2LengthSqr(input->oldMovement) < STICK_SMASH_THRESHOLD && abs(Vector3LengthSqr(objs[0].velocity)) < EPSILON) {
 		newVelocity = Vector3Add(toVelocity, gravity);
 	}
 	else {
-		Vector3 const diff = Vector3Subtract(toVelocity, objs[0].velocity);
+		/*Vector3 const diff = Vector3Subtract(toVelocity, objs[0].velocity);
 		Vector3 const acceleration = 
 			Vector3Scale(
 				Vector3Normalize(diff),          // direction between our desired and current velocity.
-				attributes.acceleration * delta
-			);
+				attributes->acceleration * delta
+			);*/
 
 		// We don't want to go past our target velocity so check if we'll go past by adding acceleration.
-		if (Vector3LengthSqr(diff) > Vector3LengthSqr(acceleration)) {
-			newVelocity = Vector3Add(objs[0].velocity, acceleration); 
-		}
-		else {
+		//if (Vector3LengthSqr(diff) > Vector3LengthSqr(acceleration)) {
+		//	newVelocity = Vector3Add(objs[0].velocity, acceleration); 
+		//}
+		//else {
 			newVelocity = Vector3Add(toVelocity, gravity);
-		}
+		//}
 	}
-
+	
 	bool collision = false;
+	Vector3 toTryVelocity = Vector3Scale(newVelocity, delta);
 
-	for (int i = 0; i < mesh.faceCount && !collision; i++) {
-		Vector3 const a = mesh.vertices[mesh.faces[i].a];
-		Vector3 const b = mesh.vertices[mesh.faces[i].b];
-		Vector3 const c = mesh.vertices[mesh.faces[i].c];
-		Ray     const r = (Ray){ objs[0].position, Vector3Scale(newVelocity, delta) };
-		OptionVector3 collisionVector = Intersect(r, a, b, c); 
+	for (int i = 0; i < mesh->faceCount && !collision; i++) {
+		Vector3 const a = mesh->vertices[mesh->faces[i].a];
+		Vector3 const b = mesh->vertices[mesh->faces[i].b];
+		Vector3 const c = mesh->vertices[mesh->faces[i].c];
+		Ray     const r = (Ray){ objs[0].position, toTryVelocity };
+		OptionVector3 collisionVector = Intersect(&r, &a, &b, &c); 
 		collision = collisionVector.valid;
 	}
-	Vector3 const newPosition = Vector3Add(objs[0].position, Vector3Scale(newVelocity, delta));
+	Vector3 const newPosition = Vector3Add(objs[0].position, toTryVelocity);
 
 	if (collision) {
 		Object const object = {
 			objs[0].type,
 			objs[0].position,
-			newVelocity,
+			objs[0].velocity,
 			objs[0].acceleration
 		};
 	    
@@ -354,35 +356,44 @@ bool Intersection(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
 	return false;
 }
 
-OptionVector3 Intersect(Ray const ray, Vector3 const a, Vector3 const b, Vector3 const c) {
-	Vector3 const edge1      = Vector3Subtract(b, a);
-	Vector3 const edge2      = Vector3Subtract(c, a);
-	Vector3 const rayCrossE2 = Vector3CrossProduct(ray.direction, edge2);
+OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c) {
+	Vector3 const edge1      = Vector3Subtract(*b, *a);
+	Vector3 const edge2      = Vector3Subtract(*c, *a);
+	Vector3 const rayCrossE2 = Vector3CrossProduct(ray->direction, edge2);
 	float const det          = Vector3DotProduct(edge1, rayCrossE2);
-	
+
+	assert(!isnan(det));
+
 	if (det > -EPSILON && det < EPSILON) {
 		return (OptionVector3){ false };
 	}
 	
-	Vector3 const s    = Vector3Subtract(ray.position, a);
+	Vector3 const s    = Vector3Subtract(ray->position, *a);
 	float const invDet = 1.0f / det;
 	float const u      = invDet * Vector3DotProduct(s, rayCrossE2);
 	
+	assert(!isnan(invDet));
+	assert(!isnan(u));
+
 	if (u < 0.0f || u > 1.0f) {
 		return (OptionVector3){ false };
 	}
 	
 	Vector3 const sCrossE1 = Vector3CrossProduct(s, edge1);
 	float const v          = invDet * Vector3DotProduct(edge2, sCrossE1);
-	
+
+	assert(!isnan(v));
+
 	if (v < 0.0f || u + v > 1.0f) {
 		return (OptionVector3){ false };
 	}
 	
 	float const t = invDet * Vector3DotProduct(edge2, sCrossE1);
 	
+	assert(!isnan(t));
+
 	if (t > EPSILON) {
-		Vector3 const intersectionPoint = Vector3Add(ray.position, Vector3Scale(ray.direction, t));
+		Vector3 const intersectionPoint = Vector3Add(ray->position, Vector3Scale(ray->direction, t));
 		return (OptionVector3){ true, intersectionPoint };
 	}
 	
@@ -399,17 +410,19 @@ Face ParseFace(char *line) {
 	int i = 0;
 	
 	while (v && i < 3) {
-		printf("%s\n", v);	
+		printf("%s\n", v);
 
 		char *indices = strtok_r(v, "/", &v);
 
-		vertices[i] = strtol(indices, NULL, 10);
+		// -1!!!!!!!! indices start at one in this format. Very annoying bug to track down.
+		vertices[i] = strtol(indices, NULL, 10) - 1;
 
 		indices = strtok_r(NULL, "/", &v);
 		// skip vertex texture coords.
 		indices = strtok_r(NULL, "/", &v);
 
-		normals[i] = strtol(indices, NULL, 10);
+		// -1!!!!!!
+		normals[i] = strtol(indices, NULL, 10) - 1;
 
 		printf("%d %d\n", vertices[i], normals[i]);
 
@@ -428,6 +441,7 @@ Face ParseFace(char *line) {
 }
 
 Vector3 ParseVector3(char *line) {
+	// z up is the obj file format standard.
 	char *yNumber;
 	char *zNumber;
 	float x = strtof(line, &yNumber);
@@ -444,7 +458,7 @@ Vector3 ParseVector3(char *line) {
 }
 
 // I'm not good at file parsing so this'll likely need to be rewritten :/
-CollisionMesh GetCollisionMesh(char const *fileName) {
+CollisionMesh GetCollisionMesh(char const * const fileName) {
 	// start by parsing the file and figuring out how many vertices, normals, and faces we have.
 	char *fileText = LoadFileText(fileName);
 

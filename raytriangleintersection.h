@@ -61,6 +61,6 @@ typedef struct OptionVector3 {
 } OptionVector3;
 
 
-OptionVector3 Intersect(Ray const ray, Vector3 const a, Vector3 const b, Vector3 const c);
+OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c);
 
-CollisionMesh GetCollisionMesh(char const *fileDir);
+CollisionMesh GetCollisionMesh(char const * const fileDir);
