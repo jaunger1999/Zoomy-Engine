@@ -82,10 +82,10 @@ typedef struct CameraState {
 
 Attributes GetAttributes(float const jumpHeight, float const timeToApex, float const movementSpeed, float const acceleration, float const terminalVelocity, float const neutralJumpDistance);
 
-OptionVector3 WrapVector3(Vector3 const vector);
+OptionVector3 WrapVector3(Vector3 const * const vector);
 
-Input GetInputState(InputMap const inputMap, Vector2 const oldMovement, Vector2 const oldCameraMovement, float const cameraYaw);
+Input GetInputState(InputMap const * const inputMap, Vector2 const * const oldMovement, Vector2 const * const oldCameraMovement, float const cameraYaw);
 
-CameraState GetNextCameraState(CameraState const cameraState, Object const playerState, Input const input, float const delta);
+CameraState GetNextCameraState(CameraState const * const cameraState, Object const * const playerState, Input const * const input, float const delta);
 
-Object GetNextPlayerGameState(Input const input, Attributes const attributes, CollisionMesh const mesh, Object const objs[], int const totalObjs, float const delta);
+Object GetNextPlayerGameState(Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, Object const objs[], int const totalObjs, float const delta);

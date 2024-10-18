@@ -39,30 +39,27 @@ bool Intersection(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
 	return false;
 }
 
-OptionVector3 Intersect(Ray const ray, Vector3 const a, Vector3 const b, Vector3 const c) {
-	Vector3 const edge1      = Vector3Subtract(b, a);
-	Vector3 const edge2      = Vector3Subtract(c, a);
-	Vector3 const rayCrossE2 = Vector3CrossProduct(ray.direction, edge2);
-	float   const det        = Vector3DotProduct(edge1, rayCrossE2);
+OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c) {
+	Vector3 const edge1      = Vector3Subtract(*b, *a);
+	Vector3 const edge2      = Vector3Subtract(*c, *a);
+	Vector3 const rayCrossE2 = Vector3CrossProduct(ray->direction, edge2);
+	float const det          = Vector3DotProduct(edge1, rayCrossE2);
 	
-	// check if the ray is parallel to the triangle.
 	if (det > -EPSILON && det < EPSILON) {
 		return (OptionVector3){ false };
 	}
 	
-	Vector3 const s      = Vector3Subtract(ray.position, a);
-	float   const invDet = 1.0f / det;
-	float   const u      = invDet * Vector3DotProduct(s, rayCrossE2);
-
-	// check if this barycentric coord is in the triangle.
+	Vector3 const s    = Vector3Subtract(ray->position, *a);
+	float const invDet = 1.0f / det;
+	float const u      = invDet * Vector3DotProduct(s, rayCrossE2);
+	
 	if (u < 0.0f || u > 1.0f) {
 		return (OptionVector3){ false };
 	}
 	
 	Vector3 const sCrossE1 = Vector3CrossProduct(s, edge1);
-	float   const v        = invDet * Vector3DotProduct(edge2, sCrossE1);
+	float const v          = invDet * Vector3DotProduct(edge2, sCrossE1);
 	
-	// check if this barycentric coord is in the triangle.
 	if (v < 0.0f || u + v > 1.0f) {
 		return (OptionVector3){ false };
 	}
@@ -70,7 +67,7 @@ OptionVector3 Intersect(Ray const ray, Vector3 const a, Vector3 const b, Vector3
 	float const t = invDet * Vector3DotProduct(edge2, sCrossE1);
 	
 	if (t > EPSILON) {
-		Vector3 const intersectionPoint = Vector3Add(ray.position, Vector3Scale(ray.direction, t));
+		Vector3 const intersectionPoint = Vector3Add(ray->position, Vector3Scale(ray->direction, t));
 		return (OptionVector3){ true, intersectionPoint };
 	}
 	
