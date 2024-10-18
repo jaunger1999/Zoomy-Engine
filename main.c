@@ -458,7 +458,7 @@ Vector3 ParseVector3(char *line) {
 }
 
 // I'm not good at file parsing so this'll likely need to be rewritten :/
-CollisionMesh GetCollisionMesh(char const *fileName) {
+CollisionMesh GetCollisionMesh(char const * const fileName) {
 	// start by parsing the file and figuring out how many vertices, normals, and faces we have.
 	char *fileText = LoadFileText(fileName);
 
