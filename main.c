@@ -82,6 +82,7 @@ int main(void) {
 	ModelAnimation *anims = LoadModelAnimations("resources/models/iqm/guyanim.iqm", &animsCount);
 	int animFrameCounter = 0;
 
+	printf("gravity: %f\n", playerAttributes.gravity);
 	DisableCursor();                    // Catch cursor
 	SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
 	int totalObjs = 1;
@@ -246,20 +247,20 @@ Object GetNextPlayerGameState(Input const * const input, Attributes const * cons
 		newVelocity = Vector3Add(toVelocity, gravity);
 	}
 	else {
-		Vector3 const diff = Vector3Subtract(toVelocity, objs[0].velocity);
+		/*Vector3 const diff = Vector3Subtract(toVelocity, objs[0].velocity);
 		Vector3 const acceleration = 
 			Vector3Scale(
 				Vector3Normalize(diff),          // direction between our desired and current velocity.
 				attributes->acceleration * delta
-			);
+			);*/
 
 		// We don't want to go past our target velocity so check if we'll go past by adding acceleration.
-		if (Vector3LengthSqr(diff) > Vector3LengthSqr(acceleration)) {
-			newVelocity = Vector3Add(objs[0].velocity, acceleration); 
-		}
-		else {
+		//if (Vector3LengthSqr(diff) > Vector3LengthSqr(acceleration)) {
+		//	newVelocity = Vector3Add(objs[0].velocity, acceleration); 
+		//}
+		//else {
 			newVelocity = Vector3Add(toVelocity, gravity);
-		}
+		//}
 	}
 	
 	bool collision = false;
@@ -409,17 +410,19 @@ Face ParseFace(char *line) {
 	int i = 0;
 	
 	while (v && i < 3) {
-		printf("%s\n", v);	
+		printf("%s\n", v);
 
 		char *indices = strtok_r(v, "/", &v);
 
-		vertices[i] = strtol(indices, NULL, 10);
+		// -1!!!!!!!! indices start at one in this format. Very annoying bug to track down.
+		vertices[i] = strtol(indices, NULL, 10) - 1;
 
 		indices = strtok_r(NULL, "/", &v);
 		// skip vertex texture coords.
 		indices = strtok_r(NULL, "/", &v);
 
-		normals[i] = strtol(indices, NULL, 10);
+		// -1!!!!!!
+		normals[i] = strtol(indices, NULL, 10) - 1;
 
 		printf("%d %d\n", vertices[i], normals[i]);
 
@@ -438,6 +441,7 @@ Face ParseFace(char *line) {
 }
 
 Vector3 ParseVector3(char *line) {
+	// z up is the obj file format standard.
 	char *yNumber;
 	char *zNumber;
 	float x = strtof(line, &yNumber);
