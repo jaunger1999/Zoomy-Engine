@@ -360,8 +360,9 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 	Vector3 const edge2      = Vector3Subtract(*c, *a);
 	Vector3 const rayCrossE2 = Vector3CrossProduct(ray->direction, edge2);
 	float const det          = Vector3DotProduct(edge1, rayCrossE2);
-	
-	printf("%f\n", det);
+
+	assert(!isnan(det));
+
 	if (det > -EPSILON && det < EPSILON) {
 		return (OptionVector3){ false };
 	}
@@ -370,19 +371,26 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 	float const invDet = 1.0f / det;
 	float const u      = invDet * Vector3DotProduct(s, rayCrossE2);
 	
+	assert(!isnan(invDet));
+	assert(!isnan(u));
+
 	if (u < 0.0f || u > 1.0f) {
 		return (OptionVector3){ false };
 	}
 	
 	Vector3 const sCrossE1 = Vector3CrossProduct(s, edge1);
 	float const v          = invDet * Vector3DotProduct(edge2, sCrossE1);
-	
+
+	assert(!isnan(v));
+
 	if (v < 0.0f || u + v > 1.0f) {
 		return (OptionVector3){ false };
 	}
 	
 	float const t = invDet * Vector3DotProduct(edge2, sCrossE1);
 	
+	assert(!isnan(t));
+
 	if (t > EPSILON) {
 		Vector3 const intersectionPoint = Vector3Add(ray->position, Vector3Scale(ray->direction, t));
 		return (OptionVector3){ true, intersectionPoint };
