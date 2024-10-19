@@ -270,7 +270,8 @@ Object GetNextPlayerGameState(Input const * const input, Attributes const * cons
 		Vector3 const a = mesh->vertices[mesh->faces[i].a];
 		Vector3 const b = mesh->vertices[mesh->faces[i].b];
 		Vector3 const c = mesh->vertices[mesh->faces[i].c];
-		Ray     const r = (Ray){ objs[0].position, toTryVelocity };
+
+		Ray const r = (Ray){ objs[0].position, Vector3Scale(toTryVelocity, 1.5f) };
 		OptionVector3 collisionVector = Intersect(&r, &a, &b, &c); 
 		collision = collisionVector.valid;
 	}
@@ -356,6 +357,8 @@ bool Intersection(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
 	return false;
 }
 
+#define M_EPSILON 0.00000000001f
+
 OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c) {
 	Vector3 const edge1      = Vector3Subtract(*b, *a);
 	Vector3 const edge2      = Vector3Subtract(*c, *a);
@@ -364,7 +367,7 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 
 	assert(!isnan(det));
 
-	if (det > -EPSILON && det < EPSILON) {
+	if (det > -M_EPSILON && det < M_EPSILON) {
 		return (OptionVector3){ false };
 	}
 	
@@ -392,7 +395,7 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 	
 	assert(!isnan(t));
 
-	if (t > EPSILON) {
+	if (t > 0.0f) { /// The online code implementations compare to M_EPSILON but idk why.
 		Vector3 const intersectionPoint = Vector3Add(ray->position, Vector3Scale(ray->direction, t));
 		return (OptionVector3){ true, intersectionPoint };
 	}
