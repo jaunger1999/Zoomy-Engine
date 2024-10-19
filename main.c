@@ -377,7 +377,7 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 	assert(!isnan(invDet));
 	assert(!isnan(u));
 
-	if (u < 0.0f || u > 1.0f) {
+	if (u < 0.0f || u > det) {
 		return (OptionVector3){ false };
 	}
 	
@@ -386,7 +386,7 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 
 	assert(!isnan(v));
 
-	if (v < 0.0f || u + v > 1.0f) {
+	if (v < 0.0f || u + v > det) {
 		return (OptionVector3){ false };
 	}
 	
@@ -394,7 +394,7 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 	
 	assert(!isnan(t));
 
-	if (t > EPSILON) { /// The online code implementations compare to EPSILON but idk why.
+	if (t > EPSILON) { // The online code implementations compare to EPSILON but idk why.
 		Vector3 const intersectionPoint = Vector3Add(ray->position, Vector3Scale(ray->direction, t));
 		return (OptionVector3){ true, intersectionPoint };
 	}
