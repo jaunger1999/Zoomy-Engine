@@ -272,8 +272,8 @@ Object GetNextPlayerGameState(Input const * const input, Attributes const * cons
 		Vector3 const c = mesh->vertices[mesh->faces[i].c];
 
 		Ray const r = (Ray){ objs[0].position, Vector3Normalize(toTryVelocity) };
-		OptionVector3 collisionVector = Intersect(&r, &a, &b, &c); 
-		collision = collisionVector.valid;
+		OptionHit hit = Intersect(&r, &a, &b, &c); 
+		collision = hit.valid && hit.t * hit.t < Vector3LengthSqr(toTryVelocity);
 	}
 
 	Vector3 const newPosition = Vector3Add(objs[0].position, toTryVelocity);
@@ -358,7 +358,7 @@ bool Intersection(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
 	return false;
 }
 
-OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c) {
+OptionHit Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c) {
 	Vector3 const edge1      = Vector3Subtract(*b, *a);
 	Vector3 const edge2      = Vector3Subtract(*c, *a);
 	Vector3 const rayCrossE2 = Vector3CrossProduct(ray->direction, edge2);
@@ -367,7 +367,7 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 	assert(!isnan(det));
 
 	if (det > -EPSILON && det < EPSILON) {
-		return (OptionVector3){ false };
+		return (OptionHit){ false };
 	}
 	
 	Vector3 const s    = Vector3Subtract(ray->position, *a);
@@ -378,7 +378,7 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 	assert(!isnan(u));
 
 	if (u < 0.0f || u > det) {
-		return (OptionVector3){ false };
+		return (OptionHit){ false };
 	}
 	
 	Vector3 const sCrossE1 = Vector3CrossProduct(s, edge1);
@@ -387,7 +387,7 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 	assert(!isnan(v));
 
 	if (v < 0.0f || u + v > det) {
-		return (OptionVector3){ false };
+		return (OptionHit){ false };
 	}
 	
 	float const t = invDet * Vector3DotProduct(edge2, sCrossE1);
@@ -396,11 +396,11 @@ OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 
 
 	if (t > EPSILON) { // The online code implementations compare to EPSILON but idk why.
 		Vector3 const intersectionPoint = Vector3Add(ray->position, Vector3Scale(ray->direction, t));
-		return (OptionVector3){ true, intersectionPoint };
+		return (OptionHit){ true, intersectionPoint, t, u, v };
 	}
 	
 	// This means that there is a line intersection but not a ray intersection.
-	return (OptionVector3){ false };
+	return (OptionHit){ false };
 }
 
 Face ParseFace(char *line) {

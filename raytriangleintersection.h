@@ -28,6 +28,11 @@ struct Hit {
 
 typedef struct Hit Hit;
 
+struct OptionHit {
+	bool valid;
+	Vector3 intersection;
+	float t, u, v;
+} typedef OptionHit;
 
 typedef struct Triangle {
 	Vector3 n;
@@ -61,6 +66,6 @@ typedef struct OptionVector3 {
 } OptionVector3;
 
 
-OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c);
+OptionHit Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c);
 
 CollisionMesh GetCollisionMesh(char const * const fileDir);
