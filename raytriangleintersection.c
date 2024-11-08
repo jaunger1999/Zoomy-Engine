@@ -1,6 +1,14 @@
 #include <xmmintrin.h>
 #include <smmintrin.h>
 #include "raytriangleintersection.h"
+#include <assert.h>
+
+Vector3 VectorComponentAlongPlane(Vector3 * vector, Vector3 * normal) {
+	float dot = Vector3DotProduct(*vector, *normal);
+	Vector3 dotNormal = Vector3Scale(*normal, dot);
+
+	return Vector3Subtract(*vector, dotNormal);
+}
 
 //reformatted
 bool Intersection(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
@@ -39,41 +47,51 @@ bool Intersection(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
 	return false;
 }
 
-OptionVector3 Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c) {
+OptionHit Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c) {
 	Vector3 const edge1      = Vector3Subtract(*b, *a);
 	Vector3 const edge2      = Vector3Subtract(*c, *a);
 	Vector3 const rayCrossE2 = Vector3CrossProduct(ray->direction, edge2);
 	float const det          = Vector3DotProduct(edge1, rayCrossE2);
-	
+
+	assert(!isnan(det));
+
 	if (det > -EPSILON && det < EPSILON) {
-		return (OptionVector3){ false };
+		return (OptionHit){ false };
 	}
 	
 	Vector3 const s    = Vector3Subtract(ray->position, *a);
 	float const invDet = 1.0f / det;
 	float const u      = invDet * Vector3DotProduct(s, rayCrossE2);
 	
-	if (u < 0.0f || u > 1.0f) {
-		return (OptionVector3){ false };
+	assert(!isnan(invDet));
+	assert(!isnan(u));
+
+	if (u < 0.0f || u > det) {
+		return (OptionHit){ false };
 	}
 	
 	Vector3 const sCrossE1 = Vector3CrossProduct(s, edge1);
 	float const v          = invDet * Vector3DotProduct(edge2, sCrossE1);
-	
-	if (v < 0.0f || u + v > 1.0f) {
-		return (OptionVector3){ false };
+
+	assert(!isnan(v));
+
+	if (v < 0.0f || u + v > det) {
+		return (OptionHit){ false };
 	}
 	
 	float const t = invDet * Vector3DotProduct(edge2, sCrossE1);
 	
-	if (t > EPSILON) {
+	assert(!isnan(t));
+
+	if (t > EPSILON) { // The online code implementations compare to EPSILON but idk why.
 		Vector3 const intersectionPoint = Vector3Add(ray->position, Vector3Scale(ray->direction, t));
-		return (OptionVector3){ true, intersectionPoint };
+		return (OptionHit){ true, intersectionPoint, t, u, v };
 	}
 	
 	// This means that there is a line intersection but not a ray intersection.
-	return (OptionVector3){ false };
+	return (OptionHit){ false };
 }
+
 
 /*float const int_coef_arr[4] = { -1, -1, -1, 1 };
 __m128 const int_coef = _mm_load_ps(helper);
