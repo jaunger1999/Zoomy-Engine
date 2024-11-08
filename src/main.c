@@ -25,6 +25,10 @@
 #define RAYLIB
 #define VECTOR3
 
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+
 #include "raylib.h"
 #include "raymath.h"
 #endif
@@ -71,17 +75,17 @@ int main(void) {
 
 	InitWindow(screenWidth, screenHeight, "raylib [models] example - model animation");
 	
-	Model level = LoadModel("resources/models/obj/slope.obj");
-	CollisionMesh cMesh = GetCollisionMesh("resources/models/obj/slope.obj");
+	Model level = LoadModel("../resources/models/obj/slope.obj");
+	CollisionMesh cMesh = GetCollisionMesh("../resources/models/obj/slope.obj");
 	printf("%f\n", cMesh.vertices[0].x);
 	printf("%d %d\n", cMesh.faces[0].a, cMesh.faces[0].nA);
-	Model model = LoadModel("resources/models/iqm/guy.iqm");                    // Load the animated model mesh and basic data
-	Texture2D texture = LoadTexture("resources/models/iqm/guytex.png");         // Load model texture and set material
+	Model model = LoadModel("../resources/models/iqm/guy.iqm");                    // Load the animated model mesh and basic data
+	Texture2D texture = LoadTexture("../resources/models/iqm/guytex.png");         // Load model texture and set material
 	SetMaterialTexture(&model.materials[0], MATERIAL_MAP_DIFFUSE, texture);     // Set model material map texture
 	
 	// Load animation data
 	int animsCount = 0;
-	ModelAnimation *anims = LoadModelAnimations("resources/models/iqm/guyanim.iqm", &animsCount);
+	ModelAnimation *anims = LoadModelAnimations("../resources/models/iqm/guyanim.iqm", &animsCount);
 	int animFrameCounter = 0;
 
 	printf("gravity: %f\n", playerAttributes.gravity);

@@ -7,8 +7,8 @@
 #include <assert.h>
 #include <string.h>
 
-void printValid(OptionVector3 const * const v) {
-	if (v->valid) {
+void printValid(OptionHit const * const h) {
+	if (h->valid) {
 		printf("Success!\n");
 	}
 	else {
@@ -24,13 +24,13 @@ int main(void) {
 	Vector3 c = {  0.0f, 0.0f, -0.5f };
 
 	printf("\nTest if an angled ray intersects with our triangle\n");
-	OptionVector3 v = Intersect(&ray, &a, &b, &c);
+	OptionHit h = Intersect(&ray, &a, &b, &c);
 	
-	printValid(&v);	
+	printValid(&h);	
 
 	printf("\nTest if a ray intersects with the exact edge of a triangle\n");
-	OptionVector3 v2 = Intersect(&ray2, &a, &b, &c);
+	OptionHit h2 = Intersect(&ray2, &a, &b, &c);
 
-	printValid(&v2);
+	printValid(&h2);
 	return 0;
 }
