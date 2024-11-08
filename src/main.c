@@ -280,6 +280,10 @@ Object GetNextPlayerGameState(Input const * const input, Attributes const * cons
 		Ray const r = (Ray){ objs[0].position, Vector3Normalize(toTryVelocity) };
 		OptionHit hit = Intersect(&r, &a, &b, &c); 
 		collision = hit.valid && hit.t * hit.t < Vector3LengthSqr(toTryVelocity);
+
+		if (collision) {
+			Vector3 planeVector = VectorComponentAlongPlane(&toTryVelocity, &mesh->normals[i]);
+		}
 	}
 
 	Vector3 const newPosition = Vector3Add(objs[0].position, toTryVelocity);
