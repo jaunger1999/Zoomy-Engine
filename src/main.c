@@ -282,7 +282,9 @@ Object GetNextPlayerGameState(Input const * const input, Attributes const * cons
 		collision = hit.valid && hit.t * hit.t < Vector3LengthSqr(toTryVelocity);
 
 		if (collision) {
-			Vector3 planeVector = VectorComponentAlongPlane(&toTryVelocity, &mesh->normals[i]);
+			Vector3 planeVector = VectorComponentAlongPlane(&toTryVelocity, &mesh->surfaceNormals[i]);
+			printf("%f %f %f\n\n", planeVector.x, planeVector.y, planeVector.z);
+			printf("%f %f %f\n\n", mesh->surfaceNormals[i].x, mesh->surfaceNormals[i].y, mesh->surfaceNormals[i].z);
 		}
 	}
 

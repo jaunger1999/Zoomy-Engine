@@ -50,14 +50,16 @@ typedef struct Face {
 	int nA;
 	int nB;
 	int nC;
-
 } Face;
 
 typedef struct CollisionMesh {
-	int faceCount;
 	Vector3 *vertices;
-	Vector3 *normals;
+	Vector3 *vertexNormals;
+	Vector3 *surfaceNormals;
+
 	Face *faces;
+
+	int faceCount;
 } CollisionMesh;
 
 typedef struct OptionVector3 {

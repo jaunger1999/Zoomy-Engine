@@ -111,7 +111,7 @@ CollisionMesh GetCollisionMesh(char const * const fileName) {
 
 	// now we can allocate our arrays, because we know how big they need to be.
 	Vector3 *vertices = malloc(sizeof(Vector3) * totalVertices);
-	Vector3 *normals = malloc(sizeof(Vector3) * totalNormals);
+	Vector3 *vertexNormals = malloc(sizeof(Vector3) * totalNormals);
 	Face *faces = malloc(sizeof(Face) * totalFaces);
 	unsigned int vI = 0;
 	unsigned int nI = 0;
@@ -137,7 +137,7 @@ CollisionMesh GetCollisionMesh(char const * const fileName) {
 			if (currLine[1] == 'n') {
 				printf("Normal Vector\n");
 				Vector3 normal = ParseVector3(&currLine[2]);
-				normals[nI] = normal;
+				vertexNormals[nI] = normal;
 				nI++;
 			}
 			else if (currLine[1] != 't') {
@@ -156,11 +156,31 @@ CollisionMesh GetCollisionMesh(char const * const fileName) {
 		currLine = strtok_r(NULL, "\n", &fileText);
 	}
 
+	// Calculate our surface normals because obj files only contain vertex normals.
+	Vector3 *surfaceNormals = malloc(sizeof(Vector3) * totalFaces); 
+
+	for (int i = 0; i < totalFaces; i++) {
+		int aI = faces[i].a;
+		int bI = faces[i].b;
+		int cI = faces[i].c;
+
+		Vector3 a = vertices[aI];
+		Vector3 b = vertices[bI];
+		Vector3 c = vertices[cI];
+
+		Vector3 edge1 = Vector3Subtract(b, a);
+		Vector3 edge2 = Vector3Subtract(c, b);
+
+		surfaceNormals[i] = Vector3Normalize(Vector3CrossProduct(edge1, edge2));
+	}
+
 	CollisionMesh mesh = {
-		totalFaces,
 		vertices,
-		normals,
-		faces
+		vertexNormals,
+		surfaceNormals,
+
+		faces,
+		totalFaces
 	};
 	
 	return mesh;
