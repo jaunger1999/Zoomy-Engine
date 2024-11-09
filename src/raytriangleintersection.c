@@ -66,7 +66,7 @@ OptionHit Intersect(Ray const * const ray, Vector3 const * const a, Vector3 cons
 	assert(!isnan(invDet));
 	assert(!isnan(u));
 
-	if (u < 0.0f || u > det) {
+	if (u < 0.0f || u > 1) {
 		return (OptionHit){ false };
 	}
 	
@@ -75,7 +75,7 @@ OptionHit Intersect(Ray const * const ray, Vector3 const * const a, Vector3 cons
 
 	assert(!isnan(v));
 
-	if (v < 0.0f || u + v > det) {
+	if (v < 0.0f || u + v > 1) {
 		return (OptionHit){ false };
 	}
 	

@@ -282,34 +282,24 @@ Object GetNextPlayerGameState(Input const * const input, Attributes const * cons
 		collision = hit.valid && hit.t * hit.t < Vector3LengthSqr(toTryVelocity);
 
 		if (collision) {
-			Vector3 planeVector = VectorComponentAlongPlane(&toTryVelocity, &mesh->surfaceNormals[i]);
-			printf("%f %f %f\n\n", planeVector.x, planeVector.y, planeVector.z);
-			printf("%f %f %f\n\n", mesh->surfaceNormals[i].x, mesh->surfaceNormals[i].y, mesh->surfaceNormals[i].z);
+			Vector3 planeVector = VectorComponentAlongPlane(&newVelocity, &mesh->surfaceNormals[i]);
+			printf("Plane Vector: %f %f %f\n\n", planeVector.x, planeVector.y, planeVector.z);
+			printf("Surface Normal: %f %f %f\n\n", mesh->surfaceNormals[i].x, mesh->surfaceNormals[i].y, mesh->surfaceNormals[i].z);
+			newVelocity = planeVector;
+			toTryVelocity = Vector3Scale(newVelocity, delta);
 		}
 	}
 
 	Vector3 const newPosition = Vector3Add(objs[0].position, toTryVelocity);
 
-	if (collision) {
-		Object const object = {
-			objs[0].type,
-			objs[0].position,
-			objs[0].velocity,
-			objs[0].acceleration
-		};
-	    
-		return object;
-	}
-	else {
-		Object const object = {
-			objs[0].type,
-			newPosition,
-			newVelocity,
-			objs[0].acceleration
-		};
-	    
-		return object;
-	}
+	Object const object = {
+		objs[0].type,
+		newPosition,
+		newVelocity,
+		objs[0].acceleration
+	};
+    
+	return object;
 }
 
 OptionVector3 WrapOptionVector3(Vector3 const vector) {
