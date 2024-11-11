@@ -1,6 +1,6 @@
 #include <xmmintrin.h>
 #include <smmintrin.h>
-#include "raytriangleintersection.h"
+#include "m_raytriangleintersection.h"
 #include <assert.h>
 
 Vector3 VectorComponentAlongPlane(Vector3 * vector, Vector3 * normal) {
@@ -11,7 +11,7 @@ Vector3 VectorComponentAlongPlane(Vector3 * vector, Vector3 * normal) {
 }
 
 //reformatted
-bool Intersection(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
+/*bool Intersection(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
 	__m128 const int_coef = _mm_set_ps(-1, -1, -1, 1); //This can be a parameter: it's a constant.
 	__m128 const o        = _mm_load_ps(&r.ox);
 	__m128 const d        = _mm_load_ps(&r.dx);
@@ -45,7 +45,7 @@ bool Intersection(CollisionRay const r, PrecomputedTriangle const p, Hit h) {
 	}
 
 	return false;
-}
+}*/
 
 OptionHit Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c) {
 	Vector3 const edge1      = Vector3Subtract(*b, *a);

@@ -6,7 +6,7 @@
 #include "raymath.h"
 #endif
 
-struct CollisionRay {
+/*struct CollisionRay {
 	float ox, oy, oz, ow;
 	float dx, dy, dz, dw;
 } __declspec(aligned(16));
@@ -26,7 +26,7 @@ struct Hit {
 	float t, u, v;
 } __declspec(aligned(16));
 
-typedef struct Hit Hit;
+typedef struct Hit Hit;*/
 
 struct OptionHit {
 	bool valid;

@@ -8,7 +8,7 @@
 
 #ifndef COLLISION 
 #define COLLISION
-#include "raytriangleintersection.h"
+#include "m_raytriangleintersection.h"
 #endif
 
 #ifndef GAMESTATE
@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "strtok_r.h"
 
 Face ParseFace(char *line) {
 	printf("Parsing Face\n");

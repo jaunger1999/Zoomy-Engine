@@ -19,15 +19,18 @@
 *
 ********************************************************************************************/
 
-#define STICK_SMASH_THRESHOLD 0.7f
 
-#ifndef RAYLIB
-#define RAYLIB
-#define VECTOR3
+#define PIOVER2 1.57079632679489661923f
+
+#define STICK_SMASH_THRESHOLD 0.7f
 
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
+
+#ifndef RAYLIB
+#define RAYLIB
+#define VECTOR3
 
 #include "raylib.h"
 #include "raymath.h"
@@ -35,8 +38,11 @@
 
 #ifndef COLLISION 
 #define COLLISION
-#include "raytriangleintersection.h"
+#include "m_raytriangleintersection.h"
 #endif
+
+#include "m_vector.h"
+#include "xoshiro256plusplus.h"
 
 #ifndef GAMESTATE
 #define GAMESTATE
@@ -47,6 +53,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <assert.h>
 #include <string.h>
 
@@ -57,6 +64,9 @@
 Vector3 position = { 0.0f, 0.0f, 0.0f };            // Set model position
 
 int main(void) {
+	time_t sec;
+	time(&sec);
+
 	Attributes playerAttributes = GetAttributes(
 			1.0f,  // jump height
 			0.5f,  // time to apex
@@ -119,6 +129,13 @@ int main(void) {
 	Vector2 oldMovement = { 0 };
 	Vector2 oldCameraMovement = { 0 };
 
+	// Allow for arbitrary gravity vectors.
+	Vector3 g = (Vector3) { 0, -1, 0 };
+	Quaternion q = QuaternionFromGravityVector(&g);
+	Vector3 xAxis = Vector3RotateByQuaternion((Vector3) { 1, 0, 0 }, q);
+	Vector3 yAxis = Vector3RotateByQuaternion((Vector3) { 0, 1, 0 }, q);
+	printf("%f %f %f", xAxis.x, xAxis.y, xAxis.z);
+
 	// Main game loop
 	while (!WindowShouldClose()) { // Detect window close button or ESC key
 		// Update
@@ -126,7 +143,7 @@ int main(void) {
 
 		Vector2 const pPos = { objs[0].position.x, objs[0].position.z };
 		Vector2 const cPos = { oldCameraState.camera.position.x, oldCameraState.camera.position.z };
-		float const angle = Vector2LineAngle(pPos, cPos)  + PI / 2;
+		float const angle = Vector2LineAngle(pPos, cPos)  + PIOVER2;
         	Input const input = GetInputState(&inputMap, &oldMovement, &oldCameraMovement, angle); // Player movement input is relative to this angle. 
 
 		Object const playerState = GetNextPlayerGameState(&input, &attributes[objs[0].type], &cMesh, objs, totalObjs, delta);
@@ -247,7 +264,7 @@ CameraState GetNextCameraState(CameraState const * const cameraState, Object con
 Object GetNextPlayerGameState(Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, Object const objs[], int const totalObjs, float const delta) {
 	Vector3 newVelocity;
 	Vector3 const gravity = (Vector3){ 0, -attributes->gravity * delta, 0 };
-	Vector3 const toVelocity = (Vector3){ attributes->speed * input->movement.x, objs[0].velocity.y, attributes->speed * input->movement.y };
+	Vector3 const toVelocity = (Vector3){ attributes->speed * input->movement.x, 0, attributes->speed * input->movement.y };
 
 	if (1 - Vector2LengthSqr(input->movement) < EPSILON && Vector2LengthSqr(input->oldMovement) < STICK_SMASH_THRESHOLD && abs(Vector3LengthSqr(objs[0].velocity)) < EPSILON) {
 		newVelocity = Vector3Add(toVelocity, gravity);
@@ -269,10 +286,16 @@ Object GetNextPlayerGameState(Input const * const input, Attributes const * cons
 		//}
 	}
 	
+	newVelocity = Vector3Add(newVelocity, objs[0].velocity);
+
 	bool collision = false;
 	Vector3 toTryVelocity = Vector3Scale(newVelocity, delta);
 
 	for (int i = 0; i < mesh->faceCount && !collision; i++) {
+		// check if we're hitting the outside of a surface
+		if (Vector3Angle(toTryVelocity, mesh->surfaceNormals[i]) < PIOVER2) {
+			continue;
+		}
 		Vector3 const a = mesh->vertices[mesh->faces[i].a];
 		Vector3 const b = mesh->vertices[mesh->faces[i].b];
 		Vector3 const c = mesh->vertices[mesh->faces[i].c];
@@ -283,8 +306,8 @@ Object GetNextPlayerGameState(Input const * const input, Attributes const * cons
 
 		if (collision) {
 			Vector3 planeVector = VectorComponentAlongPlane(&newVelocity, &mesh->surfaceNormals[i]);
-			printf("Plane Vector: %f %f %f\n\n", planeVector.x, planeVector.y, planeVector.z);
-			printf("Surface Normal: %f %f %f\n\n", mesh->surfaceNormals[i].x, mesh->surfaceNormals[i].y, mesh->surfaceNormals[i].z);
+			//printf("Plane Vector: %f %f %f\n\n", planeVector.x, planeVector.y, planeVector.z);
+			//printf("Surface Normal: %f %f %f\n\n", mesh->surfaceNormals[i].x, mesh->surfaceNormals[i].y, mesh->surfaceNormals[i].z);
 			newVelocity = planeVector;
 			toTryVelocity = Vector3Scale(newVelocity, delta);
 		}
