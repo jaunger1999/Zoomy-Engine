@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-#include "strtok_r.h"
+#include "strtok_r.h" // windows lets us use this function even with c99. needs to be here for linux.
 
 Face ParseFace(char *line) {
 	printf("Parsing Face\n");
