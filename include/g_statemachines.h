@@ -5,6 +5,7 @@ typedef struct StateMachine {
 
 	int state;
 	TickerFunction* ticker;
+	Attributes* attributes;
 } StateMachine;
 
 void Tick(StateMachine* fsm, float delta);
