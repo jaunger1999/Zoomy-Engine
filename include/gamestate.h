@@ -10,13 +10,13 @@
 #include "raytriangleintersection.h"
 #endif
 
-typedef enum {
+typedef enum ObjectType {
 	PLAYER = 0
 } ObjectType;
 
 typedef enum {
 	FOLLOW = 0,
-	LOCK = 1,
+	LOCK   = 1,
 	BEHIND = 2,
 	TRIPOD = 3
 } CameraBehaviour;
@@ -58,6 +58,10 @@ typedef struct Object {
 	Vector3 acceleration;
 } Object;
 
+typedef struct ObjectState {
+	
+} ObjectState;
+
 typedef struct Attributes {
 	float speed;
 	float acceleration;
@@ -78,7 +82,6 @@ typedef struct CameraState {
 	bool incrementedRotations;
 	Camera camera;
 } CameraState;
-
 
 Attributes GetAttributes(float const jumpHeight, float const timeToApex, float const movementSpeed, float const acceleration, float const terminalVelocity, float const neutralJumpDistance);
 

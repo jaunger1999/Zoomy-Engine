@@ -42,7 +42,9 @@
 #endif
 
 #include "m_vector.h"
-#include "xoshiro256plusplus.h"
+
+#include "g_events.h"
+#include "g_health.h"
 
 #ifndef GAMESTATE
 #define GAMESTATE
@@ -51,6 +53,8 @@
 
 #include "f_objparser.h"
 
+//#include <SDL3/SDL.h>
+//#include <SDL3/SDL_main.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -64,6 +68,27 @@
 Vector3 position = { 0.0f, 0.0f, 0.0f };            // Set model position
 
 int main(void) {
+	/*int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+
+	if (result < 0) {
+		SDL_Log("SDL_Init error: %s", SDL_GetError());
+		return -1;
+	}
+
+	SDL_Window *window = SDL_CreateWindow("Best Game Ever", 640, 480, SDL_WINDOW_OPENGL);
+	
+	if (window == NULL) {
+		SDL_Log("SDL_CreateWindow error: %s", SDL_GetError());
+		return -1;
+	}*/
+	/*
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, "Renderer");
+
+	if (renderer == NULL) {
+		SDL_Log("SDL_CreateRenderer error: %s", SDL_GetError());
+		return -1;
+	}*/	
+
 	time_t sec;
 	time(&sec);
 
@@ -85,8 +110,8 @@ int main(void) {
 
 	InitWindow(screenWidth, screenHeight, "raylib [models] example - model animation");
 	
-	Model level = LoadModel("../resources/models/obj/slope.obj");
-	CollisionMesh cMesh = GetCollisionMesh("../resources/models/obj/slope.obj");
+	Model level = LoadModel("../resources/models/obj/myplane.obj");
+	CollisionMesh cMesh = GetCollisionMesh("../resources/models/obj/myplane.obj");
 	printf("%f\n", cMesh.vertices[0].x);
 	printf("%d %d\n", cMesh.faces[0].a, cMesh.faces[0].nA);
 	Model model = LoadModel("../resources/models/iqm/guy.iqm");                    // Load the animated model mesh and basic data
@@ -186,7 +211,12 @@ int main(void) {
     UnloadModel(model);                         // Unload model
     CloseWindow();                              // Close window and OpenGL context
 
-    return 0;
+	// Close and destroy the window
+	//SDL_DestroyWindow(window);
+
+	// Clean up
+	//SDL_Quit();
+	return 0;
 }
 
 Input GetInputState(InputMap const * const inputMap, Vector2 const * const oldMovement, Vector2 const * const oldCameraMovement, float const cameraYaw) {
