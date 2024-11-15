@@ -68,12 +68,18 @@
 #include <smmintrin.h>
 
 // Program main entry point
-Vector3 position = { 0.0f, 0.0f, 0.0f };            // Set model position
+Vector3 position = { 0.0f, 0.0f, 0.0f }; // Set model position
+
+void PhysProp_GetNextPlayerState(char const * const args, unsigned int const id, void* ppOut);
 
 int main(void) {
-	//E_Init();
+	E_Init();
 	int totalObjs = 0;
-	//E_AddObj(totalObjs++);
+
+	E_AddObj(totalObjs);
+
+	totalObjs++;
+
 	/*int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
 	if (result < 0) {
@@ -132,8 +138,8 @@ int main(void) {
 	printf("gravity: %f\n", playerAttributes.gravity);
 	DisableCursor();                    // Catch cursor
 	SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
-	//Object obj = (Object){ PLAYER, (Vector3){6.5f,7,0},(Vector3){0,0,0},(Vector3){0,0,0}};
-	//Object objs[] = { obj, obj };
+	PhysicalProperties obj = (PhysicalProperties){ (Vector3){6.5f,7,0},(Vector3){0,0,0},(Vector3){0,0,0}};
+
 	InputMap const inputMap = {
 		GAMEPAD_BUTTON_RIGHT_FACE_DOWN,  // jump
 		GAMEPAD_BUTTON_LEFT_TRIGGER_1,   // crouch
@@ -163,32 +169,40 @@ int main(void) {
 	Vector3 g = (Vector3) { 0, -1, 0 };
 	Quaternion q = QuaternionFromGravityVector(&g);
 	Vector3 xAxis = Vector3RotateByQuaternion((Vector3) { 1, 0, 0 }, q);
-	//Vector3 yAxis = Vector3RotateByQuaternion((Vector3) { 0, 1, 0 }, q);
-	printf("%f %f %f", xAxis.x, xAxis.y, xAxis.z);
+	Vector3 yAxis = Vector3RotateByQuaternion((Vector3) { 0, 1, 0 }, q);
+	printf("%f %f %f\n", xAxis.x, xAxis.y, xAxis.z);
+	printf("%f %f %f\n", yAxis.x, yAxis.y, yAxis.z);
 
 	// Main game loop
 	while (!WindowShouldClose()) { // Detect window close button or ESC key
 		// Update
 		float delta = GetFrameTime();
 
-		//Vector2 const pPos = { objs[0].position.x, objs[0].position.z };
-		//Vector2 const cPos = { oldCameraState.camera.position.x, oldCameraState.camera.position.z };
-		//float const angle = Vector2LineAngle(pPos, cPos)  + PI_OVER_2;
-        	//Input const input = GetInputState(&inputMap, &oldMovement, &oldCameraMovement, angle); // Player movement input is relative to this angle. 
+		Vector2 const pPos = { obj.position.x, obj.position.z };
+		Vector2 const cPos = { oldCameraState.camera.position.x, oldCameraState.camera.position.z };
+		float const angle = Vector2LineAngle(pPos, cPos)  + PI_OVER_2;
+        	Input const input = GetInputState(&inputMap, &oldMovement, &oldCameraMovement, angle); // Player movement input is relative to this angle.
+
+		E_Register(PhysProp_GetNextPlayerState, PLAYER_MOVE, 0, 5, &input, &playerAttributes, &cMesh, &obj, delta);
 
 		for (int id = 0; id < totalObjs; id++) {
-			//Event* e = E_GetNext(id);
-			//while (e) {
-				//e = E_GetNext(id);
-				//EventReturn ret = e->function(e->args, id);
-			//}
+			Event* e = E_GetNext(id);
+			while (e) {
+				e = E_GetNext(id);
+
+				void* out;
+				e->function(e->args, id, &out);
+
+				// this is hardcoded and assumes theres only one event type PLAYER_MOVE
+				obj = *(PhysicalProperties*)out;
+			}
 		}
 
 		//Object const playerState = GetNextPlayerGameState(&input, &attributes[objs[0].type], &cMesh, objs, totalObjs, delta);
 		//objs[0] = playerState;
 		
-		//CameraState const newCameraState = GetNextCameraState(&oldCameraState, &playerState, &input, delta);
-		//Camera const newCamera = newCameraState.camera;
+		CameraState const newCameraState = GetNextCameraState(&oldCameraState, &obj, &input, delta);
+		Camera const newCamera = newCameraState.camera;
 
         	// Draw
 		BeginDrawing();
@@ -198,7 +212,7 @@ int main(void) {
 			BeginMode3D(newCamera);
 				DrawModel(level, position, 1.0f, WHITE);
 
-				//DrawModelEx(model, playerState.position, (Vector3){ 1.0f, 0.0f, 0.0f }, -90.0f, (Vector3){ 1.0f, 1.0f, 1.0f }, WHITE);
+				DrawModelEx(model, obj.position, (Vector3){ 1.0f, 0.0f, 0.0f }, -90.0f, (Vector3){ 1.0f, 1.0f, 1.0f }, WHITE);
 
 				for (int i = 0; i < model.boneCount; i++) {
 					DrawCube(anims[0].framePoses[animFrameCounter][i].translation, 0.2f, 0.2f, 0.2f, RED);
@@ -213,9 +227,9 @@ int main(void) {
 		EndDrawing();
 		
 		// Give the next iteration of the loop access to the previous frame' state.
-		//oldCameraState = newCameraState;
-		//oldMovement = input.movement;
-		//oldCameraMovement = input.cameraMovement;
+		oldCameraState = newCameraState;
+		oldMovement = input.movement;
+		oldCameraMovement = input.cameraMovement;
 	}
 
     // De-Initialization
@@ -287,8 +301,8 @@ CameraState GetNextCameraState(CameraState const * const cameraState, PhysicalPr
 	Vector3 const newPosition         = Vector3Add(newRelativePosition, playerState->position);
 
 	Camera const newCamera = {
-		newPosition, // Camera position
-		playerState->position,             // Camera looking at point
+		newPosition,                      // Camera position
+		playerState->position,            // Camera looking at point
 		(Vector3){  0.0f,  1.0f,  0.0f }, // Camera up vector (rotation towards target)
 		90.0f,                            // Camera field-of-view Y
 		CAMERA_PERSPECTIVE                // Camera mode type
@@ -304,16 +318,31 @@ CameraState GetNextCameraState(CameraState const * const cameraState, PhysicalPr
 	return nextCameraState;
 }
 
-PhysicalProperties GetNextPlayerGameState(Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, PhysicalProperties const objs[], int const totalObjs, float const delta) {
+// args == Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, PhysicalProperties const * const currState, float const delta
+void PhysProp_GetNextPlayerState(char const * const args, unsigned int const id, void* ppOut) {
+	// Our parameters for this function.
+	Input*              input      = NULL;
+	Attributes*         attributes = NULL;
+	CollisionMesh*      mesh       = NULL;
+	PhysicalProperties* currState  = NULL;
+	float               delta      = 0.0f;
+
+	// Set our parameters stored in args.
+	memcpy(&input,      args,  sizeof(input));
+	memcpy(&attributes, args + sizeof(input),  sizeof(attributes));
+	memcpy(&mesh,       args + sizeof(input) + sizeof(attributes),  sizeof(mesh));
+	memcpy(&currState,  args + sizeof(input) + sizeof(attributes) + sizeof(mesh),  sizeof(mesh));
+	memcpy(&delta,      args + sizeof(input) + sizeof(attributes) + sizeof(mesh) + sizeof(mesh), sizeof(delta));
+
 	Vector3 newVelocity;
 	Vector3 const gravity = (Vector3){ 0, -attributes->gravity * delta, 0 };
 	Vector3 const toVelocity = (Vector3){ attributes->speed * input->movement.x, 0, attributes->speed * input->movement.y };
 
-	if (1 - Vector2LengthSqr(input->movement) < EPSILON && Vector2LengthSqr(input->oldMovement) < STICK_SMASH_THRESHOLD && abs(Vector3LengthSqr(objs[0].velocity)) < EPSILON) {
+	if (1 - Vector2LengthSqr(input->movement) < EPSILON && Vector2LengthSqr(input->oldMovement) < STICK_SMASH_THRESHOLD && abs(Vector3LengthSqr(currState->velocity)) < EPSILON) {
 		newVelocity = Vector3Add(toVelocity, gravity);
 	}
 	else {
-		/*Vector3 const diff = Vector3Subtract(toVelocity, objs[0].velocity);
+		/*Vector3 const diff = Vector3Subtract(toVelocity, currState->velocity);
 		Vector3 const acceleration = 
 			Vector3Scale(
 				Vector3Normalize(diff),          // direction between our desired and current velocity.
@@ -322,14 +351,14 @@ PhysicalProperties GetNextPlayerGameState(Input const * const input, Attributes 
 
 		// We don't want to go past our target velocity so check if we'll go past by adding acceleration.
 		//if (Vector3LengthSqr(diff) > Vector3LengthSqr(acceleration)) {
-		//	newVelocity = Vector3Add(objs[0].velocity, acceleration); 
+		//	newVelocity = Vector3Add(currState->velocity, acceleration); 
 		//}
 		//else {
 			newVelocity = Vector3Add(toVelocity, gravity);
 		//}
 	}
 	
-	newVelocity = Vector3Add(newVelocity, objs[0].velocity);
+	newVelocity = Vector3Add(newVelocity, currState->velocity);
 
 	bool collision = false;
 	Vector3 toTryVelocity = Vector3Scale(newVelocity, delta);
@@ -339,11 +368,12 @@ PhysicalProperties GetNextPlayerGameState(Input const * const input, Attributes 
 		if (Vector3Angle(toTryVelocity, mesh->surfaceNormals[i]) < PI_OVER_2) {
 			continue;
 		}
+
 		Vector3 const a = mesh->vertices[mesh->faces[i].a];
 		Vector3 const b = mesh->vertices[mesh->faces[i].b];
 		Vector3 const c = mesh->vertices[mesh->faces[i].c];
 
-		Ray const r = (Ray){ objs[0].position, Vector3Normalize(toTryVelocity) };
+		Ray const r = (Ray){ currState->position, Vector3Normalize(toTryVelocity) };
 		OptionHit hit = Intersect(&r, &a, &b, &c); 
 		collision = hit.valid && hit.t * hit.t < Vector3LengthSqr(toTryVelocity);
 
@@ -356,15 +386,15 @@ PhysicalProperties GetNextPlayerGameState(Input const * const input, Attributes 
 		}
 	}
 
-	Vector3 const newPosition = Vector3Add(objs[0].position, toTryVelocity);
+	Vector3 const newPosition = Vector3Add(currState->position, toTryVelocity);
 
-	PhysicalProperties const object = {
+	PhysicalProperties const newState = {
 		newPosition,
 		newVelocity,
-		objs[0].acceleration
+		currState->acceleration
 	};
     
-	return object;
+	*(PhysicalProperties*)ppOut = newState;
 }
 
 OptionVector3 WrapOptionVector3(Vector3 const vector) {

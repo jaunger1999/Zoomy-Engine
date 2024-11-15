@@ -1,4 +1,13 @@
+#include "g_attributes.h"
+#include "g_physics.h"
 #include "g_events.h"
+#include "g_health.h"
+#include "g_statemachines.h"
+
+#include "m_raytriangleintersection.h"
+
+#include "gamestate.h"
+
 #include "d_queue.h"
 #include "d_dict.h"
 
@@ -10,7 +19,8 @@
 #include <string.h>
 
 #include <stdio.h>
-typedef char* (*EventParameters)(unsigned int const n, va_list* args); 
+
+typedef char* (*EventParameters)(unsigned int const n, va_list args); 
 
 Dict* eventQs;
 
@@ -47,7 +57,7 @@ void E_Register(EventFunction function, EventType type, unsigned int const id, u
 	va_start(ptr, n);
 
 	EventParameters parameterFunction = GetParameterFunction(type);
-	char* args = parameterFunction(n, &ptr);
+	char* args = parameterFunction(n, ptr);
 	
 	va_end(ptr);
 
@@ -61,7 +71,8 @@ void E_Register(EventFunction function, EventType type, unsigned int const id, u
 	Enqueue(q, event);
 }
 
-char* TestParameters(unsigned int const n, va_list* args);
+char* TestParameters      (unsigned int const n, va_list args);
+char* PlayerMoveParameters(unsigned int const n, va_list args);
 
 EventParameters GetParameterFunction(EventType type) {
 	switch (type) {
@@ -69,16 +80,36 @@ EventParameters GetParameterFunction(EventType type) {
 			return TestParameters;
 		case DAMAGE:
 			return NULL;
+		case PLAYER_MOVE:
+			return PlayerMoveParameters;
 	}
 
 	return NULL;
 }
 
-char* TestParameters(unsigned int const n, va_list* args) {
+char* PlayerMoveParameters(unsigned int const n, va_list args) {
+	char* packedArgs = malloc(sizeof(Input*) + sizeof(Attributes*) + sizeof(CollisionMesh*) + sizeof(PhysicalProperties*) + sizeof(float));
+
+	Input*              i     = va_arg(args, Input*);
+	Attributes*         a     = va_arg(args, Attributes*);
+	CollisionMesh*      m     = va_arg(args, CollisionMesh*);
+	PhysicalProperties* p     = va_arg(args, PhysicalProperties*);
+	float               delta = va_arg(args, double);
+
+	memcpy(packedArgs,                                                 &i,     sizeof(i));
+	memcpy(packedArgs + sizeof(i),                                     &a,     sizeof(a));
+	memcpy(packedArgs + sizeof(i) + sizeof(a),                         &m,     sizeof(m));
+	memcpy(packedArgs + sizeof(i) + sizeof(a) + sizeof(m),             &m,     sizeof(p));
+	memcpy(packedArgs + sizeof(i) + sizeof(a) + sizeof(m) + sizeof(p), &delta, sizeof(delta));
+
+	return packedArgs;
+}
+
+char* TestParameters(unsigned int const n, va_list args) {
 	char* packedArgs = calloc(sizeof(int) + sizeof(Vector3), sizeof(char));
 	
-	int     a = va_arg(*args, int);
-	Vector3 b = va_arg(*args, Vector3);
+	int     a = va_arg(args, int);
+	Vector3 b = va_arg(args, Vector3);
 
 	memcpy(packedArgs,             &a, sizeof(a));
 	memcpy(packedArgs + sizeof(a), &b, sizeof(b));

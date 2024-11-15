@@ -9,7 +9,7 @@
 int a = 1234;
 Vector3 b = { 0.1f, 0.2f, 0.3f };
 
-EventReturn Test(char* args, unsigned int id) {
+void Test(char const * args, unsigned int id, void* out) {
 	// These are the values that our char array are going to extract to.
 	int i = 0;
 	Vector3 j = (Vector3) { };
@@ -19,8 +19,6 @@ EventReturn Test(char* args, unsigned int id) {
 
 	printf("Our first value should be %i: %i\n", a, i);
 	printf("Our Vector3 should be (%f, %f, %f): (%f, %f, %f)\n", b.x, b.y, b.z, j.x, j.y, j.z);
-
-	return (EventReturn) { };
 }
 
 int main(void) {
@@ -54,7 +52,8 @@ int main(void) {
 		printf("Why doesn't this event have arguments???\n");
 	}
 
-	e->function(e->args, id1);
+	void* out = NULL;
+	e->function(e->args, id1, out);
 
 
 	printf("End of processing\n");
