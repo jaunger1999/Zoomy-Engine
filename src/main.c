@@ -20,7 +20,7 @@
 ********************************************************************************************/
 
 
-#define PIOVER2 1.57079632679489661923f
+#define PI_OVER_2 1.57079632679489661923f
 
 #define STICK_SMASH_THRESHOLD 0.7f
 
@@ -41,15 +41,18 @@
 #include "m_raytriangleintersection.h"
 #endif
 
+#include "d_dict.h"
+#include "d_queue.h"
+
 #include "m_vector.h"
 
+#include "g_attributes.h"
+#include "g_physics.h"
 #include "g_events.h"
 #include "g_health.h"
+#include "g_statemachines.h"
 
-#ifndef GAMESTATE
-#define GAMESTATE
 #include "gamestate.h"
-#endif
 
 #include "f_objparser.h"
 
@@ -68,6 +71,9 @@
 Vector3 position = { 0.0f, 0.0f, 0.0f };            // Set model position
 
 int main(void) {
+	//E_Init();
+	int totalObjs = 0;
+	//E_AddObj(totalObjs++);
 	/*int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
 	if (result < 0) {
@@ -87,7 +93,7 @@ int main(void) {
 	if (renderer == NULL) {
 		SDL_Log("SDL_CreateRenderer error: %s", SDL_GetError());
 		return -1;
-	}*/	
+	}*/
 
 	time_t sec;
 	time(&sec);
@@ -126,9 +132,8 @@ int main(void) {
 	printf("gravity: %f\n", playerAttributes.gravity);
 	DisableCursor();                    // Catch cursor
 	SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
-	int totalObjs = 1;
-	Object obj = (Object){ PLAYER, (Vector3){6.5f,7,0},(Vector3){0,0,0},(Vector3){0,0,0}};
-	Object objs[] = { obj, obj };
+	//Object obj = (Object){ PLAYER, (Vector3){6.5f,7,0},(Vector3){0,0,0},(Vector3){0,0,0}};
+	//Object objs[] = { obj, obj };
 	InputMap const inputMap = {
 		GAMEPAD_BUTTON_RIGHT_FACE_DOWN,  // jump
 		GAMEPAD_BUTTON_LEFT_TRIGGER_1,   // crouch
@@ -158,7 +163,7 @@ int main(void) {
 	Vector3 g = (Vector3) { 0, -1, 0 };
 	Quaternion q = QuaternionFromGravityVector(&g);
 	Vector3 xAxis = Vector3RotateByQuaternion((Vector3) { 1, 0, 0 }, q);
-	Vector3 yAxis = Vector3RotateByQuaternion((Vector3) { 0, 1, 0 }, q);
+	//Vector3 yAxis = Vector3RotateByQuaternion((Vector3) { 0, 1, 0 }, q);
 	printf("%f %f %f", xAxis.x, xAxis.y, xAxis.z);
 
 	// Main game loop
@@ -166,16 +171,24 @@ int main(void) {
 		// Update
 		float delta = GetFrameTime();
 
-		Vector2 const pPos = { objs[0].position.x, objs[0].position.z };
-		Vector2 const cPos = { oldCameraState.camera.position.x, oldCameraState.camera.position.z };
-		float const angle = Vector2LineAngle(pPos, cPos)  + PIOVER2;
-        	Input const input = GetInputState(&inputMap, &oldMovement, &oldCameraMovement, angle); // Player movement input is relative to this angle. 
+		//Vector2 const pPos = { objs[0].position.x, objs[0].position.z };
+		//Vector2 const cPos = { oldCameraState.camera.position.x, oldCameraState.camera.position.z };
+		//float const angle = Vector2LineAngle(pPos, cPos)  + PI_OVER_2;
+        	//Input const input = GetInputState(&inputMap, &oldMovement, &oldCameraMovement, angle); // Player movement input is relative to this angle. 
 
-		Object const playerState = GetNextPlayerGameState(&input, &attributes[objs[0].type], &cMesh, objs, totalObjs, delta);
-		objs[0] = playerState;
+		for (int id = 0; id < totalObjs; id++) {
+			//Event* e = E_GetNext(id);
+			//while (e) {
+				//e = E_GetNext(id);
+				//EventReturn ret = e->function(e->args, id);
+			//}
+		}
+
+		//Object const playerState = GetNextPlayerGameState(&input, &attributes[objs[0].type], &cMesh, objs, totalObjs, delta);
+		//objs[0] = playerState;
 		
-		CameraState const newCameraState = GetNextCameraState(&oldCameraState, &playerState, &input, delta);
-		Camera const newCamera = newCameraState.camera;
+		//CameraState const newCameraState = GetNextCameraState(&oldCameraState, &playerState, &input, delta);
+		//Camera const newCamera = newCameraState.camera;
 
         	// Draw
 		BeginDrawing();
@@ -185,7 +198,7 @@ int main(void) {
 			BeginMode3D(newCamera);
 				DrawModel(level, position, 1.0f, WHITE);
 
-				DrawModelEx(model, playerState.position, (Vector3){ 1.0f, 0.0f, 0.0f }, -90.0f, (Vector3){ 1.0f, 1.0f, 1.0f }, WHITE);
+				//DrawModelEx(model, playerState.position, (Vector3){ 1.0f, 0.0f, 0.0f }, -90.0f, (Vector3){ 1.0f, 1.0f, 1.0f }, WHITE);
 
 				for (int i = 0; i < model.boneCount; i++) {
 					DrawCube(anims[0].framePoses[animFrameCounter][i].translation, 0.2f, 0.2f, 0.2f, RED);
@@ -200,9 +213,9 @@ int main(void) {
 		EndDrawing();
 		
 		// Give the next iteration of the loop access to the previous frame' state.
-		oldCameraState = newCameraState;
-		oldMovement = input.movement;
-		oldCameraMovement = input.cameraMovement;
+		//oldCameraState = newCameraState;
+		//oldMovement = input.movement;
+		//oldCameraMovement = input.cameraMovement;
 	}
 
     // De-Initialization
@@ -265,7 +278,7 @@ Input GetInputState(InputMap const * const inputMap, Vector2 const * const oldMo
 	return input;
 }
 
-CameraState GetNextCameraState(CameraState const * const cameraState, Object const * const playerState, Input const * const input, float const delta) {
+CameraState GetNextCameraState(CameraState const * const cameraState, PhysicalProperties const * const playerState, Input const * const input, float const delta) {
 	Camera const camera = cameraState->camera;
 
 	float const rotation              = delta * cameraState->radiansPerSecond * input->cameraMovement.x;
@@ -291,7 +304,7 @@ CameraState GetNextCameraState(CameraState const * const cameraState, Object con
 	return nextCameraState;
 }
 
-Object GetNextPlayerGameState(Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, Object const objs[], int const totalObjs, float const delta) {
+PhysicalProperties GetNextPlayerGameState(Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, PhysicalProperties const objs[], int const totalObjs, float const delta) {
 	Vector3 newVelocity;
 	Vector3 const gravity = (Vector3){ 0, -attributes->gravity * delta, 0 };
 	Vector3 const toVelocity = (Vector3){ attributes->speed * input->movement.x, 0, attributes->speed * input->movement.y };
@@ -323,7 +336,7 @@ Object GetNextPlayerGameState(Input const * const input, Attributes const * cons
 
 	for (int i = 0; i < mesh->faceCount && !collision; i++) {
 		// check if we're hitting the outside of a surface
-		if (Vector3Angle(toTryVelocity, mesh->surfaceNormals[i]) < PIOVER2) {
+		if (Vector3Angle(toTryVelocity, mesh->surfaceNormals[i]) < PI_OVER_2) {
 			continue;
 		}
 		Vector3 const a = mesh->vertices[mesh->faces[i].a];
@@ -345,8 +358,7 @@ Object GetNextPlayerGameState(Input const * const input, Attributes const * cons
 
 	Vector3 const newPosition = Vector3Add(objs[0].position, toTryVelocity);
 
-	Object const object = {
-		objs[0].type,
+	PhysicalProperties const object = {
 		newPosition,
 		newVelocity,
 		objs[0].acceleration
@@ -367,7 +379,6 @@ Attributes GetAttributes(float const jumpHeight, float const timeToApex, float c
 	Attributes attributes = {
 		movementSpeed,
 		acceleration,
-		airSpeed,
 		gravity,
 		terminalVelocity,
 		initJumpSpeed

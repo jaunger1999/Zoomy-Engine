@@ -1,16 +1,16 @@
 typedef struct Node {
 	void* data;
-	Node* prev;
+	struct Node* prev;
 } Node;
 
 typedef struct Queue {
 	Node* front;
 	Node* back;
-	int count;
+	unsigned int count;
 } Queue;
 
-Queue* CreateQueue();
-void DestroyQueue(Queue* q);
+Queue* Q_Create();
+void Q_Destroy(Queue* q);
 
 void Enqueue(Queue* q, void* data);
 void* Dequeue(Queue* q);

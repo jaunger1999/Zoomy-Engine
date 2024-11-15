@@ -1,15 +1,21 @@
 #include "d_queue.h"
 
-Queue* CreateQueue() {
+#include <stdlib.h>
+
+Queue* Q_Create() {
 	Queue* q = malloc(sizeof(Queue));
 	q->count = 0;
+
+	// init to NULL so we don't seg fault lol.
+	q->front = NULL;
+	q->back  = NULL;
 
 	return q;
 }
 
-void DestroyQueue(Queue* q) {
+void Q_Destroy(Queue* q) {
 	while (q-> count > 0) {
-		free(Dequeue(q);
+		free(Dequeue(q));
 	}
 
 	free(q);
@@ -19,13 +25,20 @@ void Enqueue(Queue* q, void* data) {
 	Node* node = malloc(sizeof(Node));
 	node->data = data;
 
-	q->back->prev = node;
-	q->back       = node;
+	if (q->back != NULL) { // adding data to a queue with at least one item.
+		q->back->prev = node;
+	}
+	else { // adding data to an empty queue.
+		q->front = node;
+	}
+
+	q->back = node;
+	q->count++;
 }
 
 void* Dequeue(Queue* q) {
 	if (q->count == 0) {
-		return;
+		return NULL;
 	}
 
 	Node* front = q->front;
@@ -34,4 +47,7 @@ void* Dequeue(Queue* q) {
 	q->front = front->prev;
 
 	free(front);
+	q->count--;
+
+	return data;
 }

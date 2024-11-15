@@ -32,5 +32,7 @@ int main(void) {
 	OptionHit h2 = Intersect(&ray2, &a, &b, &c);
 
 	printValid(&h2);
+
+	printf("End of processing\n");
 	return 0;
 }

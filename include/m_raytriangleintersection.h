@@ -62,10 +62,6 @@ typedef struct CollisionMesh {
 	int faceCount;
 } CollisionMesh;
 
-typedef struct OptionVector3 {
-	bool    const valid;
-	Vector3 const vector;
-} OptionVector3;
 
 
 OptionHit Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c);

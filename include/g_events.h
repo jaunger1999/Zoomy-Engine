@@ -1,7 +1,6 @@
-typedef EventReturn (*EventFunction)(char*);
-
 typedef enum EventType {
-	DAMAGE = 0
+	TEST   = -1,
+	DAMAGE =  0
 } EventType;
 
 typedef struct EventReturn {
@@ -9,15 +8,17 @@ typedef struct EventReturn {
 	char* returnValues;
 } EventReturn;
 
+typedef EventReturn (*EventFunction)(char* args, unsigned int const id);
+
 typedef struct Event {
 	EventType type;
 	EventFunction function;
 	char* args;
 } Event;
 
-Event* E_GetNext(int id);
+Event* E_GetNext(unsigned int id);
 
-int E_AddObj();
+int E_AddObj(unsigned int id);
 
 void E_Init();
-void E_Register(EventFunction function, EventType type, int n, int id, ...);
+void E_Register(EventFunction function, EventType type, unsigned int const n, unsigned const int id, ...);

@@ -23,5 +23,6 @@ int main(void) {
 	printf("Our first value should be %i: %i\n", a, i);
 	printf("Our Vector3 should be (%f, %f, %f): (%f, %f, %f)\n", b.x, b.y, b.z, j.x, j.y, j.z);
 
+	printf("End of processing\n");
 	return 0;
 }

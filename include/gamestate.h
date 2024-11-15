@@ -3,12 +3,9 @@
 #define VECTOR3
 
 #include "raylib.h"
+#include "raymath.h"
 #endif
 
-#ifndef COLLISION
-#define COLLISION
-#include "raytriangleintersection.h"
-#endif
 
 typedef enum ObjectType {
 	PLAYER = 0
@@ -51,30 +48,6 @@ typedef struct Input {
 	bool const cameraLockReleased;
 } Input;
 
-typedef struct Object {
-	ObjectType type;
-	Vector3 position;
-	Vector3 velocity;
-	Vector3 acceleration;
-} Object;
-
-typedef struct ObjectState {
-	
-} ObjectState;
-
-typedef struct Attributes {
-	float speed;
-	float acceleration;
-	float airSpeed;
-	float gravity;
-	float terminalVelocity;
-	float initJumpSpeed;
-} Attributes;
-
-typedef struct GameState {
-	int totalObjects;
-	Object objects[];
-} GameState;
 
 typedef struct CameraState {
 	CameraBehaviour behaviour;
@@ -85,10 +58,9 @@ typedef struct CameraState {
 
 Attributes GetAttributes(float const jumpHeight, float const timeToApex, float const movementSpeed, float const acceleration, float const terminalVelocity, float const neutralJumpDistance);
 
-OptionVector3 WrapVector3(Vector3 const * const vector);
 
 Input GetInputState(InputMap const * const inputMap, Vector2 const * const oldMovement, Vector2 const * const oldCameraMovement, float const cameraYaw);
 
-CameraState GetNextCameraState(CameraState const * const cameraState, Object const * const playerState, Input const * const input, float const delta);
+CameraState GetNextCameraState(CameraState const * const cameraState, PhysicalProperties const * const playerState, Input const * const input, float const delta);
 
-Object GetNextPlayerGameState(Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, Object const objs[], int const totalObjs, float const delta);
+PhysicalProperties GetNextPlayerGameState(Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, PhysicalProperties const objs[], int const totalObjs, float const delta);

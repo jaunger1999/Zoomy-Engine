@@ -1,20 +1,14 @@
-#ifndef RAYLIB
-#define RAYLIB
-#define VECTOR3
-
 #include "raylib.h"
 #include "raymath.h"
-#endif
 
-#ifndef COLLISION 
-#define COLLISION
 #include "m_raytriangleintersection.h"
-#endif
 
-#ifndef GAMESTATE
-#define GAMESTATE
+#include "g_attributes.h"
+#include "g_physics.h"
+#include "g_events.h"
+#include "g_health.h"
+
 #include "gamestate.h"
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
