@@ -113,9 +113,6 @@ int main(void) {
 			3.0f   // neutral jump distance
 		);
 	
-	Attributes attributes[1] = {
-		playerAttributes
-	};
 	// Initialization
 	const int screenWidth  = 800;
 	int const screenHeight = 450;
@@ -178,29 +175,27 @@ int main(void) {
 		// Update
 		float delta = GetFrameTime();
 
-		Vector2 const pPos = { obj.position.x, obj.position.z };
-		Vector2 const cPos = { oldCameraState.camera.position.x, oldCameraState.camera.position.z };
-		float const angle = Vector2LineAngle(pPos, cPos)  + PI_OVER_2;
-        	Input const input = GetInputState(&inputMap, &oldMovement, &oldCameraMovement, angle); // Player movement input is relative to this angle.
+		Vector2 const pPos  = { obj.position.x, obj.position.z };
+		Vector2 const cPos  = { oldCameraState.camera.position.x, oldCameraState.camera.position.z };
+		float   const angle = Vector2LineAngle(pPos, cPos)  + PI_OVER_2;
+        	Input   const input = GetInputState(&inputMap, &oldMovement, &oldCameraMovement, angle); // Player movement input is relative to this angle.
 
 		E_Register(PhysProp_GetNextPlayerState, PLAYER_MOVE, 0, 5, &input, &playerAttributes, &cMesh, &obj, delta);
 
 		for (int id = 0; id < totalObjs; id++) {
 			Event* e = E_GetNext(id);
-			while (e) {
-				e = E_GetNext(id);
 
+			while (e) {
 				void* out;
 				e->function(e->args, id, &out);
 
 				// this is hardcoded and assumes theres only one event type PLAYER_MOVE
 				obj = *(PhysicalProperties*)out;
+				
+				e = E_GetNext(id);
 			}
 		}
 
-		//Object const playerState = GetNextPlayerGameState(&input, &attributes[objs[0].type], &cMesh, objs, totalObjs, delta);
-		//objs[0] = playerState;
-		
 		CameraState const newCameraState = GetNextCameraState(&oldCameraState, &obj, &input, delta);
 		Camera const newCamera = newCameraState.camera;
 
@@ -321,24 +316,24 @@ CameraState GetNextCameraState(CameraState const * const cameraState, PhysicalPr
 // args == Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, PhysicalProperties const * const currState, float const delta
 void PhysProp_GetNextPlayerState(char const * const args, unsigned int const id, void* ppOut) {
 	// Our parameters for this function.
-	Input*              input      = NULL;
-	Attributes*         attributes = NULL;
-	CollisionMesh*      mesh       = NULL;
-	PhysicalProperties* currState  = NULL;
-	float               delta      = 0.0f;
+	Input*              input;
+	Attributes*         attributes;
+	CollisionMesh*      mesh;
+	PhysicalProperties* currState;
+	float               delta;
 
 	// Set our parameters stored in args.
 	memcpy(&input,      args,  sizeof(input));
 	memcpy(&attributes, args + sizeof(input),  sizeof(attributes));
 	memcpy(&mesh,       args + sizeof(input) + sizeof(attributes),  sizeof(mesh));
-	memcpy(&currState,  args + sizeof(input) + sizeof(attributes) + sizeof(mesh),  sizeof(mesh));
-	memcpy(&delta,      args + sizeof(input) + sizeof(attributes) + sizeof(mesh) + sizeof(mesh), sizeof(delta));
+	memcpy(&currState,  args + sizeof(input) + sizeof(attributes) + sizeof(mesh),  sizeof(currState));
+	memcpy(&delta,      args + sizeof(input) + sizeof(attributes) + sizeof(mesh) + sizeof(currState), sizeof(delta));
 
 	Vector3 newVelocity;
 	Vector3 const gravity = (Vector3){ 0, -attributes->gravity * delta, 0 };
 	Vector3 const toVelocity = (Vector3){ attributes->speed * input->movement.x, 0, attributes->speed * input->movement.y };
 
-	if (1 - Vector2LengthSqr(input->movement) < EPSILON && Vector2LengthSqr(input->oldMovement) < STICK_SMASH_THRESHOLD && abs(Vector3LengthSqr(currState->velocity)) < EPSILON) {
+	if (1 - Vector2LengthSqr(input->movement) < EPSILON && Vector2LengthSqr(input->oldMovement) < STICK_SMASH_THRESHOLD && fabs(Vector3LengthSqr(currState->velocity)) < EPSILON) {
 		newVelocity = Vector3Add(toVelocity, gravity);
 	}
 	else {
@@ -388,13 +383,11 @@ void PhysProp_GetNextPlayerState(char const * const args, unsigned int const id,
 
 	Vector3 const newPosition = Vector3Add(currState->position, toTryVelocity);
 
-	PhysicalProperties const newState = {
+	*(PhysicalProperties*)ppOut = (PhysicalProperties) {
 		newPosition,
 		newVelocity,
 		currState->acceleration
 	};
-    
-	*(PhysicalProperties*)ppOut = newState;
 }
 
 OptionVector3 WrapOptionVector3(Vector3 const vector) {
@@ -404,7 +397,7 @@ OptionVector3 WrapOptionVector3(Vector3 const vector) {
 Attributes GetAttributes(float const jumpHeight, float const timeToApex, float const movementSpeed, float const acceleration, float const terminalVelocity, float const neutralJumpDistance) {
 	float const gravity = (2 * jumpHeight) / (timeToApex * timeToApex);
 	float const initJumpSpeed = -sqrt(2 * gravity * jumpHeight);
-	float const airSpeed = neutralJumpDistance / (2 * timeToApex);
+	//float const airSpeed = neutralJumpDistance / (2 * timeToApex);
 
 	Attributes attributes = {
 		movementSpeed,

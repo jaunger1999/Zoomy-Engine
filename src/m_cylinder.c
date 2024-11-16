@@ -1,9 +1,9 @@
 #include "m_raytriangleintersection.h"
 
-struct Cylinder {
+typedef struct Cylinder {
 	float radius;
 	float height;
-} typedef Cylinder;
+} Cylinder;
 
 // Cylinder cylinder collision where c1 wants to move from r.position to r.position + r.direction.
 OptionHit RayCylinderCollision(Ray const * const r, Vector3 const * const p, Cylinder const * const c) {

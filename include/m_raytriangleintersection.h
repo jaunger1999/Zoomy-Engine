@@ -28,11 +28,11 @@ struct Hit {
 
 typedef struct Hit Hit;*/
 
-struct OptionHit {
+typedef struct OptionHit {
 	bool valid;
 	Vector3 intersection;
 	float t, u, v;
-} typedef OptionHit;
+} OptionHit;
 
 typedef struct Triangle {
 	Vector3 n;

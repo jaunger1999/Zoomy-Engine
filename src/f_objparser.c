@@ -154,7 +154,7 @@ CollisionMesh GetCollisionMesh(char const * const fileName) {
 	// Calculate our surface normals because obj files only contain vertex normals.
 	Vector3 *surfaceNormals = malloc(sizeof(Vector3) * totalFaces); 
 
-	for (int i = 0; i < totalFaces; i++) {
+	for (unsigned int i = 0; i < totalFaces; i++) {
 		int aI = faces[i].a;
 		int bI = faces[i].b;
 		int cI = faces[i].c;

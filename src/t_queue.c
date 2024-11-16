@@ -21,6 +21,12 @@ int main(void) {
 	printf("Our first value should be %i: %i\n", a, i);
 	printf("Our Vector3 should be (%f, %f, %f): (%f, %f, %f)\n", b.x, b.y, b.z, j.x, j.y, j.z);
 
+	void* k = Dequeue(q);
+
+	if (k) {
+		printf("Our empty queue shouldn't have returned a non NULL value. :(\n");
+	}
+
 	Q_Destroy(q);
 
 	printf("End of processing\n");

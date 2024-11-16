@@ -24,6 +24,7 @@ void Q_Destroy(Queue* q) {
 void Enqueue(Queue* q, void* data) {
 	Node* node = malloc(sizeof(Node));
 	node->data = data;
+	node->prev = NULL;
 
 	if (q->back != NULL) { // adding data to a queue with at least one item.
 		q->back->prev = node;
@@ -48,6 +49,12 @@ void* Dequeue(Queue* q) {
 
 	free(front);
 	q->count--;
+
+	// Set front and back to null so we don't check freed pointers.
+	if (q->count == 0) {
+		q->front = NULL;
+		q->back  = NULL;
+	}
 
 	return data;
 }

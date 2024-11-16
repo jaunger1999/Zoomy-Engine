@@ -99,14 +99,14 @@ char* PlayerMoveParameters(unsigned int const n, va_list args) {
 	memcpy(packedArgs,                                                 &i,     sizeof(i));
 	memcpy(packedArgs + sizeof(i),                                     &a,     sizeof(a));
 	memcpy(packedArgs + sizeof(i) + sizeof(a),                         &m,     sizeof(m));
-	memcpy(packedArgs + sizeof(i) + sizeof(a) + sizeof(m),             &m,     sizeof(p));
+	memcpy(packedArgs + sizeof(i) + sizeof(a) + sizeof(m),             &p,     sizeof(p));
 	memcpy(packedArgs + sizeof(i) + sizeof(a) + sizeof(m) + sizeof(p), &delta, sizeof(delta));
 
 	return packedArgs;
 }
 
 char* TestParameters(unsigned int const n, va_list args) {
-	char* packedArgs = calloc(sizeof(int) + sizeof(Vector3), sizeof(char));
+	char* packedArgs = malloc(sizeof(int) + sizeof(Vector3));
 	
 	int     a = va_arg(args, int);
 	Vector3 b = va_arg(args, Vector3);

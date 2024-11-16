@@ -17,13 +17,13 @@ Dict* Dict_Create() {
 
 	// init with calloc so we have null terminated linked lists for each bucket.
 	d->size = INIT_DICT_SIZE;
-	d->buckets = calloc(sizeof(DictEntry*), d->size);
+	d->buckets = calloc(d->size, sizeof(DictEntry*));
 	
 	return d;
 }
 
 void Dict_Destroy(Dict *d) {
-	for (int i = 0; i < d->size; i++) {
+	for (unsigned int i = 0; i < d->size; i++) {
 		for (DictEntry* e = d->buckets[i]; e != NULL;) {
 			DictEntry* old = e;
 
