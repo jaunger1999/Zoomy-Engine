@@ -27,8 +27,10 @@ Dict* eventQs;
 /*
  * TODO: Free the previously existing event handler if it exists.
  */
-void E_Init() {
+int E_Init() {
 	eventQs = Dict_Create();
+
+	return eventQs != NULL;
 }
 
 /*
@@ -50,7 +52,7 @@ Event* E_GetNext(unsigned int const id) {
 
 EventParameters GetParameterFunction(EventType type);
 
-void E_Register(EventFunction function, EventType type, unsigned int const id, unsigned int const n, ...) {
+int E_Register(EventFunction function, EventType type, unsigned int const id, unsigned int const n, ...) {
 	assert(function != NULL);
 
 	va_list ptr;
@@ -62,13 +64,21 @@ void E_Register(EventFunction function, EventType type, unsigned int const id, u
 	va_end(ptr);
 
 	// Construct the event and append it to its corresponding queue.
-	Event* event    = calloc(1, sizeof(Event));
+	Event* event    = malloc(sizeof(Event));
+
+	if (event == NULL) {
+		fprintf(stderr, "Fatal: failed to allocate memory on the heap.");
+		return 0;
+	}
+
 	event->type     = type;
 	event->function = function;
 	event->args     = args;
 
 	Queue* q = Dict_Get(eventQs, id);
 	Enqueue(q, event);
+
+	return 1;
 }
 
 char* TestParameters      (unsigned int const n, va_list args);
@@ -90,6 +100,12 @@ EventParameters GetParameterFunction(EventType type) {
 char* PlayerMoveParameters(unsigned int const n, va_list args) {
 	char* packedArgs = malloc(sizeof(Input*) + sizeof(Attributes*) + sizeof(CollisionMesh*) + sizeof(PhysicalProperties*) + sizeof(float));
 
+	if (packedArgs == NULL) {
+		fprintf(stderr, "Fatal: failed to allocate memory on the heap.\n");
+		return NULL;
+	}
+
+
 	Input*              i     = va_arg(args, Input*);
 	Attributes*         a     = va_arg(args, Attributes*);
 	CollisionMesh*      m     = va_arg(args, CollisionMesh*);
@@ -108,6 +124,11 @@ char* PlayerMoveParameters(unsigned int const n, va_list args) {
 char* TestParameters(unsigned int const n, va_list args) {
 	char* packedArgs = malloc(sizeof(int) + sizeof(Vector3));
 	
+	if (packedArgs == NULL) {
+		fprintf(stderr, "Fatal: failed to allocate memory on the heap.\n");
+		return NULL;
+	}
+
 	int     a = va_arg(args, int);
 	Vector3 b = va_arg(args, Vector3);
 

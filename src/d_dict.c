@@ -2,6 +2,7 @@
 
 #include "d_dict.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 // https://stackoverflow.com/questions/664014/what-integer-hash-function-are-good-that-accepts-an-integer-hash-key
@@ -14,6 +15,11 @@ unsigned int hash(unsigned int x) {
 
 Dict* Dict_Create() {
 	Dict* d = malloc(sizeof(Dict));
+
+	if (d == NULL) {
+		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(Dict));
+		return NULL;
+	}
 
 	// init with calloc so we have null terminated linked lists for each bucket.
 	d->size = INIT_DICT_SIZE;
@@ -48,17 +54,25 @@ void* Dict_Get(Dict* const dict, unsigned int id) {
 	return NULL;
 }
 
-void Dict_Add(Dict* const dict, void* item, unsigned int id) {
+int Dict_Add(Dict* const dict, void* item, unsigned int id) {
 	unsigned int i = hash(id) % dict->size;
 
 	// Init the entry
 	DictEntry* entry = malloc(sizeof(DictEntry));
+
+	if (entry == NULL) {
+		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(DictEntry));
+		return 0;
+	}
+
 	entry->id = id;
 	entry->item = item;
 
 	// add the entry to hashed bucket
 	entry->next = dict->buckets[i];
 	dict->buckets[i] = entry;
+
+	return 1;
 }
 
 

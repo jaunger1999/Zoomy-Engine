@@ -1,9 +1,16 @@
 #include "d_queue.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 Queue* Q_Create() {
 	Queue* q = malloc(sizeof(Queue));
+
+	if (q == NULL) {
+		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(Queue));
+		return NULL;
+	}
+
 	q->count = 0;
 
 	// init to NULL so we don't seg fault lol.
@@ -21,8 +28,14 @@ void Q_Destroy(Queue* q) {
 	free(q);
 }
 
-void Enqueue(Queue* q, void* data) {
+int Enqueue(Queue* q, void* data) {
 	Node* node = malloc(sizeof(Node));
+
+	if (node == NULL) {
+		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(Node));
+		return 0;
+	}
+
 	node->data = data;
 	node->prev = NULL;
 
@@ -35,6 +48,8 @@ void Enqueue(Queue* q, void* data) {
 
 	q->back = node;
 	q->count++;
+
+	return 1;
 }
 
 void* Dequeue(Queue* q) {

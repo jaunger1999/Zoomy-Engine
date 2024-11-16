@@ -12,5 +12,5 @@ typedef struct Queue {
 Queue* Q_Create();
 void Q_Destroy(Queue* q);
 
-void Enqueue(Queue* q, void* data);
+int   Enqueue(Queue* q, void* data);
 void* Dequeue(Queue* q);

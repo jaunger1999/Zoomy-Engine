@@ -13,5 +13,5 @@ Dict* Dict_Create();
 
 void* Dict_Get(Dict* dict, unsigned int id);
 
-void Dict_Add(Dict* dict, void* item, unsigned int id);
+int  Dict_Add(Dict* dict, void* item, unsigned int id);
 void Dict_Destroy(Dict* dict);
