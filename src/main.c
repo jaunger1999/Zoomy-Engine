@@ -186,11 +186,11 @@ int main(void) {
 			Event* e = E_GetNext(id);
 
 			while (e) {
-				void* out;
+				PhysicalProperties out;
 				e->function(e->args, id, &out);
 
 				// this is hardcoded and assumes theres only one event type PLAYER_MOVE
-				obj = *(PhysicalProperties*)out;
+				obj = out;
 				
 				e = E_GetNext(id);
 			}
