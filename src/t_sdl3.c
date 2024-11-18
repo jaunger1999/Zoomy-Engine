@@ -1,7 +1,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
-int main() {
+int main(int argc, char *argv[]) {
 	int running = 1;
 	int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
@@ -22,10 +22,10 @@ int main() {
 	}
 
 	// Close and destroy the window
-	//SDL_DestroyWindow(window);
+	SDL_DestroyWindow(window);
 
 	// Clean up
-	//SDL_Quit();
+	SDL_Quit();
 
 	return 0;
 }
