@@ -4,7 +4,7 @@ typedef enum EventType {
 	PLAYER_MOVE =  1
 } EventType;
 
-typedef void (*EventFunction)(char const * const args, unsigned int const id, void* out);
+typedef int (*EventFunction)(char const * const args, unsigned int const id, void* out);
 
 typedef struct Event {
 	EventType type;

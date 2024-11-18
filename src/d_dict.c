@@ -6,11 +6,14 @@
 #include <stdlib.h>
 
 // https://stackoverflow.com/questions/664014/what-integer-hash-function-are-good-that-accepts-an-integer-hash-key
-unsigned int hash(unsigned int x) {
-	x = ((x >> 16) ^ x) * 0x45d9f3b;
-	x = ((x >> 16) ^ x) * 0x45d9f3b;
-	x = (x >> 16) ^ x;
-	return x;
+unsigned long hash(unsigned int const x) {
+	unsigned long hash = (long)x;
+
+	hash = ((hash >> 16) ^ hash) * 0x45d9f3b;
+	hash = ((hash >> 16) ^ hash) * 0x45d9f3b;
+	hash =  (hash >> 16) ^ hash;
+
+	return hash;
 }
 
 Dict* Dict_Create() {
@@ -43,7 +46,7 @@ void Dict_Destroy(Dict *d) {
 }
 
 void* Dict_Get(Dict* const dict, unsigned int id) {
-	unsigned int i = hash(id) % dict->size;
+	unsigned long i = hash(id) % dict->size;
 
 	for (DictEntry* entry = dict->buckets[i]; entry != NULL; entry = entry->next) {
 		if (entry->id == id) {
@@ -54,8 +57,13 @@ void* Dict_Get(Dict* const dict, unsigned int id) {
 	return NULL;
 }
 
-int Dict_Add(Dict* const dict, void* item, unsigned int id) {
-	unsigned int i = hash(id) % dict->size;
+int Dict_Add_String(Dict* const dict, void* item, char const * const key) {
+
+	return 1;
+}
+
+int Dict_Add(Dict* const dict, void* const item, unsigned int id) {
+	unsigned long i = hash(id) % dict->size;
 
 	// Init the entry
 	DictEntry* entry = malloc(sizeof(DictEntry));
@@ -74,5 +82,3 @@ int Dict_Add(Dict* const dict, void* item, unsigned int id) {
 
 	return 1;
 }
-
-

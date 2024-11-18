@@ -70,7 +70,7 @@
 // Program main entry point
 Vector3 position = { 0.0f, 0.0f, 0.0f }; // Set model position
 
-void PhysProp_GetNextPlayerState(char const * const args, unsigned int const id, void* ppOut);
+int PhysProp_GetNextPlayerState(char const * const args, unsigned int const id, void* ppOut);
 
 int main(void) {
 	E_Init();
@@ -314,7 +314,7 @@ CameraState GetNextCameraState(CameraState const * const cameraState, PhysicalPr
 }
 
 // args == Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, PhysicalProperties const * const currState, float const delta
-void PhysProp_GetNextPlayerState(char const * const args, unsigned int const id, void* ppOut) {
+int PhysProp_GetNextPlayerState(char const * const args, unsigned int const id, void* ppOut) {
 	// Our parameters for this function.
 	Input*              input;
 	Attributes*         attributes;
@@ -388,6 +388,8 @@ void PhysProp_GetNextPlayerState(char const * const args, unsigned int const id,
 		newVelocity,
 		currState->acceleration
 	};
+
+	return 1;
 }
 
 OptionVector3 WrapOptionVector3(Vector3 const vector) {

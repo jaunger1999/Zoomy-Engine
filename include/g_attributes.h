@@ -5,4 +5,3 @@ typedef struct Attributes {
 	float terminalVelocity;
 	float initJumpSpeed;
 } Attributes;
-

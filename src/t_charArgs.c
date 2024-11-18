@@ -17,8 +17,10 @@ int main(void) {
 	int i = 0;
 	Vector3 j = (Vector3) { };
 
-	memcpy(&i, args, sizeof(int));
-	memcpy(&j, args + sizeof(int), sizeof(Vector3));
+	i = (int)*args;
+
+	//memcpy(&i, args, sizeof(int));
+	//memcpy(&j, args + sizeof(int), sizeof(Vector3));
 
 	printf("Our first value should be %i: %i\n", a, i);
 	printf("Our Vector3 should be (%f, %f, %f): (%f, %f, %f)\n", b.x, b.y, b.z, j.x, j.y, j.z);
