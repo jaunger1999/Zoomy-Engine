@@ -1,3 +1,7 @@
+/// f_cdfparser.c
+///
+/// There's a small chance of user defined terms to collide with cdf keywords. Not sure if that's worth addressing.
+
 #include "hash.h"
 
 #include <stdio.h>
@@ -11,7 +15,14 @@ unsigned long transitions;
 
 Dict_S* objTemplates;
 
-int InitHashValues() {
+int CDF_Init() {
+	objTemplates = Dict_S_Create();
+
+	if(objTemplates == NULL) {
+		return -1;
+	}
+
+	// init our hash values for our string switch statements.
 	object      = hash_s("object");
 	openBrace   = hash_s("{");
 	closedBrace = hash_s("}");
@@ -22,17 +33,8 @@ int InitHashValues() {
 	return 1;
 }
 
-int CDF_Init() {
-	objTemplates = Dict_S_Create();
-
-	if(objTemplates == NULL) {
-		return -1;
-	}
-
-}
-
 int ParseCDF(char const* const fileName) {
-	char const * const delimit = " \n";
+	char const * const delimit =" \t\r\n\v\f";
 	char* fileText = LoadFileText(fileName);
 
 	char* currToken = strtok_r(fileText, delimit);
