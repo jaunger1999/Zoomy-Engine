@@ -73,6 +73,8 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 	Object* obj  = malloc(sizeof(Object));
 	char*   name = NULL;
 
+	#define RETURN_ERROR free(obj); free(name); return -1;
+
 	// The name is expected to be in the same line as the object keyword.
 	while(name == NULL && currToken) {
 		switch(hash(currToken)) {
@@ -83,14 +85,15 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 			case a_events:
 			case transitions:
 				fprintf(stderr, "Unexpected token: %s\n", currToken);
-				return -1;
+				RETURN_ERROR
 			default:
 				name = malloc(sizeof(char) * (strlen(currToken) + 1));
 
 				if(name == NULL) {
 					fprintf(stderr, "Malloc failed to allocate a string.\n");
-					return -1;
+					RETURN_ERROR
 				}
+
 				strdup(name, currToken);
 				break;
 		}
@@ -99,7 +102,7 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 	}
 
 	if(name == NULL) {
-		return -1;
+		RETURN_ERROR
 	}
 
 	// check for an open brace.
@@ -108,11 +111,30 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 			break;
 		default:
 			fprintf(stderr, "Expected open brace { after object definition.");
-			return -1;
+			RETURN_ERROR
 	}
 
 	while(currToken) {
 		currToken = strtok(fileText, delimit);
+
+		switch(hash(currToken)) {
+			case object:
+				fprintf(stderr, "Can't define an object within an object");
+				RETURN_ERROR
+			case openBrace:
+				break;
+			case closedBrace:
+				break;
+			case events:
+				break;
+			case a_events:
+				break;
+			case transitions:
+				break;
+			default:
+				break;
+		}
+
 	}
 
 	Dict_S_Add(objTemplates, name, obj);
