@@ -17,10 +17,13 @@ object Plat_Player {
 		Running:
 	}
 	
-	events {
-		land,
-		jump,
+	a_events {
+		jump
 		crouch
+	}
+	
+	events {
+		land
 	}
 	
 	transitions {

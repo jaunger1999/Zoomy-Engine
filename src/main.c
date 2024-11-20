@@ -19,7 +19,6 @@
 *
 ********************************************************************************************/
 
-
 #define PI_OVER_2 1.57079632679489661923f
 
 #define STICK_SMASH_THRESHOLD 0.7f
@@ -56,8 +55,6 @@
 
 #include "f_objparser.h"
 
-//#include <SDL3/SDL.h>
-//#include <SDL3/SDL_main.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -79,27 +76,6 @@ int main(void) {
 	E_AddObj(totalObjs);
 
 	totalObjs++;
-
-	/*int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-
-	if (result < 0) {
-		SDL_Log("SDL_Init error: %s", SDL_GetError());
-		return -1;
-	}
-
-	SDL_Window *window = SDL_CreateWindow("Best Game Ever", 640, 480, SDL_WINDOW_OPENGL);
-	
-	if (window == NULL) {
-		SDL_Log("SDL_CreateWindow error: %s", SDL_GetError());
-		return -1;
-	}*/
-	/*
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, "Renderer");
-
-	if (renderer == NULL) {
-		SDL_Log("SDL_CreateRenderer error: %s", SDL_GetError());
-		return -1;
-	}*/
 
 	time_t sec;
 	time(&sec);
@@ -227,17 +203,12 @@ int main(void) {
 		oldCameraMovement = input.cameraMovement;
 	}
 
-    // De-Initialization
-    UnloadTexture(texture);                     // Unload texture
-    UnloadModelAnimations(anims, animsCount);   // Unload model animations data
-    UnloadModel(model);                         // Unload model
-    CloseWindow();                              // Close window and OpenGL context
+	// De-Initialization
+	UnloadTexture(texture);                     // Unload texture
+	UnloadModelAnimations(anims, animsCount);   // Unload model animations data
+	UnloadModel(model);                         // Unload model
+	CloseWindow();                              // Close window and OpenGL context
 
-	// Close and destroy the window
-	//SDL_DestroyWindow(window);
-
-	// Clean up
-	//SDL_Quit();
 	return 0;
 }
 

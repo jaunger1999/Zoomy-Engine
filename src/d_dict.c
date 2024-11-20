@@ -1,20 +1,10 @@
 #define INIT_DICT_SIZE 64
 
 #include "d_dict.h"
+#include "hash.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-
-// https://stackoverflow.com/questions/664014/what-integer-hash-function-are-good-that-accepts-an-integer-hash-key
-unsigned long hash(unsigned int const x) {
-	unsigned long hash = (long)x;
-
-	hash = ((hash >> 16) ^ hash) * 0x45d9f3b;
-	hash = ((hash >> 16) ^ hash) * 0x45d9f3b;
-	hash =  (hash >> 16) ^ hash;
-
-	return hash;
-}
 
 Dict* Dict_Create() {
 	Dict* d = malloc(sizeof(Dict));

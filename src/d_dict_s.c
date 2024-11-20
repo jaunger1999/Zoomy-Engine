@@ -1,22 +1,11 @@
 #define INIT_DICT_SIZE 64
 
 #include "d_dict_s.h"
+#include "hash.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-https://stackoverflow.com/questions/7666509/hash-function-for-string
-unsigned long hash(unsigned char const * const str) {
-    unsigned long hash = 5381;
-    int c;
-
-    while (c = *str++) {
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-    }
-
-    return hash;
-}
 
 Dict_S* Dict_S_Create() {
 	Dict_S* d = malloc(sizeof(Dict_S));
@@ -48,7 +37,7 @@ void Dict_S_Destroy(Dict_S *d) {
 }
 
 void* Dict_S_Get(Dict_S* const dict, unsigned char const * const id) {
-	unsigned long i = hash(id) % dict->size;
+	unsigned long i = hash_s(id) % dict->size;
 
 	for (DictEntry_S* entry = dict->buckets[i]; entry != NULL; entry = entry->next) {
 		if (strcmp(entry->id, id) == 0) {
@@ -59,8 +48,8 @@ void* Dict_S_Get(Dict_S* const dict, unsigned char const * const id) {
 	return NULL;
 }
 
-int Dict_S_Add(Dict_S* const dict, void* const item, unsigned int id) {
-	unsigned long i = hash(id) % dict->size;
+int Dict_S_Add(Dict_S* const dict, void* const item, unsigned char const * const id) {
+	unsigned long i = hash_s(id) % dict->size;
 
 	// Init the entry
 	DictEntry_S* entry = malloc(sizeof(DictEntry_S));
