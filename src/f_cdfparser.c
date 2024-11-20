@@ -1,6 +1,6 @@
 /// f_cdfparser.c
 ///
-/// There's a small chance of user defined terms to collide with cdf keywords. Not sure if that's worth addressing.
+/// There's a small chance of user defined terms to collide with cdf keywords and symbols. Not sure if that's worth addressing.
 
 #include "hash.h"
 
@@ -101,6 +101,7 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 		currToken = strtok(fileText, delimit);
 	}
 
+	// We need a name to store this object in our dict_s
 	if(name == NULL) {
 		RETURN_ERROR
 	}
@@ -114,6 +115,7 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 			RETURN_ERROR
 	}
 
+	// parse the rest of the obj definition.
 	while(currToken) {
 		currToken = strtok(fileText, delimit);
 
@@ -122,17 +124,22 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 				fprintf(stderr, "Can't define an object within an object");
 				RETURN_ERROR
 			case openBrace:
-				break;
+				fprintf(stderr, "Unexpected brace {");
+				RETURN_ERROR
 			case closedBrace:
 				break;
 			case events:
-				break;
+				ParseEvents(fileText, delimit);
+				continue;
 			case a_events:
-				break;
+				ParseA_Events(fileText, delimit);
+				continue;
 			case transitions:
-				break;
+				ParseTransitions(fileText, delimit);
+				continue;
 			default:
-				break;
+				ParseVariable(fileText, delimit);
+				continue;
 		}
 
 	}
@@ -140,4 +147,20 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 	Dict_S_Add(objTemplates, name, obj);
 
 	return obj;
+}
+
+int ParseEvents(char* fileText, char* currToken char const * const delimit[]) {
+
+}
+
+int ParseA_Events(char* fileText, char* currToken char const * const delimit[]) {
+
+}
+
+int ParseTransitions(char* fileText, char* currToken char const * const delimit[]) {
+
+}
+
+int ParseVariable(char* fileText, char* currToken char const * const delimit[]) {
+
 }
