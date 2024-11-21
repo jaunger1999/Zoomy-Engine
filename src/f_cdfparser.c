@@ -12,6 +12,8 @@ unsigned long closedBrace;
 unsigned long events;
 unsigned long a_events;
 unsigned long transitions;
+unsigned long floatHash;
+unsigned long intHash;
 
 Dict_S* objTemplates;
 
@@ -29,6 +31,8 @@ int CDF_Init() {
 	events      = hash_s("events");
 	a_events    = hash_s("a_events");
 	transitions = hash_s("transitions");
+	floatHash   = hash_s("float");
+	intHash     = hash_s("int");
 
 	return 1;
 }
@@ -69,42 +73,85 @@ int ParseCDF(char const* const fileName) {
 	}
 }
 
+char* StringCopy(char const * const src) {
+	char* dest = malloc(sizeof(char) * (strlen(src) + 1));
+	
+	if(dest == NULL) {
+		fprintf(stderr, "Malloc failed to allocate a string.\n");
+		return NULL;
+	}
+	
+	strdup(dest, src);
+
+	return dest;
+}
+
+int ParseEvents(char* fileText, char* currToken char const * const delimit[]);
+int ParseA_Events(char* fileText, char* currToken char const * const delimit[]);
+int ParseTransitions(char* fileText, char* currToken char const * const delimit[]);
+
 int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
-	Object* obj  = malloc(sizeof(Object));
-	char*   name = NULL;
+	// Macros so I don't have to copy-paste my ass off.
+	#define RETURN_ERROR\
+		Dict_S_Destroy(obj->floats);\
+		Dict_S_Destroy(obj->ints);\
+		free(obj);\
+		free(name);\
+		return -1;
 
-	#define RETURN_ERROR free(obj); free(name); return -1;
-
-	// The name is expected to be in the same line as the object keyword.
-	while(name == NULL && currToken) {
-		switch(hash(currToken)) {
-			case object:
-			case openBrace:
-			case closedBrace:
-			case events:
-			case a_events:
-			case transitions:
-				fprintf(stderr, "Unexpected token: %s\n", currToken);
-				RETURN_ERROR
-			default:
-				name = malloc(sizeof(char) * (strlen(currToken) + 1));
-
-				if(name == NULL) {
-					fprintf(stderr, "Malloc failed to allocate a string.\n");
-					RETURN_ERROR
-				}
-
-				strdup(name, currToken);
-				break;
+	#define TOKEN_COPY(name)\
+		char* name;\
+		\
+		if((name = StringCopy(currToken)) == NULL) {\
+			RETURN_ERROR\
 		}
 
-		currToken = strtok(fileText, delimit);
-	}
+	#define GET_NEXT_TOKEN\
+		currToken = strtok(fileText, delimit);\
+		\
+		if(currToken == NULL) {\
+			fprintf(stderr, "Expected token");\
+			RETURN_ERROR\
+		}
+	
+	// Allocate our object.
+	Object* obj = malloc(sizeof(Object));
 
-	// We need a name to store this object in our dict_s
-	if(name == NULL) {
+	if(obj == NULL) {
+		fprintf(stderr, "Malloc failed to allocate an object.\n");
 		RETURN_ERROR
 	}
+
+	// Init our dicts.
+	obj->floats = Dict_S_Create();
+	obj->ints   = Dict_S_Create();
+
+	if(obj->floats == NULL || obj->ints == NULL) {
+		RETURN_ERROR
+	}
+
+	GET_NEXT_TOKEN
+
+	char* objName = NULL;
+
+	// The name is expected to be in the same line as the object keyword.
+	switch(hash(currToken)) {
+		case object:
+		case openBrace:
+		case closedBrace:
+		case events:
+		case a_events:
+		case transitions:
+			fprintf(stderr, "Unexpected token: %s\n", currToken);
+			RETURN_ERROR
+		default:
+			if((objName = StringCopy(currToken)) == NULL) {
+				RETURN_ERROR
+			}
+			break;
+	}
+
+	GET_NEXT_TOKEN
 
 	// check for an open brace.
 	switch(hash(currToken)) {
@@ -126,7 +173,7 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 			case openBrace:
 				fprintf(stderr, "Unexpected brace {");
 				RETURN_ERROR
-			case closedBrace:
+			case closedBrace: // means we're done
 				break;
 			case events:
 				ParseEvents(fileText, delimit);
@@ -137,16 +184,31 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 			case transitions:
 				ParseTransitions(fileText, delimit);
 				continue;
-			default:
-				ParseVariable(fileText, delimit);
-				continue;
-		}
+			case floatHash:
+				GET_NEXT_TOKEN
+				TOKEN_COPY(name)
 
+				GET_NEXT_TOKEN
+				float variable = atof(currToken);
+				Dict_S_Add(obj->floats, name, variable);
+				continue;
+			case intHash:
+				GET_NEXT_TOKEN
+				TOKEN_COPY(name)
+
+				GET_NEXT_TOKEN
+				int variable = atol(currToken);
+				Dict_S_Add(obj->ints, name, variable);
+				continue;
+			default:
+				fprintf(stderr, "Unexpected token: %s\n", currToken);
+				RETURN_ERROR
+		}
 	}
 
 	Dict_S_Add(objTemplates, name, obj);
 
-	return obj;
+	return 1;
 }
 
 int ParseEvents(char* fileText, char* currToken char const * const delimit[]) {
@@ -158,9 +220,5 @@ int ParseA_Events(char* fileText, char* currToken char const * const delimit[]) 
 }
 
 int ParseTransitions(char* fileText, char* currToken char const * const delimit[]) {
-
-}
-
-int ParseVariable(char* fileText, char* currToken char const * const delimit[]) {
 
 }

@@ -1,10 +1,10 @@
 object Plat_Player {
-	jumpHeight            1.0
-	timeToApex            0.5
-	movementSpeed        10.0
-	acceleration         10.0
-	terminalVelocity      3.0
-	neutralJumpDistance   3.0
+	float jumpHeight            1.0
+	float timeToApex            0.5
+	float movementSpeed        10.0
+	float acceleration         10.0
+	float terminalVelocity      3.0
+	float neutralJumpDistance   3.0
 
 	states {
 		Airborne:
