@@ -1,6 +1,7 @@
 #define INIT_DICT_SIZE 64
 
 #include "d_dict_s.h"
+#include "d_string.h"
 #include "hash.h"
 
 #include <stdio.h>
@@ -36,8 +37,8 @@ void Dict_S_Destroy(Dict_S *d) {
 	free(d);
 }
 
-void* Dict_S_Get(Dict_S* const dict, unsigned char const * const id) {
-	unsigned long i = hash_s(id) % dict->size;
+void* Dict_S_Get(Dict_S* const dict, char const * const id) {
+	unsigned long i = hash_s(id, MAX_STR_LEN) % dict->size;
 
 	for (DictEntry_S* entry = dict->buckets[i]; entry != NULL; entry = entry->next) {
 		if (strcmp(entry->id, id) == 0) {
@@ -48,8 +49,8 @@ void* Dict_S_Get(Dict_S* const dict, unsigned char const * const id) {
 	return NULL;
 }
 
-int Dict_S_Add(Dict_S* const dict, void* const item, unsigned char const * const id) {
-	unsigned long i = hash_s(id) % dict->size;
+int Dict_S_Add(Dict_S* const dict, char const * const id, void* const item) {
+	unsigned long i = hash_s(id, MAX_STR_LEN) % dict->size;
 
 	// Init the entry
 	DictEntry_S* entry = malloc(sizeof(DictEntry_S));
@@ -59,7 +60,7 @@ int Dict_S_Add(Dict_S* const dict, void* const item, unsigned char const * const
 		return 0;
 	}
 
-	entry->id = id;
+	entry->id = StringCopy(id);
 	entry->item = item;
 
 	// add the entry to hashed bucket

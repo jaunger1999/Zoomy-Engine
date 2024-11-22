@@ -2,18 +2,27 @@
 ///
 /// There's a small chance of user defined terms to collide with cdf keywords and symbols. Not sure if that's worth addressing.
 
+#include "d_dict_s.h"
+#include "d_string.h"
 #include "hash.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-unsigned long object;
-unsigned long openBrace;
-unsigned long closedBrace;
-unsigned long events;
-unsigned long a_events;
-unsigned long transitions;
-unsigned long floatHash;
-unsigned long intHash;
+#include "raylib.h"
+
+// Precomputed hash values to create a switch statement.
+#define OBJECT       3150600508
+#define OPEN_BRACE     51624448
+#define CLOSED_BRACE 3453045186
+#define EVENTS       3847627034
+#define A_EVENTS     3587176570
+#define TRANSITIONS  2309289059
+#define FLOAT         458547227
+#define INT          2897414608
+
+#define MAX_STR_LEN 32
 
 Dict_S* objTemplates;
 
@@ -23,25 +32,17 @@ int CDF_Init() {
 	if(objTemplates == NULL) {
 		return -1;
 	}
-
-	// init our hash values for our string switch statements.
-	object      = hash_s("object");
-	openBrace   = hash_s("{");
-	closedBrace = hash_s("}");
-	events      = hash_s("events");
-	a_events    = hash_s("a_events");
-	transitions = hash_s("transitions");
-	floatHash   = hash_s("float");
-	intHash     = hash_s("int");
-
+	
 	return 1;
 }
+
+int ParseObject(char* fileText, char* currToken, char const * const delimit);
 
 int ParseCDF(char const* const fileName) {
 	char const * const delimit =" \t\r\n\v\f";
 	char* fileText = LoadFileText(fileName);
 
-	char* currToken = strtok_r(fileText, delimit);
+	char* currToken = strtok(fileText, delimit);
 
 	while(currToken) {
 		if(strcmp(currToken, "") == 0) {
@@ -49,19 +50,19 @@ int ParseCDF(char const* const fileName) {
 			continue;
 		}
 
-		switch(hash(currToken)) {
-			case object:
+		switch(hash_s(currToken, MAX_STR_LEN)) {
+			case OBJECT:
 				ParseObject(fileText, currToken);
 				break;
-			case openBrace:
+			case OPEN_BRACE:
 				break;
-			case closedBrace:
+			case CLOSED_BRACE:
 				break;
-			case events:
+			case EVENTS:
 				break;
-			case a_events:
+			case A_EVENTS:
 				break;
-			case transitions:
+			case TRANSITIONS:
 				break;
 			default:
 				fprintf(stderr, "Unexpected token: %s\n", currToken);
@@ -71,26 +72,15 @@ int ParseCDF(char const* const fileName) {
 
 		currToken = strtok(fileText, delimit);
 	}
+
+	return 1;
 }
 
-char* StringCopy(char const * const src) {
-	char* dest = malloc(sizeof(char) * (strlen(src) + 1));
-	
-	if(dest == NULL) {
-		fprintf(stderr, "Malloc failed to allocate a string.\n");
-		return NULL;
-	}
-	
-	strdup(dest, src);
+int ParseEvents     (char* fileText, char* currToken, char const * const delimit);
+int ParseA_Events   (char* fileText, char* currToken, char const * const delimit);
+int ParseTransitions(char* fileText, char* currToken, char const * const delimit);
 
-	return dest;
-}
-
-int ParseEvents(char* fileText, char* currToken char const * const delimit[]);
-int ParseA_Events(char* fileText, char* currToken char const * const delimit[]);
-int ParseTransitions(char* fileText, char* currToken char const * const delimit[]);
-
-int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
+int ParseObject(char* fileText, char* currToken, char const * const delimit) {
 	// Macros so I don't have to copy-paste my ass off.
 	#define RETURN_ERROR\
 		Dict_S_Destroy(obj->floats);\
@@ -110,7 +100,7 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 		currToken = strtok(fileText, delimit);\
 		\
 		if(currToken == NULL) {\
-			fprintf(stderr, "Expected token");\
+			fprintf(stderr, "Expected token\n");\
 			RETURN_ERROR\
 		}
 	
@@ -135,13 +125,13 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 	char* objName = NULL;
 
 	// The name is expected to be in the same line as the object keyword.
-	switch(hash(currToken)) {
-		case object:
-		case openBrace:
-		case closedBrace:
-		case events:
-		case a_events:
-		case transitions:
+	switch(hash_s(currToken, MAX_STR_LEN)) {
+		case OBJECT:
+		case OPEN_BRACE:
+		case CLOSED_BRACE:
+		case EVENTS:
+		case A_EVENTS:
+		case TRANSITIONS:
 			fprintf(stderr, "Unexpected token: %s\n", currToken);
 			RETURN_ERROR
 		default:
@@ -154,37 +144,37 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 	GET_NEXT_TOKEN
 
 	// check for an open brace.
-	switch(hash(currToken)) {
-		case openBrace:
+	switch(hash_s(currToken, MAX_STR_LEN)) {
+		case OPEN_BRACE:
 			break;
 		default:
 			fprintf(stderr, "Expected open brace { after object definition.");
 			RETURN_ERROR
 	}
 
+	GET_NEXT_TOKEN
+
 	// parse the rest of the obj definition.
 	while(currToken) {
-		currToken = strtok(fileText, delimit);
-
-		switch(hash(currToken)) {
-			case object:
+		switch(hash_s(currToken, MAX_STR_LEN)) {
+			case OBJECT:
 				fprintf(stderr, "Can't define an object within an object");
 				RETURN_ERROR
-			case openBrace:
+			case OPEN_BRACE:
 				fprintf(stderr, "Unexpected brace {");
 				RETURN_ERROR
-			case closedBrace: // means we're done
+			case CLOSED_BRACE: // means we're done
 				break;
-			case events:
+			case EVENTS:
 				ParseEvents(fileText, delimit);
 				continue;
-			case a_events:
+			case A_EVENTS:
 				ParseA_Events(fileText, delimit);
 				continue;
-			case transitions:
+			case TRANSITIONS:
 				ParseTransitions(fileText, delimit);
 				continue;
-			case floatHash:
+			case FLOAT:
 				GET_NEXT_TOKEN
 				TOKEN_COPY(name)
 
@@ -192,7 +182,7 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 				float variable = atof(currToken);
 				Dict_S_Add(obj->floats, name, variable);
 				continue;
-			case intHash:
+			case INT:
 				GET_NEXT_TOKEN
 				TOKEN_COPY(name)
 
@@ -204,6 +194,8 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 				fprintf(stderr, "Unexpected token: %s\n", currToken);
 				RETURN_ERROR
 		}
+
+		currToken = strtok(fileText, delimit);
 	}
 
 	Dict_S_Add(objTemplates, name, obj);
@@ -211,14 +203,17 @@ int ParseObject(char* fileText, char* currToken char const * const delimit[]) {
 	return 1;
 }
 
-int ParseEvents(char* fileText, char* currToken char const * const delimit[]) {
+int ParseEvents(char* fileText, char* currToken, char const * const delimit) {
 
+	return 1;
 }
 
-int ParseA_Events(char* fileText, char* currToken char const * const delimit[]) {
+int ParseA_Events(char* fileText, char* currToken, char const * const delimit) {
 
+	return 1;
 }
 
-int ParseTransitions(char* fileText, char* currToken char const * const delimit[]) {
+int ParseTransitions(char* fileText, char* currToken, char const * const delimit) {
 
+	return 1;
 }

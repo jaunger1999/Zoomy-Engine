@@ -39,7 +39,7 @@ int E_Init() {
 int E_AddObj(unsigned int const id) {
 	Queue* newEventQ = Q_Create();
 	
-	Dict_Add(eventQs, newEventQ, id);
+	Dict_Add(eventQs, id, newEventQ);
 
 	return 1;
 }

@@ -20,9 +20,9 @@ int main(void) {
 	Vector3 itemOne = (Vector3){ 0.1f, 0.2f, 0.3f };
 	int itemTwo = 123;
 	float itemThree = 1.234f;
-	Dict_Add(d, &itemOne, idOne);
-	Dict_Add(d, &itemTwo, idTwo);
-	Dict_Add(d, &itemThree, idThree);
+	Dict_Add(d, idOne,   &itemOne);
+	Dict_Add(d, idTwo,   &itemTwo);
+	Dict_Add(d, idThree, &itemThree);
 
 	Vector3 retV = *(Vector3*)Dict_Get(d, idOne);
 	int retI = *(int*)Dict_Get(d, idTwo);

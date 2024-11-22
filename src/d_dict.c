@@ -52,7 +52,7 @@ int Dict_Add_String(Dict* const dict, void* item, char const * const key) {
 	return 1;
 }
 
-int Dict_Add(Dict* const dict, void* const item, unsigned int id) {
+int Dict_Add(Dict* const dict, unsigned int id, void* const item) {
 	unsigned long i = hash(id) % dict->size;
 
 	// Init the entry
