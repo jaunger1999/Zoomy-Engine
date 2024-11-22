@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-StateMachine* StateMachine_Init() {
+StateMachine* StateMachine_Init(int totalStates) {
 	StateMachine* sm = malloc(sizeof(StateMachine));
 
 	sm->transitions = malloc(sizeof(int) * totalStates);
@@ -12,7 +12,7 @@ StateMachine* StateMachine_Init() {
 		sm->transitions[i] = malloc(sizeof(int) * totalStates);
 
 		for(int j = 0; j < totalStates; j++) {
-			sm->transitions[j] = -1;
+			sm->transitions[i][j] = -1;
 		}
 	}
 

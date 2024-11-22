@@ -52,7 +52,7 @@ int ParseCDF(char const* const fileName) {
 
 		switch(hash_s(currToken, MAX_STR_LEN)) {
 			case OBJECT:
-				ParseObject(fileText, currToken);
+				ParseObject(fileText, currToken, delimit);
 				break;
 			case OPEN_BRACE:
 				break;
@@ -69,12 +69,16 @@ int ParseCDF(char const* const fileName) {
 				return -1;
 		}
 
-
 		currToken = strtok(fileText, delimit);
 	}
 
 	return 1;
 }
+
+typedef struct Object {
+	Dict_S* floats;
+	Dict_S* ints;
+} Object;
 
 int ParseEvents     (char* fileText, char* currToken, char const * const delimit);
 int ParseA_Events   (char* fileText, char* currToken, char const * const delimit);
@@ -86,7 +90,7 @@ int ParseObject(char* fileText, char* currToken, char const * const delimit) {
 		Dict_S_Destroy(obj->floats);\
 		Dict_S_Destroy(obj->ints);\
 		free(obj);\
-		free(name);\
+		free(objName);\
 		return -1;
 
 	#define TOKEN_COPY(name)\
@@ -106,6 +110,7 @@ int ParseObject(char* fileText, char* currToken, char const * const delimit) {
 	
 	// Allocate our object.
 	Object* obj = malloc(sizeof(Object));
+	char* objName = NULL;
 
 	if(obj == NULL) {
 		fprintf(stderr, "Malloc failed to allocate an object.\n");
@@ -121,8 +126,6 @@ int ParseObject(char* fileText, char* currToken, char const * const delimit) {
 	}
 
 	GET_NEXT_TOKEN
-
-	char* objName = NULL;
 
 	// The name is expected to be in the same line as the object keyword.
 	switch(hash_s(currToken, MAX_STR_LEN)) {
@@ -166,29 +169,41 @@ int ParseObject(char* fileText, char* currToken, char const * const delimit) {
 			case CLOSED_BRACE: // means we're done
 				break;
 			case EVENTS:
-				ParseEvents(fileText, delimit);
+				ParseEvents(fileText, currToken, delimit);
 				continue;
 			case A_EVENTS:
-				ParseA_Events(fileText, delimit);
+				ParseA_Events(fileText, currToken, delimit);
 				continue;
 			case TRANSITIONS:
-				ParseTransitions(fileText, delimit);
+				ParseTransitions(fileText, currToken, delimit);
 				continue;
 			case FLOAT:
 				GET_NEXT_TOKEN
-				TOKEN_COPY(name)
+				TOKEN_COPY(fName)
 
 				GET_NEXT_TOKEN
-				float variable = atof(currToken);
-				Dict_S_Add(obj->floats, name, variable);
+				float* f = malloc(sizeof(float));
+
+				if(f == NULL) {
+					RETURN_ERROR
+				}
+
+				*f = atof(currToken);
+				Dict_S_Add(obj->floats, fName, f);
 				continue;
 			case INT:
 				GET_NEXT_TOKEN
-				TOKEN_COPY(name)
+				TOKEN_COPY(iName)
 
 				GET_NEXT_TOKEN
-				int variable = atol(currToken);
-				Dict_S_Add(obj->ints, name, variable);
+				int* i = malloc(sizeof(int));
+
+				if(i == NULL) {
+					RETURN_ERROR
+				}
+
+				*i = atol(currToken);
+				Dict_S_Add(obj->ints, iName, i);
 				continue;
 			default:
 				fprintf(stderr, "Unexpected token: %s\n", currToken);
@@ -198,7 +213,7 @@ int ParseObject(char* fileText, char* currToken, char const * const delimit) {
 		currToken = strtok(fileText, delimit);
 	}
 
-	Dict_S_Add(objTemplates, name, obj);
+	Dict_S_Add(objTemplates, objName, obj);
 
 	return 1;
 }
