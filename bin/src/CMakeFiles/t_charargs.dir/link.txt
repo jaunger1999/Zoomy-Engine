@@ -1,3 +1,0 @@
-"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\t_charargs.dir/objects.a
-C:\mingw64\bin\ar.exe qc CMakeFiles\t_charargs.dir/objects.a @CMakeFiles\t_charargs.dir\objects1.rsp
-C:\mingw64\bin\gcc.exe -Wl,--whole-archive CMakeFiles\t_charargs.dir/objects.a -Wl,--no-whole-archive -o ..\t_charargs.exe -Wl,--out-implib,libt_charargs.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\t_charargs.dir\linkLibs.rsp
