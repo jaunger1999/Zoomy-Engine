@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\t_cdf.dir/objects.a
+C:\mingw64\bin\ar.exe qc CMakeFiles\t_cdf.dir/objects.a @CMakeFiles\t_cdf.dir\objects1.rsp
+C:\mingw64\bin\gcc.exe -Wl,--whole-archive CMakeFiles\t_cdf.dir/objects.a -Wl,--no-whole-archive -o ..\t_cdf.exe -Wl,--out-implib,libt_cdf.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\t_cdf.dir\linkLibs.rsp

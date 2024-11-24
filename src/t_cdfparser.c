@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 int main(void) {
+	CDF_ParseRoot();
 
 	return 1;
 }

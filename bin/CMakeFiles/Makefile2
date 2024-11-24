@@ -94,6 +94,10 @@ src/preinstall:
 
 # Recursive "clean" directory target.
 src/clean: src/CMakeFiles/RaylibProject.dir/clean
+src/clean: src/CMakeFiles/t_cdf.dir/clean
+src/clean: src/CMakeFiles/t_charargs.dir/clean
+src/clean: src/CMakeFiles/t_dict.dir/clean
+src/clean: src/CMakeFiles/t_events.dir/clean
 .PHONY : src/clean
 
 #=============================================================================
@@ -126,6 +130,130 @@ src/CMakeFiles/RaylibProject.dir/codegen:
 src/CMakeFiles/RaylibProject.dir/clean:
 	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/clean
 .PHONY : src/CMakeFiles/RaylibProject.dir/clean
+
+#=============================================================================
+# Target rules for target src/CMakeFiles/t_cdf.dir
+
+# All Build rule for target.
+src/CMakeFiles/t_cdf.dir/all:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/depend
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" --progress-num=11,12,13,14,15,16,17 "Built target t_cdf"
+.PHONY : src/CMakeFiles/t_cdf.dir/all
+
+# Build rule for subdir invocation for target.
+src/CMakeFiles/t_cdf.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" 7
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 src/CMakeFiles/t_cdf.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" 0
+.PHONY : src/CMakeFiles/t_cdf.dir/rule
+
+# Convenience name for target.
+t_cdf: src/CMakeFiles/t_cdf.dir/rule
+.PHONY : t_cdf
+
+# codegen rule for target.
+src/CMakeFiles/t_cdf.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/codegen
+.PHONY : src/CMakeFiles/t_cdf.dir/codegen
+
+# clean rule for target.
+src/CMakeFiles/t_cdf.dir/clean:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/clean
+.PHONY : src/CMakeFiles/t_cdf.dir/clean
+
+#=============================================================================
+# Target rules for target src/CMakeFiles/t_charargs.dir
+
+# All Build rule for target.
+src/CMakeFiles/t_charargs.dir/all:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_charargs.dir\build.make src/CMakeFiles/t_charargs.dir/depend
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_charargs.dir\build.make src/CMakeFiles/t_charargs.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" --progress-num=18,19 "Built target t_charargs"
+.PHONY : src/CMakeFiles/t_charargs.dir/all
+
+# Build rule for subdir invocation for target.
+src/CMakeFiles/t_charargs.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 src/CMakeFiles/t_charargs.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" 0
+.PHONY : src/CMakeFiles/t_charargs.dir/rule
+
+# Convenience name for target.
+t_charargs: src/CMakeFiles/t_charargs.dir/rule
+.PHONY : t_charargs
+
+# codegen rule for target.
+src/CMakeFiles/t_charargs.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_charargs.dir\build.make src/CMakeFiles/t_charargs.dir/codegen
+.PHONY : src/CMakeFiles/t_charargs.dir/codegen
+
+# clean rule for target.
+src/CMakeFiles/t_charargs.dir/clean:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_charargs.dir\build.make src/CMakeFiles/t_charargs.dir/clean
+.PHONY : src/CMakeFiles/t_charargs.dir/clean
+
+#=============================================================================
+# Target rules for target src/CMakeFiles/t_dict.dir
+
+# All Build rule for target.
+src/CMakeFiles/t_dict.dir/all:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/depend
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" --progress-num=20,21,22,23 "Built target t_dict"
+.PHONY : src/CMakeFiles/t_dict.dir/all
+
+# Build rule for subdir invocation for target.
+src/CMakeFiles/t_dict.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 src/CMakeFiles/t_dict.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" 0
+.PHONY : src/CMakeFiles/t_dict.dir/rule
+
+# Convenience name for target.
+t_dict: src/CMakeFiles/t_dict.dir/rule
+.PHONY : t_dict
+
+# codegen rule for target.
+src/CMakeFiles/t_dict.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/codegen
+.PHONY : src/CMakeFiles/t_dict.dir/codegen
+
+# clean rule for target.
+src/CMakeFiles/t_dict.dir/clean:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/clean
+.PHONY : src/CMakeFiles/t_dict.dir/clean
+
+#=============================================================================
+# Target rules for target src/CMakeFiles/t_events.dir
+
+# All Build rule for target.
+src/CMakeFiles/t_events.dir/all:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/depend
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" --progress-num=24,25,26,27 "Built target t_events"
+.PHONY : src/CMakeFiles/t_events.dir/all
+
+# Build rule for subdir invocation for target.
+src/CMakeFiles/t_events.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 src/CMakeFiles/t_events.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\jaung\source\repos\Raylib Project\bin\CMakeFiles" 0
+.PHONY : src/CMakeFiles/t_events.dir/rule
+
+# Convenience name for target.
+t_events: src/CMakeFiles/t_events.dir/rule
+.PHONY : t_events
+
+# codegen rule for target.
+src/CMakeFiles/t_events.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/codegen
+.PHONY : src/CMakeFiles/t_events.dir/codegen
+
+# clean rule for target.
+src/CMakeFiles/t_events.dir/clean:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/clean
+.PHONY : src/CMakeFiles/t_events.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

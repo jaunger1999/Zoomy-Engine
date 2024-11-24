@@ -30,16 +30,33 @@ int CDF_Init() {
 	objTemplates = Dict_S_Create();
 
 	if(objTemplates == NULL) {
-		return -1;
+		return 0;
 	}
 	
 	return 1;
 }
 
+int CDF_Parse(char const* const fileName);
+
+int CDF_ParseRoot() {
+	CDF_Init();
+
+	char const* const delimit =" \t\r\n\v\f";
+	char* fileText = LoadFileText("cdf/root.cdf");
+
+	char* currToken = strtok(fileText, delimit);
+
+	while(currToken) {
+		CDF_Parse(currToken);
+	}
+
+	return 1;
+}
+
 int ParseObject(char* fileText, char* currToken, char const * const delimit);
 
-int ParseCDF(char const* const fileName) {
-	char const * const delimit =" \t\r\n\v\f";
+int CDF_Parse(char const* const fileName) {
+	char const* const delimit =" \t\r\n\v\f";
 	char* fileText = LoadFileText(fileName);
 
 	char* currToken = strtok(fileText, delimit);
@@ -53,17 +70,17 @@ int ParseCDF(char const* const fileName) {
 		switch(hash_s(currToken, MAX_STR_LEN)) {
 			case OBJECT:
 				ParseObject(fileText, currToken, delimit);
-				break;
+				continue;
 			case OPEN_BRACE:
-				break;
+				continue;
 			case CLOSED_BRACE:
-				break;
+				continue;
 			case EVENTS:
-				break;
+				continue;
 			case A_EVENTS:
-				break;
+				continue;
 			case TRANSITIONS:
-				break;
+				continue;
 			default:
 				fprintf(stderr, "Unexpected token: %s\n", currToken);
 				return -1;

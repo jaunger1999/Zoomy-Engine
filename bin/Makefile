@@ -128,6 +128,58 @@ RaylibProject/fast:
 	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/build
 .PHONY : RaylibProject/fast
 
+#=============================================================================
+# Target rules for targets named t_cdf
+
+# Build rule for target.
+t_cdf: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 t_cdf
+.PHONY : t_cdf
+
+# fast build rule for target.
+t_cdf/fast:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/build
+.PHONY : t_cdf/fast
+
+#=============================================================================
+# Target rules for targets named t_charargs
+
+# Build rule for target.
+t_charargs: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 t_charargs
+.PHONY : t_charargs
+
+# fast build rule for target.
+t_charargs/fast:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_charargs.dir\build.make src/CMakeFiles/t_charargs.dir/build
+.PHONY : t_charargs/fast
+
+#=============================================================================
+# Target rules for targets named t_dict
+
+# Build rule for target.
+t_dict: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 t_dict
+.PHONY : t_dict
+
+# fast build rule for target.
+t_dict/fast:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/build
+.PHONY : t_dict/fast
+
+#=============================================================================
+# Target rules for targets named t_events
+
+# Build rule for target.
+t_events: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 t_events
+.PHONY : t_events
+
+# fast build rule for target.
+t_events/fast:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/build
+.PHONY : t_events/fast
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -137,6 +189,10 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... RaylibProject
+	@echo ... t_cdf
+	@echo ... t_charargs
+	@echo ... t_dict
+	@echo ... t_events
 .PHONY : help
 
 

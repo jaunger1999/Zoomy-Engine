@@ -110,7 +110,7 @@ CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Proje
 CMAKE_GNUtoMS:BOOL=OFF
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/src
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/RaylibProject
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=C:/mingw64/bin/ld.exe
@@ -240,15 +240,6 @@ CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 CMAKE_VERBOSE_MAKEFILE:BOOL=OFF
 
 //Value Computed by CMake
-Project_BINARY_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/bin
-
-//Value Computed by CMake
-Project_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-Project_SOURCE_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project
-
-//Value Computed by CMake
 RaylibProject_BINARY_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/bin
 
 //Value Computed by CMake
@@ -258,13 +249,40 @@ RaylibProject_IS_TOP_LEVEL:STATIC=ON
 RaylibProject_SOURCE_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project
 
 //Value Computed by CMake
-src_BINARY_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/bin/src
+t_cdf_BINARY_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/bin/src
 
 //Value Computed by CMake
-src_IS_TOP_LEVEL:STATIC=OFF
+t_cdf_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
-src_SOURCE_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/src
+t_cdf_SOURCE_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/src
+
+//Value Computed by CMake
+t_charargs_BINARY_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/bin/src
+
+//Value Computed by CMake
+t_charargs_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+t_charargs_SOURCE_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/src
+
+//Value Computed by CMake
+t_dict_BINARY_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/bin/src
+
+//Value Computed by CMake
+t_dict_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+t_dict_SOURCE_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/src
+
+//Value Computed by CMake
+t_events_BINARY_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/bin/src
+
+//Value Computed by CMake
+t_events_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+t_events_SOURCE_DIR:STATIC=C:/Users/jaung/source/repos/Raylib Project/src
 
 
 ########################

@@ -1,4 +1,7 @@
 file(REMOVE_RECURSE
+  "../RaylibProject.exe"
+  "../RaylibProject.exe.manifest"
+  "../RaylibProject.pdb"
   "CMakeFiles/RaylibProject.dir/d_dict.c.obj"
   "CMakeFiles/RaylibProject.dir/d_dict.c.obj.d"
   "CMakeFiles/RaylibProject.dir/d_queue.c.obj"
@@ -17,9 +20,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/RaylibProject.dir/m_vector.c.obj.d"
   "CMakeFiles/RaylibProject.dir/main.c.obj"
   "CMakeFiles/RaylibProject.dir/main.c.obj.d"
-  "RaylibProject.exe"
-  "RaylibProject.exe.manifest"
-  "RaylibProject.pdb"
   "libRaylibProject.dll.a"
 )
 

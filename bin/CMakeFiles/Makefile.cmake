@@ -61,4 +61,8 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "src/CMakeFiles/RaylibProject.dir/DependInfo.cmake"
+  "src/CMakeFiles/t_cdf.dir/DependInfo.cmake"
+  "src/CMakeFiles/t_charargs.dir/DependInfo.cmake"
+  "src/CMakeFiles/t_dict.dir/DependInfo.cmake"
+  "src/CMakeFiles/t_events.dir/DependInfo.cmake"
   )

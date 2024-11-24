@@ -1,1 +1,1 @@
-include plat_player.cdf
+plat_player.cdf

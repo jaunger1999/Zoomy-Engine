@@ -129,12 +129,70 @@ RaylibProject/fast:
 	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/build
 .PHONY : RaylibProject/fast
 
+# Convenience name for target.
+src/CMakeFiles/t_cdf.dir/rule:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 src/CMakeFiles/t_cdf.dir/rule
+.PHONY : src/CMakeFiles/t_cdf.dir/rule
+
+# Convenience name for target.
+t_cdf: src/CMakeFiles/t_cdf.dir/rule
+.PHONY : t_cdf
+
+# fast build rule for target.
+t_cdf/fast:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/build
+.PHONY : t_cdf/fast
+
+# Convenience name for target.
+src/CMakeFiles/t_charargs.dir/rule:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 src/CMakeFiles/t_charargs.dir/rule
+.PHONY : src/CMakeFiles/t_charargs.dir/rule
+
+# Convenience name for target.
+t_charargs: src/CMakeFiles/t_charargs.dir/rule
+.PHONY : t_charargs
+
+# fast build rule for target.
+t_charargs/fast:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_charargs.dir\build.make src/CMakeFiles/t_charargs.dir/build
+.PHONY : t_charargs/fast
+
+# Convenience name for target.
+src/CMakeFiles/t_dict.dir/rule:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 src/CMakeFiles/t_dict.dir/rule
+.PHONY : src/CMakeFiles/t_dict.dir/rule
+
+# Convenience name for target.
+t_dict: src/CMakeFiles/t_dict.dir/rule
+.PHONY : t_dict
+
+# fast build rule for target.
+t_dict/fast:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/build
+.PHONY : t_dict/fast
+
+# Convenience name for target.
+src/CMakeFiles/t_events.dir/rule:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 src/CMakeFiles/t_events.dir/rule
+.PHONY : src/CMakeFiles/t_events.dir/rule
+
+# Convenience name for target.
+t_events: src/CMakeFiles/t_events.dir/rule
+.PHONY : t_events
+
+# fast build rule for target.
+t_events/fast:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/build
+.PHONY : t_events/fast
+
 d_dict.obj: d_dict.c.obj
 .PHONY : d_dict.obj
 
 # target to build an object file
 d_dict.c.obj:
 	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/d_dict.c.obj
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/d_dict.c.obj
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/d_dict.c.obj
 .PHONY : d_dict.c.obj
 
 d_dict.i: d_dict.c.i
@@ -143,6 +201,8 @@ d_dict.i: d_dict.c.i
 # target to preprocess a source file
 d_dict.c.i:
 	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/d_dict.c.i
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/d_dict.c.i
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/d_dict.c.i
 .PHONY : d_dict.c.i
 
 d_dict.s: d_dict.c.s
@@ -151,7 +211,33 @@ d_dict.s: d_dict.c.s
 # target to generate assembly for a file
 d_dict.c.s:
 	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/d_dict.c.s
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/d_dict.c.s
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/d_dict.c.s
 .PHONY : d_dict.c.s
+
+d_dict_s.obj: d_dict_s.c.obj
+.PHONY : d_dict_s.obj
+
+# target to build an object file
+d_dict_s.c.obj:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/d_dict_s.c.obj
+.PHONY : d_dict_s.c.obj
+
+d_dict_s.i: d_dict_s.c.i
+.PHONY : d_dict_s.i
+
+# target to preprocess a source file
+d_dict_s.c.i:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/d_dict_s.c.i
+.PHONY : d_dict_s.c.i
+
+d_dict_s.s: d_dict_s.c.s
+.PHONY : d_dict_s.s
+
+# target to generate assembly for a file
+d_dict_s.c.s:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/d_dict_s.c.s
+.PHONY : d_dict_s.c.s
 
 d_queue.obj: d_queue.c.obj
 .PHONY : d_queue.obj
@@ -176,6 +262,54 @@ d_queue.s: d_queue.c.s
 d_queue.c.s:
 	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/d_queue.c.s
 .PHONY : d_queue.c.s
+
+d_string.obj: d_string.c.obj
+.PHONY : d_string.obj
+
+# target to build an object file
+d_string.c.obj:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/d_string.c.obj
+.PHONY : d_string.c.obj
+
+d_string.i: d_string.c.i
+.PHONY : d_string.i
+
+# target to preprocess a source file
+d_string.c.i:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/d_string.c.i
+.PHONY : d_string.c.i
+
+d_string.s: d_string.c.s
+.PHONY : d_string.s
+
+# target to generate assembly for a file
+d_string.c.s:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/d_string.c.s
+.PHONY : d_string.c.s
+
+f_cdfparser.obj: f_cdfparser.c.obj
+.PHONY : f_cdfparser.obj
+
+# target to build an object file
+f_cdfparser.c.obj:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/f_cdfparser.c.obj
+.PHONY : f_cdfparser.c.obj
+
+f_cdfparser.i: f_cdfparser.c.i
+.PHONY : f_cdfparser.i
+
+# target to preprocess a source file
+f_cdfparser.c.i:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/f_cdfparser.c.i
+.PHONY : f_cdfparser.c.i
+
+f_cdfparser.s: f_cdfparser.c.s
+.PHONY : f_cdfparser.s
+
+# target to generate assembly for a file
+f_cdfparser.c.s:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/f_cdfparser.c.s
+.PHONY : f_cdfparser.c.s
 
 f_objparser.obj: f_objparser.c.obj
 .PHONY : f_objparser.obj
@@ -225,12 +359,39 @@ g_events.c.s:
 	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/g_events.c.s
 .PHONY : g_events.c.s
 
+g_statemachines.obj: g_statemachines.c.obj
+.PHONY : g_statemachines.obj
+
+# target to build an object file
+g_statemachines.c.obj:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/g_statemachines.c.obj
+.PHONY : g_statemachines.c.obj
+
+g_statemachines.i: g_statemachines.c.i
+.PHONY : g_statemachines.i
+
+# target to preprocess a source file
+g_statemachines.c.i:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/g_statemachines.c.i
+.PHONY : g_statemachines.c.i
+
+g_statemachines.s: g_statemachines.c.s
+.PHONY : g_statemachines.s
+
+# target to generate assembly for a file
+g_statemachines.c.s:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/g_statemachines.c.s
+.PHONY : g_statemachines.c.s
+
 hash.obj: hash.c.obj
 .PHONY : hash.obj
 
 # target to build an object file
 hash.c.obj:
 	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/hash.c.obj
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/hash.c.obj
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/hash.c.obj
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/hash.c.obj
 .PHONY : hash.c.obj
 
 hash.i: hash.c.i
@@ -239,6 +400,9 @@ hash.i: hash.c.i
 # target to preprocess a source file
 hash.c.i:
 	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/hash.c.i
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/hash.c.i
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/hash.c.i
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/hash.c.i
 .PHONY : hash.c.i
 
 hash.s: hash.c.s
@@ -247,6 +411,9 @@ hash.s: hash.c.s
 # target to generate assembly for a file
 hash.c.s:
 	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/hash.c.s
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/hash.c.s
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/hash.c.s
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/hash.c.s
 .PHONY : hash.c.s
 
 m_cylinder.obj: m_cylinder.c.obj
@@ -345,6 +512,81 @@ main.c.s:
 	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\RaylibProject.dir\build.make src/CMakeFiles/RaylibProject.dir/main.c.s
 .PHONY : main.c.s
 
+t_cdfparser.obj: t_cdfparser.c.obj
+.PHONY : t_cdfparser.obj
+
+# target to build an object file
+t_cdfparser.c.obj:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/t_cdfparser.c.obj
+.PHONY : t_cdfparser.c.obj
+
+t_cdfparser.i: t_cdfparser.c.i
+.PHONY : t_cdfparser.i
+
+# target to preprocess a source file
+t_cdfparser.c.i:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/t_cdfparser.c.i
+.PHONY : t_cdfparser.c.i
+
+t_cdfparser.s: t_cdfparser.c.s
+.PHONY : t_cdfparser.s
+
+# target to generate assembly for a file
+t_cdfparser.c.s:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_cdf.dir\build.make src/CMakeFiles/t_cdf.dir/t_cdfparser.c.s
+.PHONY : t_cdfparser.c.s
+
+t_charArgs.obj: t_charArgs.c.obj
+.PHONY : t_charArgs.obj
+
+# target to build an object file
+t_charArgs.c.obj:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_charargs.dir\build.make src/CMakeFiles/t_charargs.dir/t_charArgs.c.obj
+.PHONY : t_charArgs.c.obj
+
+t_charArgs.i: t_charArgs.c.i
+.PHONY : t_charArgs.i
+
+# target to preprocess a source file
+t_charArgs.c.i:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_charargs.dir\build.make src/CMakeFiles/t_charargs.dir/t_charArgs.c.i
+.PHONY : t_charArgs.c.i
+
+t_charArgs.s: t_charArgs.c.s
+.PHONY : t_charArgs.s
+
+# target to generate assembly for a file
+t_charArgs.c.s:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_charargs.dir\build.make src/CMakeFiles/t_charargs.dir/t_charArgs.c.s
+.PHONY : t_charArgs.c.s
+
+t_dict.obj: t_dict.c.obj
+.PHONY : t_dict.obj
+
+# target to build an object file
+t_dict.c.obj:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/t_dict.c.obj
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/t_dict.c.obj
+.PHONY : t_dict.c.obj
+
+t_dict.i: t_dict.c.i
+.PHONY : t_dict.i
+
+# target to preprocess a source file
+t_dict.c.i:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/t_dict.c.i
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/t_dict.c.i
+.PHONY : t_dict.c.i
+
+t_dict.s: t_dict.c.s
+.PHONY : t_dict.s
+
+# target to generate assembly for a file
+t_dict.c.s:
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_dict.dir\build.make src/CMakeFiles/t_dict.dir/t_dict.c.s
+	cd /d C:\Users\jaung\source\repos\RAYLIB~1\bin && $(MAKE) $(MAKESILENT) -f src\CMakeFiles\t_events.dir\build.make src/CMakeFiles/t_events.dir/t_dict.c.s
+.PHONY : t_dict.c.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -354,18 +596,34 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... RaylibProject
+	@echo ... t_cdf
+	@echo ... t_charargs
+	@echo ... t_dict
+	@echo ... t_events
 	@echo ... d_dict.obj
 	@echo ... d_dict.i
 	@echo ... d_dict.s
+	@echo ... d_dict_s.obj
+	@echo ... d_dict_s.i
+	@echo ... d_dict_s.s
 	@echo ... d_queue.obj
 	@echo ... d_queue.i
 	@echo ... d_queue.s
+	@echo ... d_string.obj
+	@echo ... d_string.i
+	@echo ... d_string.s
+	@echo ... f_cdfparser.obj
+	@echo ... f_cdfparser.i
+	@echo ... f_cdfparser.s
 	@echo ... f_objparser.obj
 	@echo ... f_objparser.i
 	@echo ... f_objparser.s
 	@echo ... g_events.obj
 	@echo ... g_events.i
 	@echo ... g_events.s
+	@echo ... g_statemachines.obj
+	@echo ... g_statemachines.i
+	@echo ... g_statemachines.s
 	@echo ... hash.obj
 	@echo ... hash.i
 	@echo ... hash.s
@@ -381,6 +639,15 @@ help:
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... t_cdfparser.obj
+	@echo ... t_cdfparser.i
+	@echo ... t_cdfparser.s
+	@echo ... t_charArgs.obj
+	@echo ... t_charArgs.i
+	@echo ... t_charArgs.s
+	@echo ... t_dict.obj
+	@echo ... t_dict.i
+	@echo ... t_dict.s
 .PHONY : help
 
 
