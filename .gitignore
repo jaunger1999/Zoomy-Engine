@@ -1,5 +1,7 @@
 # Directories
 /bin
+/resources
+/lib
 
 # Prerequisites
 *.d
