@@ -1,7 +1,8 @@
 # Directories
 /bin
-/resources
 /lib
+models/
+shaders/
 
 # Prerequisites
 *.d
