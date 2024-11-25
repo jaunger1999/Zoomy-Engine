@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 int main(void) {
-	CDF_ParseRoot();
+	CDF_ParseRoot("../a big jump");
 
 	return 1;
 }
