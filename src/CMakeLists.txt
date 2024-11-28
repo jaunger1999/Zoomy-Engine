@@ -25,12 +25,12 @@ WindowsLibraries(RaylibProject)
 # CDF Test
 project(t_cdf)
 
-add_executable(t_cdf EXCLUDE_FROM_ALL t_cdfparser.c d_dict_s.c d_string.c f_cdfparser.c g_statemachines.c hash.c)
+add_executable(t_cdf EXCLUDE_FROM_ALL t_cdfparser.c d_dict_s.c d_dict.c d_queue.c d_string.c f_cdfparser.c g_events.c g_statemachines.c hash.c)
 
 CompilerOptions(t_cdf)
 
 target_include_directories(t_cdf PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries     (t_cdf ${CMAKE_SOURCE_DIR}/lib/libraylib.a)
+target_link_libraries     (t_cdf        ${CMAKE_SOURCE_DIR}/lib/libraylib.a)
 WindowsLibraries(t_cdf)
 
 # Char Args Test
@@ -62,3 +62,56 @@ CompilerOptions(t_events)
 
 target_include_directories(t_events PUBLIC ${CMAKE_SOURCE_DIR}/include)
 WindowsLibraries(t_events)
+
+# Hash Generator
+project(hashgenerator)
+
+add_executable(hashgenerator EXCLUDE_FROM_ALL hashGenerator.c hash.c)
+
+CompilerOptions(hashgenerator)
+
+target_include_directories(hashgenerator PUBLIC ${CMAKE_SOURCE_DIR}/include)
+WindowsLibraries(hashgenerator)
+
+# Fluidsynth test
+project(t_fluidsynth)
+
+add_executable(t_fluidsynth EXCLUDE_FROM_ALL t_fluidsynth.c)
+
+CompilerOptions(t_fluidsynth)
+
+target_include_directories(t_fluidsynth PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+target_link_libraries(t_fluidsynth ${CMAKE_SOURCE_DIR}/lib/libfluidsynth.dll.a)
+
+# Lua test
+project(t_lua)
+
+add_executable(t_lua EXCLUDE_FROM_ALL t_lua.c)
+
+CompilerOptions(t_lua)
+
+target_include_directories(t_lua PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries     (t_lua        ${CMAKE_SOURCE_DIR}/lib/liblua.a)
+WindowsLibraries(t_lua)
+
+# Queue test
+project(t_queue)
+
+add_executable(t_queue EXCLUDE_FROM_ALL t_queue.c d_queue.c)
+
+CompilerOptions(t_queue)
+
+target_include_directories(t_queue PUBLIC ${CMAKE_SOURCE_DIR}/include)
+WindowsLibraries(t_queue)
+
+# Collision test
+project(t_collision)
+
+add_executable(t_collision EXCLUDE_FROM_ALL t_collision.c m_raytriangleintersection.c)
+
+CompilerOptions(t_collision)
+
+target_include_directories(t_collision PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries     (t_collision        ${CMAKE_SOURCE_DIR}/lib/libraylib.a)
+WindowsLibraries(t_collision)

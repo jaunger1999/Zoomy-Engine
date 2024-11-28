@@ -86,9 +86,9 @@ char* PlayerMoveParameters(unsigned int const n, va_list args);
 
 EventParameters GetParameterFunction(EventType type) {
 	switch (type) {
-		case TEST:
+		case NONE:
 			return TestParameters;
-		case DAMAGE:
+		case ANIMATION_END:
 			return NULL;
 		case PLAYER_MOVE:
 			return PlayerMoveParameters;

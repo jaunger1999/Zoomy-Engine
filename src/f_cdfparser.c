@@ -1,7 +1,10 @@
 /// f_cdfparser.c
 ///
-/// There's a small chance of user defined terms to collide with cdf keywords and symbols. Not sure if that's worth addressing.
-
+/// Content Definition Format (CDF), inspired by the Eternity Engine's edf.
+/// It's a file format for defining game objects.
+///
+/// There's a small chance of hashed user defined terms to collide with hashed cdf keywords and symbols. Not sure if that's worth addressing.
+/// I added padding to each string so there shouldn't be any collisions I think.
 #include "d_dict_s.h"
 #include "d_string.h"
 #include "hash.h"
@@ -21,7 +24,9 @@
 #define TRANSITIONS  2309289059
 #define FLOAT         458547227
 #define INT          2897414608
+#define STATES       3457781689 
 
+// padding constant so we can avoid hash collisions.
 #define MAX_STR_LEN 32
 
 Dict_S* objTemplates;
@@ -36,11 +41,12 @@ int CDF_Init() {
 	return 1;
 }
 
-int CDF_Parse(char const* const fileName);
+int CDF_Parse(char const* const fileName, char const* const delimit);
 
 int CDF_ParseRoot(char const* const rootPath) {
 	CDF_Init();
 
+	// white space characters to divide our cdf files.
 	char const* const delimit =" \t\r\n\v\f";
 
 	char const* const cdfDir = "/cdf/";
@@ -59,15 +65,16 @@ int CDF_ParseRoot(char const* const rootPath) {
 	strcat(cdfRootPath, cdfRootFile);
 
 	char* fileText = LoadFileText(cdfRootPath);
-	char* currToken = strtok(fileText, delimit);
 
-	while(currToken) {
+	// Open each file listed in the root file and parse them.
+	for(char* currToken = strtok(fileText, delimit); currToken != NULL; currToken = strtok(NULL, delimit)) {
+		// Create a path to our file.
 		char cdfFilePath[strlen(cdfPath) + strlen(currToken)];
 
 		strcpy(cdfFilePath, cdfPath);
 		strcat(cdfFilePath, currToken);
 
-		CDF_Parse(cdfFilePath);
+		CDF_Parse(cdfFilePath, delimit);
 
 		currToken = strtok(NULL, delimit);
 	}
@@ -75,39 +82,33 @@ int CDF_ParseRoot(char const* const rootPath) {
 	return 1;
 }
 
-int ParseObject(char* currToken, char const * const delimit);
+// Parse an object from within a cdf file.
+int ParseObject(char* currToken, char const* const delimit);
 
-int CDF_Parse(char const* const fileName) {
-	char const* const delimit =" \t\r\n\v\f";
+// Parse an individual cdf file.
+int CDF_Parse(char const* const fileName, char const* const delimit) {
 	char* fileText = LoadFileText(fileName);
 
-	char* currToken = strtok(fileText, delimit);
-
-	while(currToken) {
+	for(char* currToken = strtok(fileText, delimit); currToken != NULL; currToken = strtok(NULL, delimit)) {
 		if(strcmp(currToken, "") == 0) {
-			currToken = strtok(NULL, delimit);
 			continue;
 		}
 
 		switch(hash_s(currToken, MAX_STR_LEN)) {
 			case OBJECT:
 				ParseObject(currToken, delimit);
-				currToken = strtok(NULL, delimit);
 				break;
 			case OPEN_BRACE:
-				currToken = strtok(NULL, delimit);
 				break;
 			case CLOSED_BRACE:
-				currToken = strtok(NULL, delimit);
 				break;
 			case EVENTS:
-				currToken = strtok(NULL, delimit);
 				break;
 			case A_EVENTS:
-				currToken = strtok(NULL, delimit);
 				break;
 			case TRANSITIONS:
-				currToken = strtok(NULL, delimit);
+				break;
+			case STATES:
 				break;
 			default:
 				fprintf(stderr, "Unexpected token: %s\n", currToken);
@@ -118,16 +119,18 @@ int CDF_Parse(char const* const fileName) {
 	return 1;
 }
 
+// Template struct for now.
 typedef struct Object {
 	Dict_S* floats;
 	Dict_S* ints;
 } Object;
 
-int ParseEvents     (char* currToken, char const * const delimit);
-int ParseA_Events   (char* currToken, char const * const delimit);
-int ParseTransitions(char* currToken, char const * const delimit);
+int ParseStates     (char* currToken, char const* const delimit);
+int ParseEvents     (char* currToken, char const* const delimit);
+int ParseA_Events   (char* currToken, char const* const delimit);
+int ParseTransitions(char* currToken, char const* const delimit);
 
-int ParseObject(char* currToken, char const * const delimit) {
+int ParseObject(char* currToken, char const* const delimit) {
 	// Macros so I don't have to copy-paste my ass off.
 	#define RETURN_ERROR\
 		Dict_S_Destroy(obj->floats);\
@@ -201,7 +204,7 @@ int ParseObject(char* currToken, char const * const delimit) {
 	GET_NEXT_TOKEN
 
 	// parse the rest of the obj definition.
-	while(currToken) {
+	for(currToken = strtok(NULL, delimit); currToken != NULL; currToken = strtok(NULL, delimit)) {
 		switch(hash_s(currToken, MAX_STR_LEN)) {
 			case OBJECT:
 				fprintf(stderr, "Can't define an object within an object");
@@ -213,15 +216,15 @@ int ParseObject(char* currToken, char const * const delimit) {
 				goto loopExit;
 			case EVENTS:
 				ParseEvents(currToken, delimit);
-				currToken = strtok(NULL, delimit);
 				break;
 			case A_EVENTS:
 				ParseA_Events(currToken, delimit);
-				currToken = strtok(NULL, delimit);
 				break;
 			case TRANSITIONS:
 				ParseTransitions(currToken, delimit);
-				currToken = strtok(NULL, delimit);
+				break;
+			case STATES:
+				ParseStates(currToken, delimit);
 				break;
 			case FLOAT:
 				GET_NEXT_TOKEN
@@ -236,7 +239,6 @@ int ParseObject(char* currToken, char const * const delimit) {
 
 				*f = atof(currToken);
 				Dict_S_Add(obj->floats, fName, f);
-				currToken = strtok(NULL, delimit);
 				break;
 			case INT:
 				GET_NEXT_TOKEN
@@ -251,7 +253,6 @@ int ParseObject(char* currToken, char const * const delimit) {
 
 				*i = atol(currToken);
 				Dict_S_Add(obj->ints, iName, i);
-				currToken = strtok(NULL, delimit);
 				break;
 			default:
 				fprintf(stderr, "Unexpected token: %s\n", currToken);
@@ -259,23 +260,85 @@ int ParseObject(char* currToken, char const * const delimit) {
 		}
 	}
 
-	loopExit: ;
+	// Needed for when we find our closing brace.
+	loopExit:
 	Dict_S_Add(objTemplates, objName, obj);
 
 	return 1;
 }
 
+int ParseStates(char* currToken, char const * const delimit) {
+	currToken = strtok(NULL, delimit);
+
+	if(strcmp(currToken, "{") != 0) {
+		return 0;
+	}
+
+	for(currToken = strtok(NULL, delimit); currToken != NULL; currToken = strtok(NULL, delimit)) {
+		switch(hash_s(currToken, MAX_STR_LEN)) {
+			case CLOSED_BRACE:
+				goto loopExit;
+		}
+	}
+
+	// Needed for when we find our closing brace.
+	loopExit:
+	return 1;
+}
+
 int ParseEvents(char* currToken, char const * const delimit) {
+	currToken = strtok(NULL, delimit);
 
+	if(strcmp(currToken, "{") != 0) {
+		return 0;
+	}
+
+	for(currToken = strtok(NULL, delimit); currToken != NULL; currToken = strtok(NULL, delimit)) {
+		switch(hash_s(currToken, MAX_STR_LEN)) {
+			case CLOSED_BRACE:
+				goto loopExit;
+		}
+	}
+
+	// Needed for when we find our closing brace.
+	loopExit: ;
 	return 1;
 }
 
-int ParseA_Events(char* currToken, char const * const delimit) {
+// Action Events
+int ParseA_Events(char* currToken, char const* const delimit) {
+	currToken = strtok(NULL, delimit);
 
+	if(strcmp(currToken, "{") != 0) {
+		return 0;
+	}
+
+	for(currToken = strtok(NULL, delimit); currToken != NULL; currToken = strtok(NULL, delimit)) {
+		switch(hash_s(currToken, MAX_STR_LEN)) {
+			case CLOSED_BRACE:
+				goto loopExit;
+		}
+	}
+
+	// Needed for when we find our closing brace.
+	loopExit: ;
 	return 1;
 }
 
-int ParseTransitions(char* currToken, char const * const delimit) {
+int ParseTransitions(char* currToken, char const* const delimit) {
+	currToken = strtok(NULL, delimit);
 
+	if(strcmp(currToken, "{") != 0) {
+		return 0;
+	}
+
+	for(currToken = strtok(NULL, delimit); currToken != NULL; currToken = strtok(NULL, delimit)) {
+		switch(hash_s(currToken, MAX_STR_LEN)) {
+			case CLOSED_BRACE:
+				goto loopExit;
+		}
+	}
+
+	loopExit: ;
 	return 1;
 }

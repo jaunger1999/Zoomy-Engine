@@ -1,6 +1,6 @@
 #define RAYLIB
 #include "raylib.h"
-#include "raytriangleintersection.h"
+#include "m_raytriangleintersection.h"
 
 #include <stdio.h>
 #include <stdlib.h>

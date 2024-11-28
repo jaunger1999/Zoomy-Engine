@@ -14,6 +14,7 @@ int main(void) {
 	unsigned long const transitions = hash_s("transitions", MAX_STR_LEN);
 	unsigned long const floatHash   = hash_s("float",       MAX_STR_LEN);
 	unsigned long const intHash     = hash_s("int",         MAX_STR_LEN);
+	unsigned long const states      = hash_s("states",      MAX_STR_LEN);
 
 	printf("%lu\n", object);
 	printf("%lu\n", openBrace);
@@ -23,6 +24,7 @@ int main(void) {
 	printf("%lu\n", transitions);
 	printf("%lu\n", floatHash);
 	printf("%lu\n", intHash);
+	printf("%lu\n", states);
 
 
 	return 1;

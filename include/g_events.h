@@ -1,7 +1,7 @@
 typedef enum EventType {
-	TEST        = -1,
-	DAMAGE      =  0,
-	PLAYER_MOVE =  1
+	NONE          = -1,
+	ANIMATION_END =  0,
+	PLAYER_MOVE   =  1
 } EventType;
 
 typedef int (*EventFunction)(char const * const args, unsigned int const id, void* out);
