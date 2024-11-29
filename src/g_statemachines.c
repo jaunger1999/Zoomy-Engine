@@ -12,6 +12,9 @@ int StateMachine_Destroy(StateMachine* sm) {
 	}
 
 	free(sm);
+	sm = NULL;
+
+	return 1;
 }
 
 StateMachine* StateMachine_Init(int const totalStates, int const totalTransitions) {
@@ -68,6 +71,26 @@ StateMachine* StateMachine_Init(int const totalStates, int const totalTransition
 }
 
 void Tick(StateMachine* const sm, float const delta) {
+	// our exit condition is in the loop.
+	// our condition variable is signed so we don't underflow.
+	for(float timeRemaining = delta; ; timeRemaining -= sm->timeToNextState) {
+		// if we aren't moving to another state, tick and exit the loop.
+		// we don't want to exit if we have states with no time length.
+		if(timeRemaining < sm->timeToNextState && sm->timeToNextState > 0) {
+			sm->tickers[sm->state](sm->id, timeRemaining);
+			sm->timeToNextState -= timeRemaining;
+			break;
+		}
+
+		sm->tickers[sm->state](sm->id, sm->timeToNextState);
+	
+		// set up our next state.
+		// 0 index reserved for state timer ending.
+		// TODO: call state exit and state entrance function.
+		sm->state = sm->transitions[sm->state][0];
+		sm->timeToNextState = sm->stateDurations[sm->state];
+	}
+
 	// Process registered events for this machine.
 	for(Event* e = E_GetNext(sm->id); e != NULL; e = E_GetNext(sm->id)) {
 		void* out = NULL;
@@ -96,6 +119,4 @@ void Tick(StateMachine* const sm, float const delta) {
 			sm->state = nextState;
 		}
 	}
-
-	sm->tickers[sm->state](sm->id, delta);
 }

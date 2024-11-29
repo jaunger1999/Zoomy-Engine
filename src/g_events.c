@@ -105,7 +105,6 @@ char* PlayerMoveParameters(unsigned int const n, va_list args) {
 		return NULL;
 	}
 
-
 	Input*              i     = va_arg(args, Input*);
 	Attributes*         a     = va_arg(args, Attributes*);
 	CollisionMesh*      m     = va_arg(args, CollisionMesh*);

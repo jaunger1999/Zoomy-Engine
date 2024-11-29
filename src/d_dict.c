@@ -33,6 +33,7 @@ void Dict_Destroy(Dict *d) {
 
 	free(d->buckets);
 	free(d);
+	d = NULL;
 }
 
 void* Dict_Get(Dict* const dict, unsigned int id) {

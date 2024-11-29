@@ -5,6 +5,9 @@ typedef struct StateMachine {
 	int**           transitions;
 	TickerFunction* tickers;
 
+	float* stateDurations;
+	float  timeToNextState;
+
 	int id;
 	int totalStates;
 	int totalTransitions;

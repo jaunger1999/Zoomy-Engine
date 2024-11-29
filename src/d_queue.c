@@ -26,6 +26,7 @@ void Q_Destroy(Queue* q) {
 	}
 
 	free(q);
+	q = NULL;
 }
 
 int Enqueue(Queue* q, void* data) {
