@@ -41,67 +41,47 @@ target_include_directories(t_charargs PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 # Dict Test
 project(t_dict)
-
 add_executable(t_dict EXCLUDE_FROM_ALL t_dict.c d_dict.c hash.c)
-
 CompilerOptions(t_dict)
-
 target_include_directories(t_dict PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 # Events Test
 project(t_events)
-
 add_executable(t_events EXCLUDE_FROM_ALL t_dict.c d_dict.c hash.c)
-
 CompilerOptions(t_events)
-
 target_include_directories(t_events PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 # Hash Generator
 project(hashgenerator)
-
 add_executable(hashgenerator EXCLUDE_FROM_ALL hashGenerator.c hash.c)
-
 CompilerOptions(hashgenerator)
-
 target_include_directories(hashgenerator PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 # Fluidsynth test
 project(t_fluidsynth)
-
 add_executable(t_fluidsynth EXCLUDE_FROM_ALL t_fluidsynth.c)
-
 CompilerOptions(t_fluidsynth)
-
 target_include_directories(t_fluidsynth PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(t_fluidsynth ${CMAKE_SOURCE_DIR}/lib/libfluidsynth.dll.a)
 
 # Lua test
 project(t_lua)
-
 add_executable(t_lua EXCLUDE_FROM_ALL t_lua.c)
-
 CompilerOptions(t_lua)
-
 target_include_directories(t_lua PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(t_lua        ${CMAKE_SOURCE_DIR}/lib/liblua.a)
 
 # Queue test
 project(t_queue)
-
 add_executable(t_queue EXCLUDE_FROM_ALL t_queue.c d_queue.c)
-
 CompilerOptions(t_queue)
 
 target_include_directories(t_queue PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 # Collision test
 project(t_collision)
-
 add_executable(t_collision EXCLUDE_FROM_ALL t_collision.c m_raytriangleintersection.c)
-
 CompilerOptions(t_collision)
-
 target_include_directories(t_collision PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(t_collision        ${CMAKE_SOURCE_DIR}/lib/libraylib.a)
 target_link_libraries(t_collision libwinmm.a)
