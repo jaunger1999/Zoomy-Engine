@@ -10,7 +10,6 @@ endmacro()
 
 add_executable(RaylibProject main.c d_dict.c d_queue.c g_events.c hash.c m_cylinder.c m_raytriangleintersection.c m_vector.c f_objparser.c)
 CompilerOptions(RaylibProject)
-target_include_directories(RaylibProject PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(RaylibProject ${CMAKE_SOURCE_DIR}/lib/liblua.a)
 target_link_libraries(RaylibProject ${CMAKE_SOURCE_DIR}/lib/libraylib.a)
 target_link_libraries(RaylibProject libopengl32.a)
