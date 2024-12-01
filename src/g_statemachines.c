@@ -5,11 +5,20 @@
 #include <stdlib.h>
 
 int StateMachine_Destroy(StateMachine* sm) {
-	for(int i = 0; i < sm->totalStates; i++) {
-		for(int j = 0; j < sm->totalStates; j++) {
-			free(sm->transitions[i]);
-		}
+	// check for NULL so we don't seg fault.
+	if(sm == NULL) {
+		return 1;
 	}
+
+	for(int i = 0; i < sm->totalStates; i++) {
+		free(sm->transitions[i]);
+	}
+
+	free(sm->stateDurations);
+	free(sm->transitions);
+	free(sm->tickers);
+	free(sm->entrances);
+	free(sm->exits);
 
 	free(sm);
 	sm = NULL;
@@ -22,8 +31,8 @@ StateMachine* StateMachine_Init(int const totalStates, int const totalTransition
 		StateMachine_Destroy(sm);
 		return NULL;
 
-	#define MALLOC_INT_ARRAY(name, size)\
-		name = malloc(sizeof(int) * size);\
+	#define MALLOC_ARRAY(type, name, size)\
+		name = malloc(sizeof(type) * size);\
 		\
 		if(name == NULL) {\
 			RETURN_ERROR\
@@ -38,16 +47,20 @@ StateMachine* StateMachine_Init(int const totalStates, int const totalTransition
 	sm->totalStates      = totalStates;
 	sm->totalTransitions = totalTransitions;
 
-	MALLOC_INT_ARRAY(sm->transitions, totalStates)
-	sm->tickers = calloc(totalStates, sizeof(TickerFunction*));
+	MALLOC_ARRAY(int, sm->transitions, totalStates)
+	
+	// calloc so we can check for NULL.
+	sm->tickers   = calloc(totalStates, sizeof(TickerFunction*));
+	sm->entrances = calloc(totalStates, sizeof(TickerFunction*));
+	sm->exits     = calloc(totalStates, sizeof(TickerFunction*));
 
-	if(sm->tickers == NULL) {
+	if(sm->tickers == NULL || sm->entrances == NULL || sm->exits == NULL) {
 		RETURN_ERROR
 	}
 
 	// init all but the last state and its transitions.
 	for(int i = 0; i < totalStates - 1; i++) {
-		MALLOC_INT_ARRAY(sm->transitions[i], totalTransitions)
+		MALLOC_ARRAY(int, sm->transitions[i], totalTransitions)
 
 		// The 0 index is reserved for an animation ending, 
 		// in which the state machine progresses to the next state.
@@ -60,9 +73,9 @@ StateMachine* StateMachine_Init(int const totalStates, int const totalTransition
 	}
 
 	// init the last states transitions.
-	for(int k = 0; k < totalTransitions; k++) {
-		MALLOC_INT_ARRAY(sm->transitions[totalStates - 1], totalTransitions)
+	MALLOC_ARRAY(int, sm->transitions[totalStates - 1], totalTransitions)
 
+	for(int k = 0; k < totalTransitions; k++) {
 		// By default the final state in our table has no defined transition.
 		sm->transitions[totalStates - 1][k] = -1;
 	}
@@ -71,25 +84,36 @@ StateMachine* StateMachine_Init(int const totalStates, int const totalTransition
 }
 
 void Tick(StateMachine* const sm, float const delta) {
-	// our exit condition is in the loop.
-	// our condition variable is signed so we don't underflow.
-	for(float timeRemaining = delta; ; timeRemaining -= sm->timeToNextState) {
-		// if we aren't moving to another state, tick and exit the loop.
-		// we don't want to exit if we have states with no time length.
-		if(timeRemaining < sm->timeToNextState && sm->timeToNextState > 0) {
-			sm->tickers[sm->state](sm->id, timeRemaining);
-			sm->timeToNextState -= timeRemaining;
-			break;
-		}
+	assert(delta > 0);
+	assert(sm != NULL);
 
+	// loop through as many states within delta time as we can.
+	float timeRemaining;
+
+	for(
+		timeRemaining = delta; 
+		(timeRemaining < sm->timeToNextState && sm->timeToNextState > 0) || sm->stateDurations[sm->state] == -1;
+		timeRemaining -= sm->timeToNextState
+	) {
 		sm->tickers[sm->state](sm->id, sm->timeToNextState);
-	
+
+		if(sm->exits[sm->state] != NULL) {
+			sm->exits[sm->state](sm->id, delta);
+		}
+		
 		// set up our next state.
 		// 0 index reserved for state timer ending.
-		// TODO: call state exit and state entrance function.
 		sm->state = sm->transitions[sm->state][0];
 		sm->timeToNextState = sm->stateDurations[sm->state];
+		
+		if(sm->entrances[sm->state] != NULL) {
+			sm->entrances[sm->state](sm->id, delta);
+		}
 	}
+
+	// tick the remaining time
+	sm->tickers[sm->state](sm->id, timeRemaining);
+	sm->timeToNextState -= timeRemaining;
 
 	// Process registered events for this machine.
 	for(Event* e = E_GetNext(sm->id); e != NULL; e = E_GetNext(sm->id)) {
