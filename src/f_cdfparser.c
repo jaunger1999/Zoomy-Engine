@@ -66,7 +66,7 @@ int CDF_ParseRoot(char const* const rootPath) {
 
 	char* fileText = LoadFileText(cdfRootPath);
 
-	// Open each file listed in the root file and parse them.
+	// Open each file listed in the root file and parse them
 	for(char* currToken = strtok(fileText, delimit); currToken != NULL; currToken = strtok(NULL, delimit)) {
 		// Create a path to our file.
 		char cdfFilePath[strlen(cdfPath) + strlen(currToken)];
