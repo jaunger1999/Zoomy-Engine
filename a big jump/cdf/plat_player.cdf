@@ -7,14 +7,22 @@ object Plat_Player {
 	float neutralJumpDistance   3.0
 
 	states {
-		Airborne:
+		Airborne: PlatPlayer_GroundedMovement
+			NULL -1
 		Ground: PlatPlayer_GroundedMovement
+			NULL -1
 		Sliding:
+			NULL -1
 		GroundPound:
+			NULL -1
 		LongJump:
+			NULL -1
 		DoubleJump:
+			NULL -1
 		SideJump:
+			NULL -1
 		Running:
+			NULL -1
 	}
 	
 	a_events {

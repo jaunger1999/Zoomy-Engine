@@ -67,7 +67,7 @@
 // Program main entry point
 Vector3 position = { 0.0f, 0.0f, 0.0f }; // Set model position
 
-int PhysProp_GetNextPlayerState(char const * const args, unsigned int const id, void* ppOut);
+int PhysProp_GetNextState(char const * const args, unsigned int const id, void* ppOut);
 
 int main(void) {
 	E_Init();
@@ -95,17 +95,17 @@ int main(void) {
 
 	InitWindow(screenWidth, screenHeight, "raylib [models] example - model animation");
 	
-	Model level = LoadModel("../resources/models/obj/myplane.obj");
-	CollisionMesh cMesh = GetCollisionMesh("../resources/models/obj/myplane.obj");
+	Model level = LoadModel("../a big jump/models/obj/myplane.obj");
+	CollisionMesh cMesh = GetCollisionMesh("../a big jump/models/obj/myplane.obj");
 	printf("%f\n", cMesh.vertices[0].x);
 	printf("%d %d\n", cMesh.faces[0].a, cMesh.faces[0].nA);
-	Model model = LoadModel("../resources/models/iqm/guy.iqm");                    // Load the animated model mesh and basic data
-	Texture2D texture = LoadTexture("../resources/models/iqm/guytex.png");         // Load model texture and set material
+	Model model = LoadModel("../a big jump/models/iqm/guy.iqm");                    // Load the animated model mesh and basic data
+	Texture2D texture = LoadTexture("../a big jump/models/iqm/guytex.png");         // Load model texture and set material
 	SetMaterialTexture(&model.materials[0], MATERIAL_MAP_DIFFUSE, texture);     // Set model material map texture
 	
 	// Load animation data
 	int animsCount = 0;
-	ModelAnimation *anims = LoadModelAnimations("../resources/models/iqm/guyanim.iqm", &animsCount);
+	ModelAnimation *anims = LoadModelAnimations("../a big jump/models/iqm/guyanim.iqm", &animsCount);
 	int animFrameCounter = 0;
 
 	printf("gravity: %f\n", playerAttributes.gravity);
@@ -156,7 +156,7 @@ int main(void) {
 		float   const angle = Vector2LineAngle(pPos, cPos)  + PI_OVER_2;
         	Input   const input = GetInputState(&inputMap, &oldMovement, &oldCameraMovement, angle); // Player movement input is relative to this angle.
 
-		E_Register(PhysProp_GetNextPlayerState, PLAYER_MOVE, 0, 5, &input, &playerAttributes, &cMesh, &obj, delta);
+		E_Register(PhysProp_GetNextState, PLAYER_MOVE, 0, 5, &input, &playerAttributes, &cMesh, &obj, delta);
 
 		for (int id = 0; id < totalObjs; id++) {
 			Event* e = E_GetNext(id);
@@ -232,7 +232,7 @@ Input GetInputState(InputMap const * const inputMap, Vector2 const * const oldMo
 	bool const attackButtonReleased     = IsGamepadButtonReleased(0, inputMap->attack);
 	bool const cameraLockButtonReleased = IsGamepadButtonReleased(0, inputMap->cameraLock);
 
-        Input const input = {
+	Input const input = {
 		adjustedMovement,
 		cameraMovement,
 		
@@ -253,7 +253,7 @@ Input GetInputState(InputMap const * const inputMap, Vector2 const * const oldMo
 		crouchButtonReleased,
 		attackButtonReleased,
 		cameraLockButtonReleased
-        };
+	};
 
 	return input;
 }
@@ -285,7 +285,7 @@ CameraState GetNextCameraState(CameraState const * const cameraState, PhysicalPr
 }
 
 // args == Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, PhysicalProperties const * const currState, float const delta
-int PhysProp_GetNextPlayerState(char const * const args, unsigned int const id, void* ppOut) {
+int PhysProp_GetNextState(char const * const args, unsigned int const id, void* ppOut) {
 	// Our parameters for this function.
 	Input*              input;
 	Attributes*         attributes;
@@ -294,11 +294,17 @@ int PhysProp_GetNextPlayerState(char const * const args, unsigned int const id, 
 	float               delta;
 
 	// Set our parameters stored in args.
-	memcpy(&input,      args,  sizeof(input));
-	memcpy(&attributes, args + sizeof(input),  sizeof(attributes));
-	memcpy(&mesh,       args + sizeof(input) + sizeof(attributes),  sizeof(mesh));
-	memcpy(&currState,  args + sizeof(input) + sizeof(attributes) + sizeof(mesh),  sizeof(currState));
-	memcpy(&delta,      args + sizeof(input) + sizeof(attributes) + sizeof(mesh) + sizeof(currState), sizeof(delta));
+	#define COPY_ARG(argName)\
+		memcpy(&argName, args + offset, sizeof(argName));\
+		offset += sizeof(argName);
+
+	int offset = 0;
+
+	COPY_ARG(input)
+	COPY_ARG(attributes)
+	COPY_ARG(mesh)
+	COPY_ARG(currState)
+	COPY_ARG(delta)
 
 	Vector3 newVelocity;
 	Vector3 const gravity = (Vector3){ 0, -attributes->gravity * delta, 0 };
