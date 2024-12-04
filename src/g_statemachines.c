@@ -21,7 +21,6 @@ int StateMachine_Destroy(StateMachine* sm) {
 	free(sm->exits);
 
 	free(sm);
-	sm = NULL;
 
 	return 1;
 }
@@ -41,7 +40,7 @@ StateMachine* StateMachine_Init(int const totalStates, int const totalTransition
 	StateMachine* sm = malloc(sizeof(StateMachine));
 
 	if(sm == NULL) {
-		RETURN_ERROR
+		return NULL;
 	}
 
 	sm->totalStates      = totalStates;

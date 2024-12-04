@@ -120,7 +120,7 @@ int main(void) {
 		GAMEPAD_BUTTON_RIGHT_TRIGGER_1,  // camera lock
 	};
 
-	Camera const newCamera = {
+	Camera const camera = {
 		(Vector3){  0.0f, 10.0f, 10.0f }, // Camera position
 		(Vector3){  0.0f,  0.0f,  0.0f }, // Camera looking at point
 		(Vector3){  0.0f,  2.0f,  0.0f }, // Camera up vector (rotation towards target)
@@ -132,7 +132,7 @@ int main(void) {
 		FOLLOW,        // Behaviour
 		10,            // Radians Per Second
 		false,         // Incremented Rotations
-		newCamera      // Camera 
+		camera         // Camera 
 	};
 
 	Vector2 oldMovement = { 0 };

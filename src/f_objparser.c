@@ -27,7 +27,7 @@ Face ParseFace(char *line) {
 	while (v && i < 3) {
 		printf("%s\n", v);
 
-		char *indices = strtok_r(v, "/", &v);
+		char const* indices = strtok_r(v, "/", &v);
 
 		// -1!!!!!!!! indices start at one in this format. Very annoying bug to track down.
 		vertices[i] = strtol(indices, NULL, 10) - 1;
@@ -55,7 +55,7 @@ Face ParseFace(char *line) {
 	return face;
 }
 
-Vector3 ParseVector3(char *line) {
+Vector3 ParseVector3(char const* line) {
 	// z up is the obj file format standard.
 	char *yNumber;
 	char *zNumber;
@@ -102,7 +102,7 @@ CollisionMesh GetCollisionMesh(char const * const fileName) {
 	}
 
 	printf("Vertices, Normals, and Faces\n");
-	printf("%d %d %d \n\n", totalVertices, totalNormals, totalFaces);
+	printf("%ud %ud %ud \n\n", totalVertices, totalNormals, totalFaces);
 
 	// now we can allocate our arrays, because we know how big they need to be.
 	Vector3 *vertices = malloc(sizeof(Vector3) * totalVertices);

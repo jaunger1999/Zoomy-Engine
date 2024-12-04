@@ -21,7 +21,7 @@ Dict* Dict_Create() {
 	return d;
 }
 
-void Dict_Destroy(Dict *d) {
+void Dict_Destroy(Dict* d) {
 	for (unsigned int i = 0; i < d->size; i++) {
 		for (DictEntry* e = d->buckets[i]; e != NULL;) {
 			DictEntry* old = e;
@@ -33,10 +33,9 @@ void Dict_Destroy(Dict *d) {
 
 	free(d->buckets);
 	free(d);
-	d = NULL;
 }
 
-void* Dict_Get(Dict* const dict, unsigned int id) {
+void* Dict_Get(Dict const* const dict, unsigned int const id) {
 	unsigned long i = hash(id) % dict->size;
 
 	for (DictEntry* entry = dict->buckets[i]; entry != NULL; entry = entry->next) {
@@ -46,11 +45,6 @@ void* Dict_Get(Dict* const dict, unsigned int id) {
 	}
 
 	return NULL;
-}
-
-int Dict_Add_String(Dict* const dict, void* item, char const * const key) {
-
-	return 1;
 }
 
 int Dict_Add(Dict* const dict, unsigned int id, void* const item) {

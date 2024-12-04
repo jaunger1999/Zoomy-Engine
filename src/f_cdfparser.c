@@ -67,7 +67,7 @@ int CDF_ParseRoot(char const* const rootPath) {
 	char* fileText = LoadFileText(cdfRootPath);
 
 	// Open each file listed in the root file and parse them
-	for(char* currToken = strtok(fileText, delimit); currToken != NULL; currToken = strtok(NULL, delimit)) {
+	for(char const* currToken = strtok(fileText, delimit); currToken != NULL; currToken = strtok(NULL, delimit)) {
 		// Create a path to our file.
 		char cdfFilePath[strlen(cdfPath) + strlen(currToken)];
 
@@ -137,7 +137,7 @@ int ParseObject(char* currToken, char const* const delimit) {
 		Dict_S_Destroy(obj->ints);\
 		free(obj);\
 		free(objName);\
-		return -1;
+		return 0;
 
 	#define TOKEN_COPY(name)\
 		char* name;\
@@ -156,11 +156,10 @@ int ParseObject(char* currToken, char const* const delimit) {
 	
 	// Allocate our object.
 	Object* obj = malloc(sizeof(Object));
-	char* objName = NULL;
 
 	if(obj == NULL) {
 		fprintf(stderr, "Malloc failed to allocate an object.\n");
-		RETURN_ERROR
+		return 0;
 	}
 
 	// Init our dicts.
@@ -173,6 +172,8 @@ int ParseObject(char* currToken, char const* const delimit) {
 
 	GET_NEXT_TOKEN
 
+	char* objName = NULL;
+	
 	// The name is expected to be in the same line as the object keyword.
 	switch(hash_s(currToken, MAX_STR_LEN)) {
 		case OBJECT:

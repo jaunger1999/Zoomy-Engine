@@ -4,7 +4,7 @@ macro(CompilerOptions name)
 	set_property(TARGET ${name} PROPERTY C_STANDARD 99)
 	set_property(TARGET ${name} PROPERTY C_STANDARD_REQUIRED ON)
 
-	target_compile_options(${name} PRIVATE -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option)
+	target_compile_options(${name} PRIVATE -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common)
 	target_include_directories(${name} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 endmacro()
 

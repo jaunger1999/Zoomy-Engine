@@ -11,7 +11,7 @@ typedef struct Dict {
 
 Dict* Dict_Create();
 
-void* Dict_Get(Dict* dict, unsigned int id);
+void* Dict_Get(Dict const* const dict, unsigned int const id);
 
-int  Dict_Add(Dict* dict, unsigned int id, void* item);
+int  Dict_Add(Dict* const dict, unsigned int const id, void* item);
 void Dict_Destroy(Dict* dict);
