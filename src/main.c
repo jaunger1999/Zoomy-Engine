@@ -83,7 +83,7 @@ int main(void) {
 	Attributes playerAttributes = GetAttributes(
 			1.0f,  // jump height
 			0.5f,  // time to apex
-			10.0f, // movement speed
+			1.0f, // movement speed
 			10.0f, // acceleration
 			3.0f,  // terminal velocity
 			3.0f   // neutral jump distance
