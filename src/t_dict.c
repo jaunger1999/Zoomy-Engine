@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "raymath.h"
 #include "d_dict.h"
@@ -13,9 +11,9 @@ int main(void) {
 		return -1;
 	}
 
-	int idOne = 1000;
-	int idTwo = 23;
-	int idThree = 64 + 23; // 64 is the init dict size. tests for overlapping buckets.
+	unsigned int idOne = 1000;
+	unsigned int idTwo = 23;
+	unsigned int idThree = 64 + 23; // 64 is the init dict size. tests for overlapping buckets.
 
 	Vector3 itemOne = (Vector3){ 0.1f, 0.2f, 0.3f };
 	int itemTwo = 123;

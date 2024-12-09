@@ -1,8 +1,8 @@
 typedef void (*TickerFunction)(int const id, float const delta);
 
 typedef struct StateMachine {
-	int   state;
-	int** transitions;
+	unsigned int   state;
+	unsigned int** transitions;
 
 	TickerFunction* tickers;
 	TickerFunction* entrances;
@@ -11,9 +11,9 @@ typedef struct StateMachine {
 	float* stateDurations;
 	float  timeToNextState;
 
-	int id;
-	int totalStates;
-	int totalTransitions;
+	unsigned int id;
+	unsigned int totalStates;
+	unsigned int totalTransitions;
 } StateMachine;
 
 void Tick(StateMachine* const fsm, float const delta);

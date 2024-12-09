@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-Dict_S* Dict_S_Create() {
+Dict_S* Dict_S_Create(void) {
 	Dict_S* d = malloc(sizeof(Dict_S));
 
 	if (d == NULL) {
@@ -17,13 +17,13 @@ Dict_S* Dict_S_Create() {
 	}
 
 	// init with calloc so we have null terminated linked lists for each bucket.
-	d->size = INIT_DICT_SIZE;
+	d->size    = INIT_DICT_SIZE;
 	d->buckets = calloc(d->size, sizeof(DictEntry_S*));
-	
+
 	return d;
 }
 
-void Dict_S_Destroy(Dict_S *d) {
+void Dict_S_Destroy(Dict_S* d) {
 	for (unsigned int i = 0; i < d->size; i++) {
 		for (DictEntry_S* e = d->buckets[i]; e != NULL;) {
 			DictEntry_S* old = e;
@@ -40,7 +40,8 @@ void Dict_S_Destroy(Dict_S *d) {
 void* Dict_S_Get(Dict_S const* const dict, char const* const id) {
 	unsigned long i = hash_s(id, MAX_STR_LEN) % dict->size;
 
-	for (DictEntry_S* entry = dict->buckets[i]; entry != NULL; entry = entry->next) {
+	for (DictEntry_S* entry = dict->buckets[i]; entry != NULL;
+	     entry              = entry->next) {
 		if (strcmp(entry->id, id) == 0) {
 			return entry->item;
 		}
@@ -49,22 +50,23 @@ void* Dict_S_Get(Dict_S const* const dict, char const* const id) {
 	return NULL;
 }
 
-int Dict_S_Add(Dict_S* const dict, char const * const id, void* const item) {
+int Dict_S_Add(Dict_S* const dict, char const* const id, void* const item) {
 	unsigned long i = hash_s(id, MAX_STR_LEN) % dict->size;
 
 	// Init the entry
 	DictEntry_S* entry = malloc(sizeof(DictEntry_S));
 
 	if (entry == NULL) {
-		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(DictEntry_S));
+		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n",
+		        sizeof(DictEntry_S));
 		return 0;
 	}
 
-	entry->id = StringCopy(id);
+	entry->id   = StringCopy(id);
 	entry->item = item;
 
 	// add the entry to hashed bucket
-	entry->next = dict->buckets[i];
+	entry->next      = dict->buckets[i];
 	dict->buckets[i] = entry;
 
 	return 1;

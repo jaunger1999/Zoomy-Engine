@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Queue* Q_Create() {
+Queue* Q_Create(void) {
 	Queue* q = malloc(sizeof(Queue));
 
 	if (q == NULL) {
@@ -21,7 +21,7 @@ Queue* Q_Create() {
 }
 
 void Q_Destroy(Queue* q) {
-	while (q-> count > 0) {
+	while (q->count > 0) {
 		free(Dequeue(q));
 	}
 
@@ -58,7 +58,7 @@ void* Dequeue(Queue* q) {
 	}
 
 	Node* front = q->front;
-	void* data = front->data;
+	void* data  = front->data;
 
 	q->front = front->prev;
 

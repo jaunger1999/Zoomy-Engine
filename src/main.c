@@ -56,7 +56,6 @@
 #include "f_objparser.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 #include <assert.h>
 #include <string.h>
@@ -71,8 +70,8 @@ int PhysProp_GetNextState(char const * const args, unsigned int const id, void* 
 
 int main(void) {
 	E_Init();
-	int totalObjs = 0;
-
+	unsigned int totalObjs = 0;
+	
 	E_AddObj(totalObjs);
 
 	totalObjs++;

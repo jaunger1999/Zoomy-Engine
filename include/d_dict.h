@@ -9,7 +9,7 @@ typedef struct Dict {
 	unsigned int size;
 } Dict;
 
-Dict* Dict_Create();
+Dict* Dict_Create(void);
 
 void* Dict_Get(Dict const* const dict, unsigned int const id);
 

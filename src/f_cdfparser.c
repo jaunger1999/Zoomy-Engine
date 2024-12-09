@@ -31,7 +31,7 @@
 
 Dict_S* objTemplates;
 
-int CDF_Init() {
+int CDF_Init(void) {
 	objTemplates = Dict_S_Create();
 
 	if(objTemplates == NULL) {
@@ -302,7 +302,7 @@ int ParseEvents(char* currToken, char const * const delimit) {
 	}
 
 	// Needed for when we find our closing brace.
-	loopExit: ;
+	loopExit:
 	return 1;
 }
 
@@ -322,7 +322,7 @@ int ParseA_Events(char* currToken, char const* const delimit) {
 	}
 
 	// Needed for when we find our closing brace.
-	loopExit: ;
+	loopExit:
 	return 1;
 }
 
@@ -340,6 +340,6 @@ int ParseTransitions(char* currToken, char const* const delimit) {
 		}
 	}
 
-	loopExit: ;
+	loopExit:
 	return 1;
 }

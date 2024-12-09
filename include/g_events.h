@@ -16,5 +16,5 @@ Event* E_GetNext(unsigned int id);
 
 int E_AddObj(unsigned int id);
 
-int E_Init();
+int E_Init(void);
 int E_Register(EventFunction function, EventType type, unsigned int const id, unsigned const int n, ...);

@@ -64,8 +64,8 @@ typedef struct CollisionMesh {
 
 
 
-OptionHit Intersect(Ray const * const ray, Vector3 const * const a, Vector3 const * const b, Vector3 const * const c);
+OptionHit Intersect(Ray const* const ray, Vector3 const* const a, Vector3 const* const b, Vector3 const* const c);
 
-CollisionMesh GetCollisionMesh(char const * const fileDir);
+CollisionMesh GetCollisionMesh(char const* const fileDir);
 
-Vector3 VectorComponentAlongPlane(Vector3 * vector, Vector3 * normal);
+Vector3 VectorComponentAlongPlane(Vector3* vector, Vector3 * normal);

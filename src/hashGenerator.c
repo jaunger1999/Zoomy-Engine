@@ -1,7 +1,6 @@
 #include "hash.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 
 #define MAX_STR_LEN 32
 

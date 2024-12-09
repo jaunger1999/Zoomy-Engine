@@ -6,11 +6,9 @@
 	memcpy(&b, args + sizeof(a), sizeof(b));
 
 #define Unpack3(a, b, c, args) \
-	int offset = 0;
+	int offset = 0;\
 	memcpy(&a, args + offset, sizeof(a)); \
 	offset += sizeof(a); \
-\
 	memcpy(&b, args + offset, sizeof(b)); \
-	offset += sizeof(b);
-\	
-	memcpy(&c, args + offset, sizeof(c)); \
+	offset += sizeof(b);\
+	memcpy(&c, args + offset, sizeof(c));

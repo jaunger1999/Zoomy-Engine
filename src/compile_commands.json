@@ -1,0 +1,200 @@
+[
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/RaylibProject.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\RaylibProject.dir\\main.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\main.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/main.c",
+  "output": "src/CMakeFiles/RaylibProject.dir/main.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/RaylibProject.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\RaylibProject.dir\\d_dict.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\d_dict.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/d_dict.c",
+  "output": "src/CMakeFiles/RaylibProject.dir/d_dict.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/RaylibProject.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\RaylibProject.dir\\d_queue.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\d_queue.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/d_queue.c",
+  "output": "src/CMakeFiles/RaylibProject.dir/d_queue.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/RaylibProject.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\RaylibProject.dir\\g_events.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\g_events.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/g_events.c",
+  "output": "src/CMakeFiles/RaylibProject.dir/g_events.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/RaylibProject.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\RaylibProject.dir\\hash.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\hash.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/hash.c",
+  "output": "src/CMakeFiles/RaylibProject.dir/hash.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/RaylibProject.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\RaylibProject.dir\\m_cylinder.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\m_cylinder.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/m_cylinder.c",
+  "output": "src/CMakeFiles/RaylibProject.dir/m_cylinder.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/RaylibProject.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\RaylibProject.dir\\m_raytriangleintersection.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\m_raytriangleintersection.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/m_raytriangleintersection.c",
+  "output": "src/CMakeFiles/RaylibProject.dir/m_raytriangleintersection.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/RaylibProject.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\RaylibProject.dir\\m_vector.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\m_vector.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/m_vector.c",
+  "output": "src/CMakeFiles/RaylibProject.dir/m_vector.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/RaylibProject.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\RaylibProject.dir\\f_objparser.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\f_objparser.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/f_objparser.c",
+  "output": "src/CMakeFiles/RaylibProject.dir/f_objparser.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_cdf.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_cdf.dir\\t_cdfparser.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\t_cdfparser.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/t_cdfparser.c",
+  "output": "src/CMakeFiles/t_cdf.dir/t_cdfparser.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_cdf.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_cdf.dir\\d_dict_s.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\d_dict_s.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/d_dict_s.c",
+  "output": "src/CMakeFiles/t_cdf.dir/d_dict_s.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_cdf.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_cdf.dir\\d_dict.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\d_dict.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/d_dict.c",
+  "output": "src/CMakeFiles/t_cdf.dir/d_dict.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_cdf.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_cdf.dir\\d_queue.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\d_queue.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/d_queue.c",
+  "output": "src/CMakeFiles/t_cdf.dir/d_queue.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_cdf.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_cdf.dir\\d_string.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\d_string.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/d_string.c",
+  "output": "src/CMakeFiles/t_cdf.dir/d_string.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_cdf.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_cdf.dir\\f_cdfparser.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\f_cdfparser.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/f_cdfparser.c",
+  "output": "src/CMakeFiles/t_cdf.dir/f_cdfparser.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_cdf.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_cdf.dir\\g_events.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\g_events.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/g_events.c",
+  "output": "src/CMakeFiles/t_cdf.dir/g_events.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_cdf.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_cdf.dir\\g_statemachines.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\g_statemachines.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/g_statemachines.c",
+  "output": "src/CMakeFiles/t_cdf.dir/g_statemachines.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_cdf.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_cdf.dir\\hash.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\hash.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/hash.c",
+  "output": "src/CMakeFiles/t_cdf.dir/hash.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_charargs.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_charargs.dir\\t_charArgs.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\t_charArgs.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/t_charArgs.c",
+  "output": "src/CMakeFiles/t_charargs.dir/t_charArgs.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_dict.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_dict.dir\\t_dict.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\t_dict.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/t_dict.c",
+  "output": "src/CMakeFiles/t_dict.dir/t_dict.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_dict.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_dict.dir\\d_dict.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\d_dict.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/d_dict.c",
+  "output": "src/CMakeFiles/t_dict.dir/d_dict.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_dict.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_dict.dir\\hash.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\hash.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/hash.c",
+  "output": "src/CMakeFiles/t_dict.dir/hash.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_events.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_events.dir\\t_dict.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\t_dict.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/t_dict.c",
+  "output": "src/CMakeFiles/t_events.dir/t_dict.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_events.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_events.dir\\d_dict.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\d_dict.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/d_dict.c",
+  "output": "src/CMakeFiles/t_events.dir/d_dict.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_events.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_events.dir\\hash.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\hash.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/hash.c",
+  "output": "src/CMakeFiles/t_events.dir/hash.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/hashgenerator.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\hashgenerator.dir\\hashGenerator.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\hashGenerator.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/hashGenerator.c",
+  "output": "src/CMakeFiles/hashgenerator.dir/hashGenerator.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/hashgenerator.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\hashgenerator.dir\\hash.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\hash.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/hash.c",
+  "output": "src/CMakeFiles/hashgenerator.dir/hash.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_fluidsynth.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_fluidsynth.dir\\t_fluidsynth.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\t_fluidsynth.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/t_fluidsynth.c",
+  "output": "src/CMakeFiles/t_fluidsynth.dir/t_fluidsynth.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_lua.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_lua.dir\\t_lua.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\t_lua.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/t_lua.c",
+  "output": "src/CMakeFiles/t_lua.dir/t_lua.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_queue.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_queue.dir\\t_queue.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\t_queue.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/t_queue.c",
+  "output": "src/CMakeFiles/t_queue.dir/t_queue.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_queue.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_queue.dir\\d_queue.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\d_queue.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/d_queue.c",
+  "output": "src/CMakeFiles/t_queue.dir/d_queue.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_collision.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_collision.dir\\t_collision.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\t_collision.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/t_collision.c",
+  "output": "src/CMakeFiles/t_collision.dir/t_collision.c.obj"
+},
+{
+  "directory": "C:/Users/jaung/source/repos/Raylib Project/bin/src",
+  "command": "C:\\mingw64\\bin\\gcc.exe  @CMakeFiles/t_collision.dir/includes_C.rsp -std=gnu99 -g3 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wshadow -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option -Wconversion -Wpadded -fno-common -o CMakeFiles\\t_collision.dir\\m_raytriangleintersection.c.obj -c \"C:\\Users\\jaung\\source\\repos\\Raylib Project\\src\\m_raytriangleintersection.c\"",
+  "file": "C:/Users/jaung/source/repos/Raylib Project/src/m_raytriangleintersection.c",
+  "output": "src/CMakeFiles/t_collision.dir/m_raytriangleintersection.c.obj"
+}
+]

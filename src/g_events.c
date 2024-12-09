@@ -11,8 +11,6 @@
 #include "d_queue.h"
 #include "d_dict.h"
 
-#include "raymath.h"
-
 #include <assert.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -27,7 +25,7 @@ Dict* eventQs;
 /*
  * TODO: Free the previously existing event handler if it exists.
  */
-int E_Init() {
+int E_Init(void) {
 	eventQs = Dict_Create();
 
 	return eventQs != NULL;

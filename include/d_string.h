@@ -1,1 +1,1 @@
-char* StringCopy(char const * const src);
+char* StringCopy(char const* const src);

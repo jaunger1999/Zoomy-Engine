@@ -9,9 +9,9 @@ typedef struct Dict_S {
 	unsigned int size;
 } Dict_S;
 
-Dict_S* Dict_S_Create();
+Dict_S* Dict_S_Create(void);
 
-void* Dict_S_Get(Dict_S* dict, char const * const id);
+void* Dict_S_Get(Dict_S const* const dict, char const * const id);
 
 int  Dict_S_Add(Dict_S* dict, char const * const id, void* item);
 void Dict_S_Destroy(Dict_S* dict);

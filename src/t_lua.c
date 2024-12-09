@@ -65,7 +65,7 @@ main(void)
     }
 
     /* By what name is the script going to reference our table? */
-    lua_setglobal(L, "foo");
+    lua_setglobal(L, "Foo");
 
     /* Ask Lua to run our little script */
     result = lua_pcall(L, 0, LUA_MULTRET, 0);

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Dict* Dict_Create() {
+Dict* Dict_Create(void) {
 	Dict* d = malloc(sizeof(Dict));
 
 	if (d == NULL) {

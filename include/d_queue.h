@@ -9,7 +9,7 @@ typedef struct Queue {
 	unsigned int count;
 } Queue;
 
-Queue* Q_Create();
+Queue* Q_Create(void);
 void Q_Destroy(Queue* q);
 
 int   Enqueue(Queue* q, void* data);

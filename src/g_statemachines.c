@@ -10,7 +10,7 @@ int StateMachine_Destroy(StateMachine* sm) {
 		return 1;
 	}
 
-	for(int i = 0; i < sm->totalStates; i++) {
+	for(unsigned int i = 0; i < sm->totalStates; i++) {
 		free(sm->transitions[i]);
 	}
 
@@ -25,13 +25,13 @@ int StateMachine_Destroy(StateMachine* sm) {
 	return 1;
 }
 
-StateMachine* StateMachine_Init(int const totalStates, int const totalTransitions) {
+StateMachine* StateMachine_Init(unsigned int const totalStates, unsigned int const totalTransitions) {
 	#define RETURN_ERROR\
 		StateMachine_Destroy(sm);
 		return NULL;
 
-	#define MALLOC_ARRAY(type, name, size)\
-		name = malloc(sizeof(type) * size);\
+	#define CALLOC_ARRAY(type, name, size)\
+		name = calloc(size, sizeof(type));\
 		\
 		if(name == NULL) {\
 			RETURN_ERROR\
@@ -46,7 +46,7 @@ StateMachine* StateMachine_Init(int const totalStates, int const totalTransition
 	sm->totalStates      = totalStates;
 	sm->totalTransitions = totalTransitions;
 
-	MALLOC_ARRAY(int, sm->transitions, totalStates)
+	CALLOC_ARRAY(int, sm->transitions, totalStates)
 	
 	// calloc so we can check for NULL.
 	sm->tickers   = calloc(totalStates, sizeof(TickerFunction*));
@@ -58,26 +58,16 @@ StateMachine* StateMachine_Init(int const totalStates, int const totalTransition
 	}
 
 	// init all but the last state and its transitions.
-	for(int i = 0; i < totalStates - 1; i++) {
-		MALLOC_ARRAY(int, sm->transitions[i], totalTransitions)
+	for(unsigned int i = 0; i < totalStates - 1; i++) {
+		CALLOC_ARRAY(int, sm->transitions[i], totalTransitions)
 
 		// The 0 index is reserved for an animation ending, 
 		// in which the state machine progresses to the next state.
 		sm->transitions[i][0] = i + 1;
-
-		//The rest of the states have unset transitions by default.
-		for(int j = 1; j < totalTransitions; j++) {
-			sm->transitions[i][j] = -1;
-		}
 	}
 
 	// init the last states transitions.
-	MALLOC_ARRAY(int, sm->transitions[totalStates - 1], totalTransitions)
-
-	for(int k = 0; k < totalTransitions; k++) {
-		// By default the final state in our table has no defined transition.
-		sm->transitions[totalStates - 1][k] = -1;
-	}
+	CALLOC_ARRAY(int, sm->transitions[totalStates - 1], totalTransitions)
 
 	return sm;
 }

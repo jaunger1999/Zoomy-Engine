@@ -12,4 +12,4 @@ typedef struct OptionVector3 {
 } OptionVector3;
 
 Quaternion QuaternionFromGravityVector(Vector3 *g);
-OptionVector3 WrapVector3(Vector3 const * const vector);
+OptionVector3 WrapVector3(Vector3 const* const vector);
