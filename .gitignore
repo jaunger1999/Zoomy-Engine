@@ -3,6 +3,7 @@
 /lib
 models/
 shaders/
+.cache/
 
 # Prerequisites
 *.d
