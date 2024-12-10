@@ -1,10 +1,10 @@
 typedef enum EventType {
-	NONE          = -1,
-	ANIMATION_END =  0,
-	PLAYER_MOVE   =  1
+	NONE          = 0,
+	ANIMATION_END = 1,
+	PLAYER_MOVE   = 2, 
 } EventType;
 
-typedef int (*EventFunction)(char const * const args, unsigned int const id, void* out);
+typedef unsigned int (*EventFunction)(char const * const args, unsigned int const id, void* out);
 
 typedef struct Event {
 	EventType type;

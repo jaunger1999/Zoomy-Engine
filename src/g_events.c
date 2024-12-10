@@ -1,15 +1,15 @@
-#include "g_attributes.h"
-#include "g_physics.h"
 #include "g_events.h"
+#include "g_attributes.h"
 #include "g_health.h"
+#include "g_physics.h"
 #include "g_statemachines.h"
 
 #include "m_raytriangleintersection.h"
 
 #include "gamestate.h"
 
-#include "d_queue.h"
 #include "d_dict.h"
+#include "d_queue.h"
 
 #include <assert.h>
 #include <stdarg.h>
@@ -18,7 +18,7 @@
 
 #include <stdio.h>
 
-typedef char* (*EventParameters)(unsigned int const n, va_list args); 
+typedef char* (*EventParameters)(unsigned int const n, va_list args);
 
 Dict* eventQs;
 
@@ -36,7 +36,7 @@ int E_Init(void) {
  */
 int E_AddObj(unsigned int const id) {
 	Queue* newEventQ = Q_Create();
-	
+
 	Dict_Add(eventQs, id, newEventQ);
 
 	return 1;
@@ -57,14 +57,14 @@ int E_Register(EventFunction function, EventType type, unsigned int const id, un
 	va_start(ptr, n);
 
 	EventParameters parameterFunction = GetParameterFunction(type);
-	char* args = parameterFunction(n, ptr);
-	
+	char*           args              = parameterFunction(n, ptr);
+
 	va_end(ptr);
 
 	// Construct the event and append it to its corresponding queue.
-	Event* event    = malloc(sizeof(Event));
+	Event* event = malloc(sizeof(Event));
 
-	if (event == NULL) {
+	if(event == NULL) {
 		fprintf(stderr, "Fatal: failed to allocate memory on the heap.");
 		return 0;
 	}
@@ -79,26 +79,27 @@ int E_Register(EventFunction function, EventType type, unsigned int const id, un
 	return 1;
 }
 
-char* TestParameters      (unsigned int const n, va_list args);
+char* TestParameters(unsigned int const n, va_list args);
 char* PlayerMoveParameters(unsigned int const n, va_list args);
 
 EventParameters GetParameterFunction(EventType type) {
-	switch (type) {
-		case NONE:
-			return TestParameters;
-		case ANIMATION_END:
-			return NULL;
-		case PLAYER_MOVE:
-			return PlayerMoveParameters;
+	switch(type) {
+	case NONE:
+		return TestParameters;
+	case ANIMATION_END:
+		return NULL;
+	case PLAYER_MOVE:
+		return PlayerMoveParameters;
 	}
 
 	return NULL;
 }
 
 char* PlayerMoveParameters(unsigned int const n, va_list args) {
-	char* packedArgs = malloc(sizeof(Input*) + sizeof(Attributes*) + sizeof(CollisionMesh*) + sizeof(PhysicalProperties*) + sizeof(float));
+	char* packedArgs = malloc(sizeof(Input*) + sizeof(Attributes*) + sizeof(CollisionMesh*) +
+	                          sizeof(PhysicalProperties*) + sizeof(float));
 
-	if (packedArgs == NULL) {
+	if(packedArgs == NULL) {
 		fprintf(stderr, "Fatal: failed to allocate memory on the heap.\n");
 		return NULL;
 	}
@@ -109,10 +110,10 @@ char* PlayerMoveParameters(unsigned int const n, va_list args) {
 	PhysicalProperties* p     = va_arg(args, PhysicalProperties*);
 	float               delta = va_arg(args, double);
 
-	memcpy(packedArgs,                                                 &i,     sizeof(i));
-	memcpy(packedArgs + sizeof(i),                                     &a,     sizeof(a));
-	memcpy(packedArgs + sizeof(i) + sizeof(a),                         &m,     sizeof(m));
-	memcpy(packedArgs + sizeof(i) + sizeof(a) + sizeof(m),             &p,     sizeof(p));
+	memcpy(packedArgs, &i, sizeof(i));
+	memcpy(packedArgs + sizeof(i), &a, sizeof(a));
+	memcpy(packedArgs + sizeof(i) + sizeof(a), &m, sizeof(m));
+	memcpy(packedArgs + sizeof(i) + sizeof(a) + sizeof(m), &p, sizeof(p));
 	memcpy(packedArgs + sizeof(i) + sizeof(a) + sizeof(m) + sizeof(p), &delta, sizeof(delta));
 
 	return packedArgs;
@@ -120,8 +121,8 @@ char* PlayerMoveParameters(unsigned int const n, va_list args) {
 
 char* TestParameters(unsigned int const n, va_list args) {
 	char* packedArgs = malloc(sizeof(int) + sizeof(Vector3));
-	
-	if (packedArgs == NULL) {
+
+	if(packedArgs == NULL) {
 		fprintf(stderr, "Fatal: failed to allocate memory on the heap.\n");
 		return NULL;
 	}
@@ -129,7 +130,7 @@ char* TestParameters(unsigned int const n, va_list args) {
 	int     a = va_arg(args, int);
 	Vector3 b = va_arg(args, Vector3);
 
-	memcpy(packedArgs,             &a, sizeof(a));
+	memcpy(packedArgs, &a, sizeof(a));
 	memcpy(packedArgs + sizeof(a), &b, sizeof(b));
 
 	return packedArgs;

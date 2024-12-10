@@ -1,4 +1,4 @@
-typedef void (*TickerFunction)(int const id, float const delta);
+typedef void (*TickerFunction)(unsigned int const id, float const delta);
 
 typedef struct StateMachine {
 	unsigned int   state;

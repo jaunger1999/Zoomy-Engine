@@ -1,5 +1,5 @@
-#include "g_events.h"
 #include "g_statemachines.h"
+#include "g_events.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -26,17 +26,17 @@ int StateMachine_Destroy(StateMachine* sm) {
 }
 
 StateMachine* StateMachine_Init(unsigned int const totalStates, unsigned int const totalTransitions) {
-	#define RETURN_ERROR\
-		StateMachine_Destroy(sm);
-		return NULL;
+#define RETURN_ERROR         \
+	StateMachine_Destroy(sm); \
+	return NULL;
 
-	#define CALLOC_ARRAY(type, name, size)\
-		name = calloc(size, sizeof(type));\
-		\
-		if(name == NULL) {\
-			RETURN_ERROR\
-		}
-	
+#define CALLOC_ARRAY(type, name, size) \
+	name = calloc(size, sizeof(type));  \
+                                       \
+	if(name == NULL) {                  \
+		RETURN_ERROR                     \
+	}
+
 	StateMachine* sm = malloc(sizeof(StateMachine));
 
 	if(sm == NULL) {
@@ -47,21 +47,17 @@ StateMachine* StateMachine_Init(unsigned int const totalStates, unsigned int con
 	sm->totalTransitions = totalTransitions;
 
 	CALLOC_ARRAY(int, sm->transitions, totalStates)
-	
-	// calloc so we can check for NULL.
-	sm->tickers   = calloc(totalStates, sizeof(TickerFunction*));
-	sm->entrances = calloc(totalStates, sizeof(TickerFunction*));
-	sm->exits     = calloc(totalStates, sizeof(TickerFunction*));
 
-	if(sm->tickers == NULL || sm->entrances == NULL || sm->exits == NULL) {
-		RETURN_ERROR
-	}
+	// calloc so we can check for NULL.
+	CALLOC_ARRAY(TickerFunction*, sm->tickers, totalStates)
+	CALLOC_ARRAY(TickerFunction*, sm->entrances, totalStates)
+	CALLOC_ARRAY(TickerFunction*, sm->exits, totalStates)
 
 	// init all but the last state and its transitions.
 	for(unsigned int i = 0; i < totalStates - 1; i++) {
 		CALLOC_ARRAY(int, sm->transitions[i], totalTransitions)
 
-		// The 0 index is reserved for an animation ending, 
+		// The 0 index is reserved for an animation ending,
 		// in which the state machine progresses to the next state.
 		sm->transitions[i][0] = i + 1;
 	}
@@ -79,22 +75,20 @@ void Tick(StateMachine* const sm, float const delta) {
 	// loop through as many states within delta time as we can.
 	float timeRemaining;
 
-	for(
-		timeRemaining = delta; 
-		(timeRemaining < sm->timeToNextState && sm->timeToNextState > 0) || sm->stateDurations[sm->state] == -1;
-		timeRemaining -= sm->timeToNextState
-	) {
+	for(timeRemaining = delta;
+	    (timeRemaining < sm->timeToNextState && sm->timeToNextState > 0) || sm->stateDurations[sm->state] == -1;
+	    timeRemaining -= sm->timeToNextState) {
 		sm->tickers[sm->state](sm->id, sm->timeToNextState);
 
 		if(sm->exits[sm->state] != NULL) {
 			sm->exits[sm->state](sm->id, delta);
 		}
-		
+
 		// set up our next state.
 		// 0 index reserved for state timer ending.
-		sm->state = sm->transitions[sm->state][0];
+		sm->state           = sm->transitions[sm->state][0];
 		sm->timeToNextState = sm->stateDurations[sm->state];
-		
+
 		if(sm->entrances[sm->state] != NULL) {
 			sm->entrances[sm->state](sm->id, delta);
 		}
@@ -108,7 +102,7 @@ void Tick(StateMachine* const sm, float const delta) {
 	for(Event* e = E_GetNext(sm->id); e != NULL; e = E_GetNext(sm->id)) {
 		void* out = NULL;
 
-		int const eventType = e->function(e->args, sm->id, out);
+		unsigned int const eventType = e->function(e->args, sm->id, out);
 
 		// skip out processing if it's NULL
 		if(out == NULL) {
@@ -116,15 +110,14 @@ void Tick(StateMachine* const sm, float const delta) {
 		}
 
 		// process out
-
-		after_out_processing:
+	after_out_processing:
 		if(eventType == NONE) {
 			continue;
 		}
 
 		assert(eventType >= 0 && eventType < sm->totalTransitions);
 
-		int const nextState = sm->transitions[sm->state][eventType];
+		unsigned int const nextState = sm->transitions[sm->state][eventType];
 
 		if(nextState != NONE) {
 			assert(nextState >= 0 && nextState < sm->totalTransitions);

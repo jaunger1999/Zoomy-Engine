@@ -11,7 +11,7 @@
 Dict_S* Dict_S_Create(void) {
 	Dict_S* d = malloc(sizeof(Dict_S));
 
-	if (d == NULL) {
+	if(d == NULL) {
 		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(Dict_S));
 		return NULL;
 	}
@@ -24,8 +24,8 @@ Dict_S* Dict_S_Create(void) {
 }
 
 void Dict_S_Destroy(Dict_S* d) {
-	for (unsigned int i = 0; i < d->size; i++) {
-		for (DictEntry_S* e = d->buckets[i]; e != NULL;) {
+	for(unsigned int i = 0; i < d->size; i++) {
+		for(DictEntry_S* e = d->buckets[i]; e != NULL;) {
 			DictEntry_S* old = e;
 
 			e = e->next;
@@ -40,9 +40,8 @@ void Dict_S_Destroy(Dict_S* d) {
 void* Dict_S_Get(Dict_S const* const dict, char const* const id) {
 	unsigned long i = hash_s(id, MAX_STR_LEN) % dict->size;
 
-	for (DictEntry_S* entry = dict->buckets[i]; entry != NULL;
-	     entry              = entry->next) {
-		if (strcmp(entry->id, id) == 0) {
+	for(DictEntry_S* entry = dict->buckets[i]; entry != NULL; entry = entry->next) {
+		if(strcmp(entry->id, id) == 0) {
 			return entry->item;
 		}
 	}
@@ -56,9 +55,8 @@ int Dict_S_Add(Dict_S* const dict, char const* const id, void* const item) {
 	// Init the entry
 	DictEntry_S* entry = malloc(sizeof(DictEntry_S));
 
-	if (entry == NULL) {
-		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n",
-		        sizeof(DictEntry_S));
+	if(entry == NULL) {
+		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(DictEntry_S));
 		return 0;
 	}
 

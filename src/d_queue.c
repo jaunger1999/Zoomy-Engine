@@ -6,7 +6,7 @@
 Queue* Q_Create(void) {
 	Queue* q = malloc(sizeof(Queue));
 
-	if (q == NULL) {
+	if(q == NULL) {
 		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(Queue));
 		return NULL;
 	}
@@ -21,7 +21,7 @@ Queue* Q_Create(void) {
 }
 
 void Q_Destroy(Queue* q) {
-	while (q->count > 0) {
+	while(q->count > 0) {
 		free(Dequeue(q));
 	}
 
@@ -31,7 +31,7 @@ void Q_Destroy(Queue* q) {
 int Enqueue(Queue* q, void* data) {
 	Node* node = malloc(sizeof(Node));
 
-	if (node == NULL) {
+	if(node == NULL) {
 		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(Node));
 		return 0;
 	}
@@ -39,7 +39,7 @@ int Enqueue(Queue* q, void* data) {
 	node->data = data;
 	node->prev = NULL;
 
-	if (q->back != NULL) { // adding data to a queue with at least one item.
+	if(q->back != NULL) { // adding data to a queue with at least one item.
 		q->back->prev = node;
 	}
 	else { // adding data to an empty queue.
@@ -53,7 +53,7 @@ int Enqueue(Queue* q, void* data) {
 }
 
 void* Dequeue(Queue* q) {
-	if (q->count == 0) {
+	if(q->count == 0) {
 		return NULL;
 	}
 
@@ -66,7 +66,7 @@ void* Dequeue(Queue* q) {
 	q->count--;
 
 	// Set front and back to null so we don't check freed pointers.
-	if (q->count == 0) {
+	if(q->count == 0) {
 		q->front = NULL;
 		q->back  = NULL;
 	}

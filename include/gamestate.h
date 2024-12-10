@@ -51,6 +51,7 @@ typedef struct Input {
 
 typedef struct CameraState {
 	CameraBehaviour behaviour;
+	Vector3 relativePosition;
 	float radiansPerSecond;
 	bool incrementedRotations;
 	Camera camera;
@@ -61,6 +62,6 @@ Attributes GetAttributes(float const jumpHeight, float const timeToApex, float c
 
 Input GetInputState(InputMap const * const inputMap, Vector2 const * const oldMovement, Vector2 const * const oldCameraMovement, float const cameraYaw);
 
-CameraState GetNextCameraState(CameraState const * const cameraState, PhysicalProperties const * const playerState, Input const * const input, float const delta);
+unsigned int GetNextCameraState(PhysicalProperties const * const playerState, Input const * const input, float const delta, CameraState* cameraState);
 
 PhysicalProperties GetNextPlayerGameState(Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh, PhysicalProperties const objs[], int const totalObjs, float const delta);
