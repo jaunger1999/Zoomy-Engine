@@ -72,9 +72,9 @@ int main(void) {
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 
-	int luaStatus = luaL_loadfile(L, "../a big jump/scripts/camera.lua");
+	int luaErrorCode = luaL_loadfile(L, "../a big jump/scripts/camera.lua");
 
-	if(luaStatus) {
+	if(luaErrorCode) {
 		fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
 		exit(1);
 	}
@@ -182,7 +182,25 @@ int main(void) {
 			}
 		}
 
-		GetNextCameraState(&obj, &input, delta, &cameraState);
+		// Update our camera controls
+		luaErrorCode = lua_getglobal(L, "UpdateCameraControls");
+
+		if(!luaErrorCode) {
+			lua_pushnumber(L, input.cameraMovement.x);
+			lua_pushnumber(L, input.cameraMovement.y);
+			lua_pushnumber(L, delta);
+			lua_call(L, 3, 0);
+		}
+
+		// Then run our camera script
+		luaErrorCode = lua_pcall(L, 0, LUA_MULTRET, 0);
+
+		if(!luaErrorCode) {
+			float const rotation = (float)lua_tonumber(L, -1);
+			lua_pop(L, 1);
+			GetNextCameraState(&obj, &input, rotation, delta, &cameraState);
+		}
+
 		Camera const newCamera = cameraState.camera;
 
 		// Draw
@@ -272,11 +290,11 @@ Input GetInputState(InputMap const* const inputMap,
 
 unsigned int GetNextCameraState(PhysicalProperties const* const playerState,
                                 Input const* const              input,
+                                float const                     rotation,
                                 float const                     delta,
                                 CameraState*                    cameraState) {
 	Camera const camera = cameraState->camera;
 
-	float const   rotation            = delta * cameraState->radiansPerSecond * input->cameraMovement.x;
 	Vector3 const newRelativePosition = Vector3RotateByAxisAngle(cameraState->relativePosition, camera.up, rotation);
 	Vector3 const newPosition         = Vector3Add(newRelativePosition, playerState->position);
 
