@@ -43,7 +43,15 @@
 #include "d_dict.h"
 #include "d_queue.h"
 
-#include "m_vector.h"
+typedef struct OptionVector3 {
+	bool    const valid;
+	Vector3 const vector;
+} OptionVector3;
+
+Quaternion QuaternionFromGravityVector(Vector3* g) {
+	return QuaternionFromVector3ToVector3((Vector3){0, -1, 0}, *g);
+}
+OptionVector3 WrapVector3(Vector3 const* const vector);
 
 #include "g_attributes.h"
 #include "g_events.h"
@@ -183,9 +191,9 @@ int main(void) {
 		}
 
 		// Update our camera controls
-		luaErrorCode = lua_getglobal(L, "UpdateCameraControls");
+		//luaErrorCode = lua_getglobal(L, "UpdateCameraControls");
 
-		if(!luaErrorCode) {
+		/*if(!luaErrorCode) {
 			lua_pushnumber(L, input.cameraMovement.x);
 			lua_pushnumber(L, input.cameraMovement.y);
 			lua_pushnumber(L, delta);
@@ -199,7 +207,7 @@ int main(void) {
 			float const rotation = (float)lua_tonumber(L, -1);
 			lua_pop(L, 1);
 			GetNextCameraState(&obj, &input, rotation, delta, &cameraState);
-		}
+		}*/
 
 		Camera const newCamera = cameraState.camera;
 

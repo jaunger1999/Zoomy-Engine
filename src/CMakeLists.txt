@@ -8,7 +8,7 @@ macro(CompilerOptions name)
 	target_include_directories(${name} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 endmacro()
 
-add_executable(RaylibProject main.c d_dict.c d_queue.c g_events.c hash.c m_cylinder.c m_raytriangleintersection.c m_vector.c f_objparser.c)
+add_executable(RaylibProject main.c d_dict.c d_queue.c g_events.c hash.c m_cylinder.c m_raytriangleintersection.c f_objparser.c)
 CompilerOptions(RaylibProject)
 target_link_libraries(RaylibProject ${CMAKE_SOURCE_DIR}/lib/liblua.a)
 target_link_libraries(RaylibProject ${CMAKE_SOURCE_DIR}/lib/libraylib.a)
