@@ -1,6 +1,7 @@
 #include "m_vector2.h"
 #include "m_fixed.h"
 #include "m_matrix.h"
+#include <stdint.h>
 
 // Vector with components value 0->0f
 Vector2 Vector2Zero(void)
@@ -51,7 +52,7 @@ Vector2 Vector2SubtractValue(Vector2 const* const v, fixed_t sub)
 }
 
 // Calculate vector length
-fixed_t Vector2Length(Vector2 const* const v) { return sqrtf((v->x * v.x) + (v->y * v->y)); }
+fixed_t Vector2Length(Vector2 const* const v) { return (fixed_t)uint64_sqrt((uint64_t)((v->x * v->x) + (v->y * v->y))); }
 
 // Calculate vector square length
 fixed_t Vector2LengthSqr(Vector2 const* const v) { return (v->x * v->x) + (v->y * v->y); }
@@ -67,7 +68,7 @@ fixed_t Vector2DotProduct(Vector2 const* const v1, Vector2 const* const v2)
 // Calculate distance between two vectors
 fixed_t Vector2Distance(Vector2 const* const v1, Vector2 const* const v2)
 {
-	fixed_t result = sqrtf((v1->x - v2->x) * (v1->x - v2->x) + (v1->y - v2->y) * (v1->y - v2->y));
+	fixed_t result = (int64_t)uint64_sqrt((uint64_t)((v1->x - v2->x) * (v1->x - v2->x) + (v1->y - v2->y) * (v1->y - v2->y)));
 
 	return result;
 }
@@ -143,7 +144,7 @@ Vector2 Vector2Divide(Vector2 const* const v1, Vector2 const* const v2)
 Vector2 Vector2Normalize(Vector2 const* const v)
 {
 	Vector2 result = {0};
-	fixed_t length = sqrtf((v->x * v.x) + (v.y * v.y));
+	fixed_t length = (int64_t)uint64_sqrt((uint64_t)((v->x * v->x) + (v->y * v->y)));
 
 	if(length > 0) {
 		fixed_t ilength = 1LL / length;
@@ -198,33 +199,33 @@ Vector2 Vector2Min(Vector2 const* const v1, Vector2 const* const v2)
 {
 	Vector2 result = {0};
 
-	result.x = fminf(v1->x, v2->x);
-	result.y = fminf(v1->y, v2->y);
+	result.x = min(v1->x, v2->x);
+	result.y = min(v1->y, v2->y);
 
 	return result;
 }
 
 // Get max value for each pair of components
-Vector2 Vector2Max(Vector2 v1, Vector2 v2)
+Vector2 Vector2Max(Vector2 const* const v1, Vector2 const* const v2)
 {
 	Vector2 result = {0};
 
-	result.x = fmaxf(v1->x, v2->x);
-	result.y = fmaxf(v1->y, v2->y);
+	result.x = max(v1->x, v2->x);
+	result.y = max(v1->y, v2->y);
 
 	return result;
 }
 
 // Rotate vector by angle
-Vector2 Vector2Rotate(Vector2 v, fixed_t angle)
+Vector2 Vector2Rotate(Vector2 const* const v, fixed_t const angle)
 {
 	Vector2 result = {0};
 
 	fixed_t cosres = cosf(angle);
 	fixed_t sinres = sinf(angle);
 
-	result.x = v.x * cosres - v.y * sinres;
-	result.y = v.x * sinres + v.y * cosres;
+	result.x = v->x * cosres - v->y * sinres;
+	result.y = v->x * sinres + v->y * cosres;
 
 	return result;
 }
@@ -242,7 +243,7 @@ Vector2 Vector2MoveTowards(Vector2 const* const v, Vector2 const* const target, 
 		return *target;
 	}
 
-	fixed_t dist = sqrtf(value);
+	fixed_t dist = (int64_t)uint64_sqrt((uint64_t)value);
 
 	result.x = v->x + dx / dist * maxDistance;
 	result.y = v->y + dy / dist * maxDistance;
@@ -278,7 +279,7 @@ Vector2 Vector2ClampValue(Vector2 const* const v, fixed_t min, fixed_t max)
 	fixed_t length = (v->x * v->x) + (v->y * v->y);
 
 	if(length > 0LL) {
-		length = sqrtf(length);
+		length = (int64_t)uint64_sqrt(length);
 
 		fixed_t scale = 1; // By default, 1 as the neutral element->
 		if(length < min) {
@@ -298,8 +299,8 @@ Vector2 Vector2ClampValue(Vector2 const* const v, fixed_t min, fixed_t max)
 // Check whether two given vectors are almost equal
 int Vector2Equals(Vector2 const* const p, Vector2 const* const q)
 {
-	int result = (fabsf(p->x - q->x) <= fmaxf(1LL, fmaxf(fabsf(p->x), fabsf(q->x)))) &&
-	             (fabsf(p->y - q->y) <= fmaxf(1LL, fmaxf(fabsf(p->y), fabsf(q->y))));
+	int result = (fabsf(p->x - q->x) <= max(1LL, max(abs(p->x), abs(q->x)))) &&
+	             (fabsf(p->y - q->y) <= max(1LL, max(abs(p->y), abs(q->y))));
 
 	return result;
 }
@@ -317,7 +318,7 @@ Vector2 Vector2Refract(Vector2 const* const v, Vector2 const* const n, fixed_t r
 	fixed_t d   = 1LL - r * r * (1LL - dot * dot);
 
 	if(d >= 0LL) {
-		d    = sqrtf(d);
+		d    = (int64_t)uint64_sqrt((uint64_t)d);
 		result.x = r * v->x - (r * dot + d) * n->x;
 		result.y = r * v->y - (r * dot + d) * n->y;
 	}
