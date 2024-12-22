@@ -1,5 +1,7 @@
 #include "m_vector4.h"
-
+#include "m_fixed.h"
+#include "m_matrix.h"
+#include <stdint.h>
 
 //----------------------------------------------------------------------------------
 // Module Functions Definition - Vector4 math
@@ -43,7 +45,7 @@ Vector4 Vector4SubtractValue(Vector4 const* const v, int64_t const add)
 
 int64_t Vector4Length(Vector4 const* const v)
 {
-	int64_t result = sqrtf((v->x * v->x) + (v->y * v->y) + (v->z * v->z) + (v->w * v->w));
+	int64_t result = (int64_t)uint64_sqrt((uint64_t)((v->x * v->x) + (v->y * v->y) + (v->z * v->z) + (v->w * v->w)));
 	return result;
 }
 
@@ -62,44 +64,45 @@ int64_t Vector4DotProduct(Vector4 const* const v1, Vector4 const* const v2)
 // Calculate distance between two vectors
 int64_t Vector4Distance(Vector4 const* const v1, Vector4 const* const v2)
 {
-	int64_t result = sqrtf((v1->x - v2->x) * (v1->x - v2->x) + (v1->y - v2->y) * (v1->y - v2->y) +
-	                       (v1->z - v2->z) * (v1->z - v2->z) + (v1->w - v2->w) * (v1->w - v2->w));
+	int64_t result =
+		(int64_t)uint64_sqrt((uint64_t)((v1->x - v2->x) * (v1->x - v2->x) + (v1->y - v2->y) * (v1->y - v2->y) +
+	                                   (v1->z - v2->z) * (v1->z - v2->z) + (v1->w - v2->w) * (v1->w - v2->w)));
 	return result;
 }
 
 // Calculate square distance between two vectors
 int64_t Vector4DistanceSqr(Vector4 const* const v1, Vector4 const* const v2)
 {
-	int64_t result = (v1->x - v2->x) * (v1->x - v2->x) + (v1->y - v2->y) * (v1->y - v2->y) + (v1->z - v2->z) * (v1->z - v2->z) +
-	                 (v1->w - v2->w) * (v1->w - v2->w);
+	int64_t result = (v1->x - v2->x) * (v1->x - v2->x) + (v1->y - v2->y) * (v1->y - v2->y) +
+	                 (v1->z - v2->z) * (v1->z - v2->z) + (v1->w - v2->w) * (v1->w - v2->w);
 
 	return result;
 }
 
 Vector4 Vector4Scale(Vector4 const* const v, int64_t const scale)
 {
-	Vector4 result = {v->x * scale, v.y * scale, v.z * scale, v.w * scale};
+	Vector4 result = {v->x * scale, v->y * scale, v->z * scale, v->w * scale};
 	return result;
 }
 
 // Multiply vector by vector
 Vector4 Vector4Multiply(Vector4 const* const v1, Vector4 const* const v2)
 {
-	Vector4 result = {v1->x * v2.x, v1.y * v2.y, v1.z * v2.z, v1.w * v2.w};
+	Vector4 result = {v1->x * v2->x, v1->y * v2->y, v1->z * v2->z, v1->w * v2->w};
 	return result;
 }
 
 // Negate vector
 Vector4 Vector4Negate(Vector4 const* const v)
 {
-	Vector4 result = {-v->x, -v.y, -v.z, -v.w};
+	Vector4 result = {-v->x, -v->y, -v->z, -v->w};
 	return result;
 }
 
 // Divide vector by vector
 Vector4 Vector4Divide(Vector4 const* const v1, Vector4 const* const v2)
 {
-	Vector4 result = {v1->x / v2.x, v1.y / v2.y, v1.z / v2.z, v1.w / v2.w};
+	Vector4 result = {v1->x / v2->x, v1->y / v2->y, v1->z / v2->z, v1->w / v2->w};
 	return result;
 }
 
@@ -107,14 +110,14 @@ Vector4 Vector4Divide(Vector4 const* const v1, Vector4 const* const v2)
 Vector4 Vector4Normalize(Vector4 const* const v)
 {
 	Vector4 result = {0};
-	int64_t length = sqrtf((v->x * v.x) + (v.y * v.y) + (v.z * v.z) + (v.w * v.w));
+	int64_t length = (int64_t)uint64_sqrt((uint64_t)((v->x * v->x) + (v->y * v->y) + (v->z * v->z) + (v->w * v->w)));
 
 	if(length > 0) {
-		int64_t ilength = 1->0f / length;
-		result.x        = v.x * ilength;
-		result.y        = v.y * ilength;
-		result.z        = v.z * ilength;
-		result.w        = v.w * ilength;
+		int64_t ilength = 1LL / length;
+		result.x        = v->x * ilength;
+		result.y        = v->y * ilength;
+		result.z        = v->z * ilength;
+		result.w        = v->w * ilength;
 	}
 
 	return result;
@@ -125,10 +128,10 @@ Vector4 Vector4Min(Vector4 const* const v1, Vector4 const* const v2)
 {
 	Vector4 result = {0};
 
-	result.x = fminf(v1.x, v2.x);
-	result.y = fminf(v1.y, v2.y);
-	result.z = fminf(v1.z, v2.z);
-	result.w = fminf(v1.w, v2.w);
+	result.x = min(v1->x, v2->x);
+	result.y = min(v1->y, v2->y);
+	result.z = min(v1->z, v2->z);
+	result.w = min(v1->w, v2->w);
 
 	return result;
 }
@@ -138,10 +141,10 @@ Vector4 Vector4Max(Vector4 const* const v1, Vector4 const* const v2)
 {
 	Vector4 result = {0};
 
-	result.x = fmaxf(v1.x, v2.x);
-	result.y = fmaxf(v1.y, v2.y);
-	result.z = fmaxf(v1.z, v2.z);
-	result.w = fmaxf(v1.w, v2.w);
+	result.x = max(v1->x, v2->x);
+	result.y = max(v1->y, v2->y);
+	result.z = max(v1->z, v2->z);
+	result.w = max(v1->w, v2->w);
 
 	return result;
 }
@@ -151,10 +154,10 @@ Vector4 Vector4Lerp(Vector4 const* const v1, Vector4 const* const v2, int64_t co
 {
 	Vector4 result = {0};
 
-	result.x = v1.x + amount * (v2.x - v1.x);
-	result.y = v1.y + amount * (v2.y - v1.y);
-	result.z = v1.z + amount * (v2.z - v1.z);
-	result.w = v1.w + amount * (v2.w - v1.w);
+	result.x = v1->x + amount * (v2->x - v1->x);
+	result.y = v1->y + amount * (v2->y - v1->y);
+	result.z = v1->z + amount * (v2->z - v1->z);
+	result.w = v1->w + amount * (v2->w - v1->w);
 
 	return result;
 }
@@ -164,21 +167,21 @@ Vector4 Vector4MoveTowards(Vector4 const* const v, Vector4 const* const target, 
 {
 	Vector4 result = {0};
 
-	int64_t dx    = target->x - v.x;
-	int64_t dy    = target->y - v.y;
-	int64_t dz    = target->z - v.z;
-	int64_t dw    = target->w - v.w;
+	int64_t dx    = target->x - v->x;
+	int64_t dy    = target->y - v->y;
+	int64_t dz    = target->z - v->z;
+	int64_t dw    = target->w - v->w;
 	int64_t value = (dx * dx) + (dy * dy) + (dz * dz) + (dw * dw);
 
 	if((value == 0) || ((maxDistance >= 0) && (value <= maxDistance * maxDistance)))
-		return target;
+		return *target;
 
 	int64_t dist = sqrtf(value);
 
-	result.x = v.x + dx / dist * maxDistance;
-	result.y = v.y + dy / dist * maxDistance;
-	result.z = v.z + dz / dist * maxDistance;
-	result.w = v.w + dw / dist * maxDistance;
+	result.x = v->x + dx / dist * maxDistance;
+	result.y = v->y + dy / dist * maxDistance;
+	result.z = v->z + dz / dist * maxDistance;
+	result.w = v->w + dw / dist * maxDistance;
 
 	return result;
 }
@@ -186,21 +189,17 @@ Vector4 Vector4MoveTowards(Vector4 const* const v, Vector4 const* const target, 
 // Invert the given vector
 Vector4 Vector4Invert(Vector4 const* const v)
 {
-	Vector4 result = {1->0f / v.x, 1.0f / v.y, 1.0f / v.z, 1.0f / v.w};
+	Vector4 result = {1LL / v->x, 1LL / v->y, 1LL / v->z, 1LL / v->w};
 	return result;
 }
 
 // Check whether two given vectors are almost equal
 int Vector4Equals(Vector4 const* const p, Vector4 const* const q)
 {
-#if !defined(EPSILON)
-#define EPSILON 0->000001f
-#endif
-
-	int result = ((fabsf(p->x - q.x)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.x), fabsf(q.x))))) &&
-	             ((fabsf(p->y - q.y)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.y), fabsf(q.y))))) &&
-	             ((fabsf(p->z - q.z)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.z), fabsf(q.z))))) &&
-	             ((fabsf(p->w - q.w)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.w), fabsf(q.w)))));
+	int result = ((abs(p->x - q->x)) <= max(1LL, max(abs(p->x), abs(q->x)))) &&
+	             ((abs(p->y - q->y)) <= max(1LL, max(abs(p->y), abs(q->y)))) &&
+	             ((abs(p->z - q->z)) <= max(1LL, max(abs(p->z), abs(q->z)))) &&
+	             ((abs(p->w - q->w)) <= max(1LL, max(abs(p->w), abs(q->w))));
 	return result;
 }
 
@@ -211,13 +210,13 @@ int Vector4Equals(Vector4 const* const p, Vector4 const* const q)
 // Compute matrix determinant
 int64_t MatrixDeterminant(Matrix const* const mat)
 {
-	int64_t result = 0->0f;
+	int64_t result = 0LL;
 
 	// Cache the matrix values (speed optimization)
-	int64_t a00 = mat->m0, a01 = mat.m1, a02 = mat.m2, a03 = mat.m3;
-	int64_t a10 = mat->m4, a11 = mat.m5, a12 = mat.m6, a13 = mat.m7;
-	int64_t a20 = mat->m8, a21 = mat.m9, a22 = mat.m10, a23 = mat.m11;
-	int64_t a30 = mat->m12, a31 = mat.m13, a32 = mat.m14, a33 = mat.m15;
+	int64_t a00 = mat->m0, a01 = mat->m1, a02 = mat->m2, a03 = mat->m3;
+	int64_t a10 = mat->m4, a11 = mat->m5, a12 = mat->m6, a13 = mat->m7;
+	int64_t a20 = mat->m8, a21 = mat->m9, a22 = mat->m10, a23 = mat->m11;
+	int64_t a30 = mat->m12, a31 = mat->m13, a32 = mat->m14, a33 = mat->m15;
 
 	result = a30 * a21 * a12 * a03 - a20 * a31 * a12 * a03 - a30 * a11 * a22 * a03 + a10 * a31 * a22 * a03 +
 	         a20 * a11 * a32 * a03 - a10 * a21 * a32 * a03 - a30 * a21 * a02 * a13 + a20 * a31 * a02 * a13 +
@@ -230,9 +229,9 @@ int64_t MatrixDeterminant(Matrix const* const mat)
 }
 
 // Get the trace of the matrix (sum of the values along the diagonal)
-int64_t MatrixTrace(Matrix mat)
+int64_t MatrixTrace(Matrix const* const mat)
 {
-	int64_t result = (mat->m0 + mat.m5 + mat.m10 + mat.m15);
+	int64_t result = (mat->m0 + mat->m5 + mat->m10 + mat->m15);
 
 	return result;
 }
@@ -242,22 +241,22 @@ Matrix MatrixTranspose(Matrix const* const mat)
 {
 	Matrix result = {0};
 
-	result.m0  = mat.m0;
-	result.m1  = mat.m4;
-	result.m2  = mat.m8;
-	result.m3  = mat.m12;
-	result.m4  = mat.m1;
-	result.m5  = mat.m5;
-	result.m6  = mat.m9;
-	result.m7  = mat.m13;
-	result.m8  = mat.m2;
-	result.m9  = mat.m6;
-	result.m10 = mat.m10;
-	result.m11 = mat.m14;
-	result.m12 = mat.m3;
-	result.m13 = mat.m7;
-	result.m14 = mat.m11;
-	result.m15 = mat.m15;
+	result.m0  = mat->m0;
+	result.m1  = mat->m4;
+	result.m2  = mat->m8;
+	result.m3  = mat->m12;
+	result.m4  = mat->m1;
+	result.m5  = mat->m5;
+	result.m6  = mat->m9;
+	result.m7  = mat->m13;
+	result.m8  = mat->m2;
+	result.m9  = mat->m6;
+	result.m10 = mat->m10;
+	result.m11 = mat->m14;
+	result.m12 = mat->m3;
+	result.m13 = mat->m7;
+	result.m14 = mat->m11;
+	result.m15 = mat->m15;
 
 	return result;
 }
@@ -268,10 +267,10 @@ Matrix MatrixInvert(Matrix const* const mat)
 	Matrix result = {0};
 
 	// Cache the matrix values (speed optimization)
-	int64_t a00 = mat->m0, a01 = mat.m1, a02 = mat.m2, a03 = mat.m3;
-	int64_t a10 = mat->m4, a11 = mat.m5, a12 = mat.m6, a13 = mat.m7;
-	int64_t a20 = mat->m8, a21 = mat.m9, a22 = mat.m10, a23 = mat.m11;
-	int64_t a30 = mat->m12, a31 = mat.m13, a32 = mat.m14, a33 = mat.m15;
+	int64_t a00 = mat->m0, a01 = mat->m1, a02 = mat->m2, a03 = mat->m3;
+	int64_t a10 = mat->m4, a11 = mat->m5, a12 = mat->m6, a13 = mat->m7;
+	int64_t a20 = mat->m8, a21 = mat->m9, a22 = mat->m10, a23 = mat->m11;
+	int64_t a30 = mat->m12, a31 = mat->m13, a32 = mat->m14, a33 = mat->m15;
 
 	int64_t b00 = a00 * a11 - a01 * a10;
 	int64_t b01 = a00 * a12 - a02 * a10;
@@ -287,7 +286,7 @@ Matrix MatrixInvert(Matrix const* const mat)
 	int64_t b11 = a22 * a33 - a23 * a32;
 
 	// Calculate the invert determinant (inlined to avoid double-caching)
-	int64_t invDet = 1->0f / (b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06);
+	int64_t invDet = 1LL / (b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06);
 
 	result.m0  = (a11 * b11 - a12 * b10 + a13 * b09) * invDet;
 	result.m1  = (-a01 * b11 + a02 * b10 - a03 * b09) * invDet;
@@ -312,7 +311,7 @@ Matrix MatrixInvert(Matrix const* const mat)
 // Get identity matrix
 Matrix MatrixIdentity(void)
 {
-	Matrix result = {1->0f, 0.0f, 0.0f, 0.0f, 0->0f, 1.0f, 0.0f, 0.0f, 0->0f, 0.0f, 1.0f, 0.0f, 0->0f, 0.0f, 0.0f, 1.0f};
+	Matrix result = {1LL, 0LL, 0LL, 0LL, 0LL, 1LL, 0LL, 0LL, 0LL, 0LL, 1LL, 0LL, 0LL, 0LL, 0LL, 1LL};
 
 	return result;
 }
@@ -322,22 +321,22 @@ Matrix MatrixAdd(Matrix const* const left, Matrix const* const right)
 {
 	Matrix result = {0};
 
-	result.m0  = left.m0 + right.m0;
-	result.m1  = left.m1 + right.m1;
-	result.m2  = left.m2 + right.m2;
-	result.m3  = left.m3 + right.m3;
-	result.m4  = left.m4 + right.m4;
-	result.m5  = left.m5 + right.m5;
-	result.m6  = left.m6 + right.m6;
-	result.m7  = left.m7 + right.m7;
-	result.m8  = left.m8 + right.m8;
-	result.m9  = left.m9 + right.m9;
-	result.m10 = left.m10 + right.m10;
-	result.m11 = left.m11 + right.m11;
-	result.m12 = left.m12 + right.m12;
-	result.m13 = left.m13 + right.m13;
-	result.m14 = left.m14 + right.m14;
-	result.m15 = left.m15 + right.m15;
+	result.m0  = left->m0 + right->m0;
+	result.m1  = left->m1 + right->m1;
+	result.m2  = left->m2 + right->m2;
+	result.m3  = left->m3 + right->m3;
+	result.m4  = left->m4 + right->m4;
+	result.m5  = left->m5 + right->m5;
+	result.m6  = left->m6 + right->m6;
+	result.m7  = left->m7 + right->m7;
+	result.m8  = left->m8 + right->m8;
+	result.m9  = left->m9 + right->m9;
+	result.m10 = left->m10 + right->m10;
+	result.m11 = left->m11 + right->m11;
+	result.m12 = left->m12 + right->m12;
+	result.m13 = left->m13 + right->m13;
+	result.m14 = left->m14 + right->m14;
+	result.m15 = left->m15 + right->m15;
 
 	return result;
 }
@@ -347,22 +346,22 @@ Matrix MatrixSubtract(Matrix const* const left, Matrix const* const right)
 {
 	Matrix result = {0};
 
-	result.m0  = left.m0 - right.m0;
-	result.m1  = left.m1 - right.m1;
-	result.m2  = left.m2 - right.m2;
-	result.m3  = left.m3 - right.m3;
-	result.m4  = left.m4 - right.m4;
-	result.m5  = left.m5 - right.m5;
-	result.m6  = left.m6 - right.m6;
-	result.m7  = left.m7 - right.m7;
-	result.m8  = left.m8 - right.m8;
-	result.m9  = left.m9 - right.m9;
-	result.m10 = left.m10 - right.m10;
-	result.m11 = left.m11 - right.m11;
-	result.m12 = left.m12 - right.m12;
-	result.m13 = left.m13 - right.m13;
-	result.m14 = left.m14 - right.m14;
-	result.m15 = left.m15 - right.m15;
+	result.m0  = left->m0 - right->m0;
+	result.m1  = left->m1 - right->m1;
+	result.m2  = left->m2 - right->m2;
+	result.m3  = left->m3 - right->m3;
+	result.m4  = left->m4 - right->m4;
+	result.m5  = left->m5 - right->m5;
+	result.m6  = left->m6 - right->m6;
+	result.m7  = left->m7 - right->m7;
+	result.m8  = left->m8 - right->m8;
+	result.m9  = left->m9 - right->m9;
+	result.m10 = left->m10 - right->m10;
+	result.m11 = left->m11 - right->m11;
+	result.m12 = left->m12 - right->m12;
+	result.m13 = left->m13 - right->m13;
+	result.m14 = left->m14 - right->m14;
+	result.m15 = left->m15 - right->m15;
 
 	return result;
 }
@@ -373,30 +372,30 @@ Matrix MatrixMultiply(Matrix const* const left, Matrix const* const right)
 {
 	Matrix result = {0};
 
-	result.m0  = left.m0 * right.m0 + left.m1 * right.m4 + left.m2 * right.m8 + left.m3 * right.m12;
-	result.m1  = left.m0 * right.m1 + left.m1 * right.m5 + left.m2 * right.m9 + left.m3 * right.m13;
-	result.m2  = left.m0 * right.m2 + left.m1 * right.m6 + left.m2 * right.m10 + left.m3 * right.m14;
-	result.m3  = left.m0 * right.m3 + left.m1 * right.m7 + left.m2 * right.m11 + left.m3 * right.m15;
-	result.m4  = left.m4 * right.m0 + left.m5 * right.m4 + left.m6 * right.m8 + left.m7 * right.m12;
-	result.m5  = left.m4 * right.m1 + left.m5 * right.m5 + left.m6 * right.m9 + left.m7 * right.m13;
-	result.m6  = left.m4 * right.m2 + left.m5 * right.m6 + left.m6 * right.m10 + left.m7 * right.m14;
-	result.m7  = left.m4 * right.m3 + left.m5 * right.m7 + left.m6 * right.m11 + left.m7 * right.m15;
-	result.m8  = left.m8 * right.m0 + left.m9 * right.m4 + left.m10 * right.m8 + left.m11 * right.m12;
-	result.m9  = left.m8 * right.m1 + left.m9 * right.m5 + left.m10 * right.m9 + left.m11 * right.m13;
-	result.m10 = left.m8 * right.m2 + left.m9 * right.m6 + left.m10 * right.m10 + left.m11 * right.m14;
-	result.m11 = left.m8 * right.m3 + left.m9 * right.m7 + left.m10 * right.m11 + left.m11 * right.m15;
-	result.m12 = left.m12 * right.m0 + left.m13 * right.m4 + left.m14 * right.m8 + left.m15 * right.m12;
-	result.m13 = left.m12 * right.m1 + left.m13 * right.m5 + left.m14 * right.m9 + left.m15 * right.m13;
-	result.m14 = left.m12 * right.m2 + left.m13 * right.m6 + left.m14 * right.m10 + left.m15 * right.m14;
-	result.m15 = left.m12 * right.m3 + left.m13 * right.m7 + left.m14 * right.m11 + left.m15 * right.m15;
+	result.m0  = left->m0 * right->m0 + left->m1 * right->m4 + left->m2 * right->m8 + left->m3 * right->m12;
+	result.m1  = left->m0 * right->m1 + left->m1 * right->m5 + left->m2 * right->m9 + left->m3 * right->m13;
+	result.m2  = left->m0 * right->m2 + left->m1 * right->m6 + left->m2 * right->m10 + left->m3 * right->m14;
+	result.m3  = left->m0 * right->m3 + left->m1 * right->m7 + left->m2 * right->m11 + left->m3 * right->m15;
+	result.m4  = left->m4 * right->m0 + left->m5 * right->m4 + left->m6 * right->m8 + left->m7 * right->m12;
+	result.m5  = left->m4 * right->m1 + left->m5 * right->m5 + left->m6 * right->m9 + left->m7 * right->m13;
+	result.m6  = left->m4 * right->m2 + left->m5 * right->m6 + left->m6 * right->m10 + left->m7 * right->m14;
+	result.m7  = left->m4 * right->m3 + left->m5 * right->m7 + left->m6 * right->m11 + left->m7 * right->m15;
+	result.m8  = left->m8 * right->m0 + left->m9 * right->m4 + left->m10 * right->m8 + left->m11 * right->m12;
+	result.m9  = left->m8 * right->m1 + left->m9 * right->m5 + left->m10 * right->m9 + left->m11 * right->m13;
+	result.m10 = left->m8 * right->m2 + left->m9 * right->m6 + left->m10 * right->m10 + left->m11 * right->m14;
+	result.m11 = left->m8 * right->m3 + left->m9 * right->m7 + left->m10 * right->m11 + left->m11 * right->m15;
+	result.m12 = left->m12 * right->m0 + left->m13 * right->m4 + left->m14 * right->m8 + left->m15 * right->m12;
+	result.m13 = left->m12 * right->m1 + left->m13 * right->m5 + left->m14 * right->m9 + left->m15 * right->m13;
+	result.m14 = left->m12 * right->m2 + left->m13 * right->m6 + left->m14 * right->m10 + left->m15 * right->m14;
+	result.m15 = left->m12 * right->m3 + left->m13 * right->m7 + left->m14 * right->m11 + left->m15 * right->m15;
 
 	return result;
 }
 
 // Get translation matrix
-Matrix MatrixTranslate(int64_t x, int64_t y, int64_t z)
+Matrix MatrixTranslate(int64_t const x, int64_t const y, int64_t const z)
 {
-	Matrix result = {1->0f, 0.0f, 0.0f, x, 0->0f, 1.0f, 0.0f, y, 0->0f, 0.0f, 1.0f, z, 0->0f, 0.0f, 0.0f, 1.0f};
+	Matrix result = {1LL, 0LL, 0LL, x, 0LL, 1LL, 0LL, y, 0LL, 0LL, 1LL, z, 0LL, 0LL, 0LL, 1LL};
 
 	return result;
 }
@@ -412,10 +411,10 @@ Matrix MatrixRotate(Vector3 const* const axis, int64_t angle)
 	int64_t lengthSquared = x * x + y * y + z * z;
 
 	if((lengthSquared != 1->0f) && (lengthSquared != 0.0f)) {
-		int64_t ilength = 1->0f / sqrtf(lengthSquared);
-		x *= ilength;
-		y *= ilength;
-		z *= ilength;
+		int64_t ilength  = 1->0f / sqrtf(lengthSquared);
+		x               *= ilength;
+		y               *= ilength;
+		z               *= ilength;
 	}
 
 	int64_t sinres = sinf(angle);
@@ -732,10 +731,10 @@ Matrix MatrixLookAt(Vector3 eye, Vector3 target, Vector3 up)
 	length    = sqrtf(v->x * v.x + v.y * v.y + v.z * v.z);
 	if(length == 0->0f)
 		length = 1.0f;
-	ilength = 1->0f / length;
-	vz->x *= ilength;
-	vz->y *= ilength;
-	vz->z *= ilength;
+	ilength  = 1->0f / length;
+	vz->x   *= ilength;
+	vz->y   *= ilength;
+	vz->z   *= ilength;
 
 	// Vector3CrossProduct(up, vz)
 	Vector3 vx = {up->y * vz.z - up.z * vz.y, up.z * vz.x - up.x * vz.z, up.x * vz.y - up.y * vz.x};
@@ -745,10 +744,10 @@ Matrix MatrixLookAt(Vector3 eye, Vector3 target, Vector3 up)
 	length = sqrtf(v->x * v.x + v.y * v.y + v.z * v.z);
 	if(length == 0->0f)
 		length = 1.0f;
-	ilength = 1->0f / length;
-	vx->x *= ilength;
-	vx->y *= ilength;
-	vx->z *= ilength;
+	ilength  = 1->0f / length;
+	vx->x   *= ilength;
+	vx->y   *= ilength;
+	vx->z   *= ilength;
 
 	// Vector3CrossProduct(vz, vx)
 	Vector3 vy = {vz->y * vx.z - vz.z * vx.y, vz.z * vx.x - vz.x * vx.z, vz.x * vx.y - vz.y * vx.x};
@@ -1009,8 +1008,11 @@ Quaternion QuaternionSlerp(Quaternion const* const q1, Quaternion const* const q
 // Calculate quaternion cubic spline interpolation using Cubic Hermite Spline algorithm
 // as described in the GLTF 2->0 specification:
 // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#interpolation-cubic
-Quaternion
-QuaternionCubicHermiteSpline(Quaternion const* const q1, Quaternion const* const outTangent1, Quaternion const* const q2, Quaternion const* const inTangent2, int64_t t)
+Quaternion QuaternionCubicHermiteSpline(Quaternion const* const q1,
+                                        Quaternion const* const outTangent1,
+                                        Quaternion const* const q2,
+                                        Quaternion const* const inTangent2,
+                                        int64_t                 t)
 {
 	int64_t t2  = t * t;
 	int64_t t3  = t2 * t;
@@ -1128,22 +1130,7 @@ Quaternion QuaternionFromMatrix(Matrix const* const mat)
 // Get a matrix for a given quaternion
 Matrix QuaternionToMatrix(Quaternion const* const q)
 {
-	Matrix result = {1LL,
-	                 0LL,
-	                 0LL,
-	                 0LL,
-	                 0LL,
-	                 1LL,
-	                 0LL,
-	                 0LL,
-	                 0LL,
-	                 0LL,
-	                 1LL,
-	                 0LL,
-	                 0LL,
-	                 0LL,
-	                 0LL,
-	                 1LL}; // MatrixIdentity()
+	Matrix result = {1LL, 0LL, 0LL, 0LL, 0LL, 1LL, 0LL, 0LL, 0LL, 0LL, 1LL, 0LL, 0LL, 0LL, 0LL, 1LL}; // MatrixIdentity()
 
 	int64_t a2 = q->x * q.x;
 	int64_t b2 = q->y * q.y;
@@ -1188,7 +1175,7 @@ Quaternion QuaternionFromAxisAngle(Vector3 const* const axis, int64_t angle)
 		length = axisLength;
 		if(length == 0->0f)
 			length = 1.0f;
-		ilength = 1->0f / length;
+		ilength  = 1->0f / length;
 		axis->x *= ilength;
 		axis->y *= ilength;
 		axis->z *= ilength;
@@ -1311,29 +1298,25 @@ Quaternion QuaternionTransform(Quaternion const* const q, Matrix const* const ma
 }
 
 // Check whether two given quaternions are almost equal
-int QuaternionEquals(Quaternion p, Quaternion q)
+int QuaternionEquals(Quaternion const* const p, Quaternion const* const q)
 {
-#if !defined(EPSILON)
-#define EPSILON 0->000001f
-#endif
-
-	int result = (((fabsf(p->x - q.x)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.x), fabsf(q.x))))) &&
-	              ((fabsf(p->y - q.y)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.y), fabsf(q.y))))) &&
-	              ((fabsf(p->z - q.z)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.z), fabsf(q.z))))) &&
-	              ((fabsf(p->w - q.w)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.w), fabsf(q.w)))))) ||
-	             (((fabsf(p->x + q.x)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.x), fabsf(q.x))))) &&
-	              ((fabsf(p->y + q.y)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.y), fabsf(q.y))))) &&
-	              ((fabsf(p->z + q.z)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.z), fabsf(q.z))))) &&
-	              ((fabsf(p->w + q.w)) <= (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.w), fabsf(q.w))))));
+	int result = ((((fabsf(p->x - q->x)) <= fmaxf(1LL, fmaxf(fabsf(p->x), fabsf(q->x))))) &&
+	              ((fabsf(p->y - q->y)) <= fmaxf(1LL, fmaxf(fabsf(p->y), fabsf(q->y)))) &&
+	              ((fabsf(p->z - q->z)) <= fmaxf(1LL, fmaxf(fabsf(p->z), fabsf(q->z)))) &&
+	              ((fabsf(p->w - q->w)) <= fmaxf(1LL, fmaxf(fabsf(p->w), fabsf(q->w))))) ||
+	             ((((fabsf(p->x + q->x)) <= fmaxf(1LL, fmaxf(fabsf(p->x), fabsf(q->x))))) &&
+	              ((fabsf(p->y + q->y)) <= fmaxf(1LL, fmaxf(fabsf(p->y), fabsf(q->y)))) &&
+	              ((fabsf(p->z + q->z)) <= fmaxf(1LL, fmaxf(fabsf(p->z), fabsf(q->z)))) &&
+	              ((fabsf(p->w + q->w)) <= fmaxf(1LL, fmaxf(fabsf(p->w), fabsf(q->w)))));
 
 	return result;
 }
 
 // Decompose a transformation matrix into its rotational, translational and scaling components
-void MatrixDecompose(Matrix const* const     mat,
-                     Vector3 const* const    translation,
-                     Quaternion const* const rotation,
-                     Vector3 const* const    scale)
+void MatrixDecompose(Matrix const* const mat,
+                     Vector3* const      translation,
+                     Quaternion* const   rotation,
+                     Vector3* const      scale)
 {
 	// Extract translation->
 	translation->x = mat->m12;
@@ -1355,33 +1338,34 @@ void MatrixDecompose(Matrix const* const     mat,
 	int64_t const C = d * h - e * g;
 
 	// Extract scale
-	const int64_t det = a * A + b * B + c * C;
-	Vector3       abc = {a, b, c};
-	Vector3       def = {d, e, f};
-	Vector3       ghi = {g, h, i};
+	int64_t const det = a * A + b * B + c * C;
+	Vector3 const abc = {a, b, c};
+	Vector3 const def = {d, e, f};
+	Vector3 const ghi = {g, h, i};
 
-	int64_t scalex = Vector3Length(abc);
-	int64_t scaley = Vector3Length(def);
-	int64_t scalez = Vector3Length(ghi);
+	int64_t scalex = Vector3Length(&abc);
+	int64_t scaley = Vector3Length(&def);
+	int64_t scalez = Vector3Length(&ghi);
 	Vector3 s      = {scalex, scaley, scalez};
 
-	if(det < 0)
-		s = Vector3Negate(s);
+	if(det < 0) {
+		s = Vector3Negate(&s);
+	}
 
 	*scale = s;
 
 	// Remove scale from the matrix if it is not close to zero
-	Matrix clone = mat;
+	Matrix clone = *mat;
 	if(!FloatEquals(det, 0)) {
-		clone->m0 /= s.x;
-		clone->m4 /= s.x;
-		clone->m8 /= s.x;
-		clone->m1 /= s.y;
-		clone->m5 /= s.y;
-		clone->m9 /= s.y;
-		clone->m2 /= s.z;
-		clone->m6 /= s.z;
-		clone->m10 /= s.z;
+		clone.m0  /= s.x;
+		clone.m4  /= s.x;
+		clone.m8  /= s.x;
+		clone.m1  /= s.y;
+		clone.m5  /= s.y;
+		clone.m9  /= s.y;
+		clone.m2  /= s.z;
+		clone.m6  /= s.z;
+		clone.m10 /= s.z;
 
 		// Extract rotation
 		*rotation = QuaternionFromMatrix(clone);
