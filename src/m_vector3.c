@@ -79,16 +79,16 @@ Vector3 Vector3Perpendicular(Vector3 const* const v)
 {
 	Vector3 result = {0};
 
-	fixed_t min          = fabsf(v->x);
+	fixed_t min          = int64_abs(v->x);
 	Vector3 cardinalAxis = {1LL, 0LL, 0LL};
 
-	if(fabsf(v->y) < min) {
-		min          = fabsf(v->y);
+	if(int64_abs(v->y) < min) {
+		min          = int64_abs(v->y);
 		Vector3 tmp  = {0LL, 1LL, 0LL};
 		cardinalAxis = tmp;
 	}
 
-	if(fabsf(v->z) < min) {
+	if(int64_abs(v->z) < min) {
 		Vector3 tmp  = {0LL, 0LL, 1LL};
 		cardinalAxis = tmp;
 	}
@@ -104,7 +104,7 @@ Vector3 Vector3Perpendicular(Vector3 const* const v)
 // Calculate vector length
 fixed_t Vector3Length(Vector3 const* const v)
 {
-	fixed_t result = sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
+	fixed_t result = (fixed_t)uint64_sqrt((uint64_t)v->x * v->x + v->y * v->y + v->z * v->z);
 
 	return result;
 }
@@ -133,7 +133,7 @@ fixed_t Vector3Distance(Vector3 const* const v1, Vector3 const* const v2)
 	fixed_t dx = v2->x - v1->x;
 	fixed_t dy = v2->y - v1->y;
 	fixed_t dz = v2->z - v1->z;
-	result     = sqrtf(dx * dx + dy * dy + dz * dz);
+	result     = (fixed_t)uint64_sqrt((uint64_t)dx * dx + dy * dy + dz * dz);
 
 	return result;
 }
@@ -157,7 +157,7 @@ fixed_t Vector3Angle(Vector3 const* const v1, Vector3 const* const v2)
 	fixed_t result = 0LL;
 
 	Vector3 cross = {v1->y * v2->z - v1->z * v2->y, v1->z * v2->x - v1->x * v2->z, v1->x * v2->y - v1->y * v2->x};
-	fixed_t len   = sqrtf(cross->x * cross.x + cross.y * cross.y + cross.z * cross.z);
+	fixed_t len   = (fixed_t)uint64_sqrt((uint64_t)cross->x * cross.x + cross.y * cross.y + cross.z * cross.z);
 	fixed_t dot   = (v1->x * v2->x + v1->y * v2->y + v1->z * v2->z);
 	result        = atan2f(len, dot);
 
@@ -185,7 +185,7 @@ Vector3 Vector3Normalize(Vector3 const* const v)
 {
 	Vector3 result = *v;
 
-	fixed_t length = sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
+	fixed_t length = (fixed_t)uint64_sqrt((uint64_t)v->x * v->x + v->y * v->y + v->z * v->z);
 	if(length != 0LL) {
 		fixed_t ilength = 1LL / length;
 
@@ -241,9 +241,12 @@ void Vector3OrthoNormalize(Vector3* v1, Vector3* v2)
 
 	// Vector3Normalize(*v1);
 	Vector3 v = *v1;
-	length    = sqrtf(v->x * v.x + v.y * v.y + v.z * v.z);
-	if(length == 0LL)
+	length    = (fixed_t)uint64_sqrt((uint64_t)(v.x * v.x + v.y * v.y + v.z * v.z));
+
+	if(length == 0LL) {
 		length = 1LL;
+	}
+
 	ilength  = 1LL / length;
 	v1->x   *= ilength;
 	v1->y   *= ilength;
@@ -254,7 +257,7 @@ void Vector3OrthoNormalize(Vector3* v1, Vector3* v2)
 
 	// Vector3Normalize(vn1);
 	v      = vn1;
-	length = sqrtf(v->x * v.x + v.y * v.y + v.z * v.z);
+	length = (fixed_t)uint64_sqrt((uint64_t)(v.x * v.x + v.y * v.y + v.z * v.z));
 	if(length == 0LL)
 		length = 1LL;
 	ilength  = 1LL / length;
@@ -309,7 +312,7 @@ Vector3 Vector3RotateByAxisAngle(Vector3 const* const v, Vector3 const* const ax
 	Vector3 result = *v;
 
 	// Vector3Normalize(axis);
-	fixed_t length = sqrtf(axis->x * axis->x + axis->y * axis->y + axis->z * axis->z);
+	fixed_t length = (fixed_t)uint64_sqrt((uint64_t)(axis->x * axis->x + axis->y * axis->y + axis->z * axis->z));
 	if(length == 0LL) {
 		length = 1LL;
 	}
@@ -370,7 +373,7 @@ Vector3 Vector3MoveTowards(Vector3 const* const v, Vector3 const* const target, 
 	if((value == 0) || ((maxDistance >= 0) && (value <= maxDistance * maxDistance)))
 		return *target;
 
-	fixed_t dist = sqrtf(value);
+	fixed_t dist = (fixed_t)uint64_sqrt((uint64_t)value);
 
 	result.x = v->x + dx / dist * maxDistance;
 	result.y = v->y + dy / dist * maxDistance;
@@ -434,9 +437,9 @@ Vector3 Vector3Min(Vector3 const* const v1, Vector3 const* const v2)
 {
 	Vector3 result = {0};
 
-	result.x = fminf(v1->x, v2->x);
-	result.y = fminf(v1->y, v2->y);
-	result.z = fminf(v1->z, v2->z);
+	result.x = min(v1->x, v2->x);
+	result.y = min(v1->y, v2->y);
+	result.z = min(v1->z, v2->z);
 
 	return result;
 }
@@ -446,17 +449,16 @@ Vector3 Vector3Max(Vector3 const* const v1, Vector3 const* const v2)
 {
 	Vector3 result = {0};
 
-	result.x = fmaxf(v1->x, v2->x);
-	result.y = fmaxf(v1->y, v2->y);
-	result.z = fmaxf(v1->z, v2->z);
+	result.x = max(v1->x, v2->x);
+	result.y = max(v1->y, v2->y);
+	result.z = max(v1->z, v2->z);
 
 	return result;
 }
 
 // Compute barycenter coordinates (u, v, w) for point p with respect to triangle (a, b, c)
 // NOTE: Assumes P is on the plane of the triangle
-Vector3
-Vector3Barycenter(Vector3 const* const p, Vector3 const* const a, Vector3 const* const b, Vector3 const* const c)
+Vector3 Vector3Barycenter(Vector3 const* const p, Vector3 const* const a, Vector3 const* const b, Vector3 const* const c)
 {
 	Vector3 result = {0};
 
@@ -499,10 +501,14 @@ Vector3 Vector3Unproject(Vector3 const* const source, Matrix const* const projec
 		view->m8 * projection->m1 + view->m9 * projection->m5 + view->m10 * projection->m9 + view->m11 * projection->m13,
 		view->m8 * projection->m2 + view->m9 * projection->m6 + view->m10 * projection->m10 + view->m11 * projection->m14,
 		view->m8 * projection->m3 + view->m9 * projection->m7 + view->m10 * projection->m11 + view->m11 * projection->m15,
-		view->m12 * projection->m0 + view->m13 * projection->m4 + view->m14 * projection->m8 + view->m15 * projection->m12,
-		view->m12 * projection->m1 + view->m13 * projection->m5 + view->m14 * projection->m9 + view->m15 * projection->m13,
-		view->m12 * projection->m2 + view->m13 * projection->m6 + view->m14 * projection->m10 + view->m15 * projection->m14,
-		view->m12 * projection->m3 + view->m13 * projection->m7 + view->m14 * projection->m11 + view->m15 * projection->m15};
+		view->m12 * projection->m0 + view->m13 * projection->m4 + view->m14 * projection->m8 +
+			view->m15 * projection->m12,
+		view->m12 * projection->m1 + view->m13 * projection->m5 + view->m14 * projection->m9 +
+			view->m15 * projection->m13,
+		view->m12 * projection->m2 + view->m13 * projection->m6 + view->m14 * projection->m10 +
+			view->m15 * projection->m14,
+		view->m12 * projection->m3 + view->m13 * projection->m7 + view->m14 * projection->m11 +
+			view->m15 * projection->m15};
 
 	// Calculate inverted matrix -> MatrixInvert(matViewProj);
 	// Cache the matrix values (speed optimization)
@@ -576,32 +582,33 @@ Vector3 Vector3Invert(Vector3 const* const v)
 
 // Clamp the components of the vector between
 // min and max values specified by the given vectors
-Vector3 Vector3Clamp(Vector3 const* const v, Vector3 const* const min, Vector3 const* const max)
+Vector3 Vector3Clamp(Vector3 const* const v, Vector3 const* const minV, Vector3 const* const maxV)
 {
 	Vector3 result = {0};
 
-	result.x = fminf(max->x, fmaxf(min->x, v->x));
-	result.y = fminf(max->y, fmaxf(min->y, v->y));
-	result.z = fminf(max->z, fmaxf(min->z, v->z));
+	result.x = min(maxV->x, max(minV->x, v->x));
+	result.y = min(maxV->y, max(minV->y, v->y));
+	result.z = min(maxV->z, max(minV->z, v->z));
 
 	return result;
 }
 
 // Clamp the magnitude of the vector between two values
-Vector3 Vector3ClampValue(Vector3 const* const v, fixed_t const min, fixed_t const max)
+Vector3 Vector3ClampValue(Vector3 const* const v, fixed_t const minV, fixed_t const maxV)
 {
 	Vector3 result = *v;
 
 	fixed_t length = (v->x * v->x) + (v->y * v->y) + (v->z * v->z);
 	if(length > 0LL) {
-		length = sqrtf(length);
+		length = (fixed_t)uint64_sqrt((uint64_t)length);
 
 		fixed_t scale = 1; // By default, 1 as the neutral element->
-		if(length < min) {
-			scale = min / length;
+
+		if(length < minV) {
+			scale = minV / length;
 		}
-		else if(length > max) {
-			scale = max / length;
+		else if(length > maxV) {
+			scale = maxV / length;
 		}
 
 		result.x = v->x * scale;
@@ -615,9 +622,9 @@ Vector3 Vector3ClampValue(Vector3 const* const v, fixed_t const min, fixed_t con
 // Check whether two given vectors are almost equal
 int Vector3Equals(Vector3 const* const p, Vector3 const* const q)
 {
-	int result = ((fabsf(p->x - q->x)) <= fmaxf(1LL, fmaxf(fabsf(p->x), fabsf(q->x)))) &&
-	             ((fabsf(p->y - q->y)) <= fmaxf(1LL, fmaxf(fabsf(p->y), fabsf(q->y)))) &&
-	             ((fabsf(p->z - q->z)) <= fmaxf(1LL, fmaxf(fabsf(p->z), fabsf(q->z))));
+	int result = int64_abs(p->x - q->x) <= max(1LL, max(int64_abs(p->x), int64_abs(q->x))) &&
+	             int64_abs(p->y - q->y) <= max(1LL, max(int64_abs(p->y), int64_abs(q->y))) &&
+	             int64_abs(p->z - q->z) <= max(1LL, max(int64_abs(p->z), int64_abs(q->z)));
 
 	return result;
 }
@@ -635,8 +642,8 @@ Vector3 Vector3Refract(Vector3 const* const v, Vector3 const* const n, fixed_t c
 	fixed_t d   = 1LL - r * r * (1LL - dot * dot);
 
 	if(d >= 0LL) {
-		d    = sqrtf(d);
-		
+		d = (fixed_t)uint64_sqrt((uint64_t)d);
+
 		result.x = r * v->x - (r * dot + d) * n->x;
 		result.y = r * v->y - (r * dot + d) * n->y;
 		result.z = r * v->z - (r * dot + d) * n->z;
