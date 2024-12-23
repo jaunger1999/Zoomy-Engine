@@ -1,7 +1,6 @@
 #include "m_fixed.h"
 #include <stdbool.h>
 
-
 // https://www.nullhardware.com/blog/fixed-point-sine-and-cosine-for-embedded-systems/
 // TODO: make this work for 64 bit ints
 /*
@@ -43,4 +42,3 @@ int64_t fpsin(int64_t i)
 
 	return c ? -y : y;
 }
-
