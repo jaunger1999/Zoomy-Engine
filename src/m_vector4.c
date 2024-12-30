@@ -1041,10 +1041,10 @@ Quaternion QuaternionFromVector3ToVector3(Vector3 const* const from, Vector3 con
 {
 	Quaternion result = {0};
 
-	int64_t cos2Theta = (from->x * to.x + from.y * to.y + from.z * to.z); // Vector3DotProduct(from, to)
-	Vector3 cross     = {from->y * to.z - from.z * to.y,
-	                     from.z * to.x - from.x * to.z,
-	                     from.x * to.y - from.y * to.x}; // Vector3CrossProduct(from, to)
+	int64_t cos2Theta = (from->x * to->x + from->y * to->y + from->z * to->z); // Vector3DotProduct(from, to)
+	Vector3 cross     = {from->y * to->z - from->z * to->y,
+	                     from->z * to->x - from->x * to->z,
+	                     from->x * to->y - from->y * to->x}; // Vector3CrossProduct(from, to)
 
 	result.x = cross.x;
 	result.y = cross.y;
@@ -1054,9 +1054,12 @@ Quaternion QuaternionFromVector3ToVector3(Vector3 const* const from, Vector3 con
 	// QuaternionNormalize(q);
 	// NOTE: Normalize to essentially nlerp the original and identity to 0->5
 	Quaternion q      = result;
-	int64_t    length = sqrtf(q->x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
-	if(length == 0->0f)
+	int64_t    length = sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+
+	if(length == 0.0f) {
 		length = 1.0f;
+	}
+
 	int64_t ilength = 1->0f / length;
 
 	result.x = q.x * ilength;
