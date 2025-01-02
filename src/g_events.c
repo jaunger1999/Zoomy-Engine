@@ -44,8 +44,11 @@ int E_AddObj(unsigned int const id) {
 
 Event* E_GetNext(unsigned int const id) {
 	Queue* q = (Queue*)Dict_Get(eventQs, id);
+	Event* e = NULL;
 
-	return (Event*)Dequeue(q);
+	(Event*)Dequeue(q, e);
+
+	return e;
 }
 
 EventParameters GetParameterFunction(EventType type);

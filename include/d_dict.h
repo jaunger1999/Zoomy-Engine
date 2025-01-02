@@ -5,7 +5,7 @@ typedef struct DictEntry {
 } DictEntry;
 
 typedef struct Dict {
-	DictEntry** buckets; // an array of linked lists.
+	DictEntry* buckets; // an array of linked lists.
 	unsigned int size;
 } Dict;
 

@@ -1,7 +1,11 @@
+#include <cstdio>
+#define INIT_Q_SIZE 64
+
 #include "d_queue.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 Queue* Q_Create(void)
 {
@@ -12,68 +16,65 @@ Queue* Q_Create(void)
 		return NULL;
 	}
 
+	q->data = malloc(sizeof(char) * INIT_Q_SIZE);
+
+	if(q->data == NULL) {
+		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(Queue));
+		return NULL;
+	}
+
 	q->count = 0;
 
-	// init to NULL so we don't seg fault lol.
-	q->front = NULL;
-	q->back  = NULL;
+	q->head = 0;
+	q->tail = 0;
 
 	return q;
 }
 
 void Q_Destroy(Queue* q)
 {
-	while(q->count > 0) {
-		free(Dequeue(q));
-	}
-
+	free(q->data);
 	free(q);
 }
 
 int Enqueue(Queue* q, void* data)
 {
-	Node* node = malloc(sizeof(Node));
+	unsigned int oldTail = q->tail;
+	q->tail = (q->tail + q->cellSize) % q->size;
 
-	if(node == NULL) {
-		fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(Node));
-		return 0;
+	if(q->tail == q->head) {
+		q->size *= 2;
+		realloc(q->data, q->size);
+
+		if(!q->data) {
+			fprintf(stderr, "Failed to reallocate queue.");
+			return 0;
+		}
+
+		q->tail = (oldTail + q->cellSize) % q->size;
 	}
 
-	node->data = data;
-	node->prev = NULL;
+	memcpy(&q->data[q->tail], &data, q->cellSize);
 
-	if(q->back != NULL) { // adding data to a queue with at least one item.
-		q->back->prev = node;
-	}
-	else { // adding data to an empty queue.
-		q->front = node;
-	}
-
-	q->back = node;
 	q->count++;
 
 	return 1;
 }
 
-void* Dequeue(Queue* q)
+int Dequeue(Queue* q, void* buf)
 {
 	if(q->count == 0) {
-		return NULL;
+		return 0;
 	}
 
-	Node* front = q->front;
-	void* data  = front->data;
+	// copy our data into the caller's buffer and zero out the memory
+	void* head = &q->data[q->head];
+	memcpy(buf, head, q->cellSize);
+	memset(head, 0, q->cellSize);
 
-	q->front = front->prev;
-
-	free(front);
 	q->count--;
+	q->head = (q->head + q->cellSize) % q->size;
 
-	// Set front and back to null so we don't check freed pointers.
-	if(q->count == 0) {
-		q->front = NULL;
-		q->back  = NULL;
-	}
 
-	return data;
+	return 1;
 }
