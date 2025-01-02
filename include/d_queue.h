@@ -8,8 +8,8 @@ typedef struct Queue {
 	unsigned int tail;
 } Queue;
 
-Queue* Q_Create(void);
+Queue* Q_Create(unsigned int const cellSize);
 void   Q_Destroy(Queue* q);
 
-int Enqueue(Queue* q, void* data);
-int Dequeue(Queue* q, void* buf);
+int Enqueue(Queue* const q, void const* const data);
+int Dequeue(Queue* const q, void* const buf);
