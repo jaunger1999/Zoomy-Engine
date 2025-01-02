@@ -12,16 +12,22 @@ add_executable(RaylibProject main.c d_dict.c d_list.c d_queue.c g_events.c hash.
 CompilerOptions(RaylibProject)
 target_link_libraries(RaylibProject ${CMAKE_SOURCE_DIR}/lib/liblua.a)
 target_link_libraries(RaylibProject ${CMAKE_SOURCE_DIR}/lib/libraylib.a)
-target_link_libraries(RaylibProject libopengl32.a)
-target_link_libraries(RaylibProject libgdi32.a)
-target_link_libraries(RaylibProject libwinmm.a)
+
+if (WIN32)
+	target_link_libraries(RaylibProject libopengl32.a)
+	target_link_libraries(RaylibProject libgdi32.a)
+	target_link_libraries(RaylibProject libwinmm.a)
+endif()
 
 # CDF Test
 project(t_cdf)
 add_executable(t_cdf EXCLUDE_FROM_ALL t_cdfparser.c d_dict_s.c d_dict.c d_queue.c d_string.c f_cdfparser.c g_events.c g_statemachines.c hash.c)
 CompilerOptions(t_cdf)
 target_link_libraries(t_cdf        ${CMAKE_SOURCE_DIR}/lib/libraylib.a)
-target_link_libraries(t_cdf libwinmm.a)
+
+if (WIN32)
+	target_link_libraries(t_cdf libwinmm.a)
+endif()
 
 # Char Args Test
 project(t_charargs)
