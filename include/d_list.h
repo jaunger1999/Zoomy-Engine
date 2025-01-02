@@ -1,7 +1,9 @@
 typedef struct List {
 	char* data;
-	unsigned int count;
-	unsigned int cellSize;
+	unsigned int itemSize;
+	unsigned int size;
 } List;
 
-#define LIST_GET(type, list, i) (type)data[i * cellSize]
+List* List_Create(unsigned int const itemSize);
+int List_Get(List const* const list, unsigned int const i, void* buf);
+int List_Insert(List* const list, unsigned int const i, void const* const data); 

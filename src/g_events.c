@@ -9,6 +9,7 @@
 #include "gamestate.h"
 
 #include "d_dict.h"
+#include "d_list.h"
 #include "d_queue.h"
 
 #include <assert.h>
@@ -20,13 +21,13 @@
 
 typedef char* (*EventParameters)(unsigned int const n, va_list args);
 
-Dict* eventQs;
+List* eventQs;
 
 /*
  * TODO: Free the previously existing event handler if it exists.
  */
 int E_Init(void) {
-	eventQs = Dict_Create();
+	eventQs = List_Create(sizeof(Queue*));
 
 	return eventQs != NULL;
 }
@@ -35,18 +36,17 @@ int E_Init(void) {
  * Creates a new Event Queue and returns the id/index in which it's stored in the array.
  */
 int E_AddObj(unsigned int const id) {
-	Queue* newEventQ = Q_Create();
+	Queue* newEventQ = Q_Create(sizeof(Event));
 
-	Dict_Add(eventQs, id, newEventQ);
-
-	return 1;
+	return List_Insert(eventQs, id, newEventQ);
 }
 
 Event* E_GetNext(unsigned int const id) {
-	Queue* q = (Queue*)Dict_Get(eventQs, id);
+	Queue* q = NULL;
+	List_Get(eventQs, id, q);
 	Event* e = NULL;
 
-	(Event*)Dequeue(q, e);
+	Dequeue(q, e);
 
 	return e;
 }
@@ -76,7 +76,8 @@ int E_Register(EventFunction function, EventType type, unsigned int const id, un
 	event->function = function;
 	event->args     = args;
 
-	Queue* q = Dict_Get(eventQs, id);
+	Queue* q = NULL;
+	List_Get(eventQs, id, q);
 	Enqueue(q, event);
 
 	return 1;
