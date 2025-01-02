@@ -75,7 +75,6 @@ Vector3 position = {0.0f, 0.0f, 0.0f}; // Set model position
 
 unsigned int PhysProp_GetNextState(char const* const args, unsigned int const id, void* ppOut);
 
-// Program main entry point
 int main(void) {
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
