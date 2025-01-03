@@ -10,10 +10,10 @@ Vector3 Vector3Zero(void)
 	return result;
 }
 
-// Vector with components value 1LL
+// Vector with components value FIXED_UNIT
 Vector3 Vector3One(void)
 {
-	Vector3 result = {1LL, 1LL, 1LL};
+	Vector3 result = {FIXED_UNIT, FIXED_UNIT, FIXED_UNIT};
 
 	return result;
 }
@@ -53,7 +53,7 @@ Vector3 Vector3SubtractValue(Vector3 const* const v, fixed_t const sub)
 // Multiply vector by scalar
 Vector3 Vector3Scale(Vector3 const* const v, fixed_t const scalar)
 {
-	Vector3 result = {v->x * scalar, v->y * scalar, v->z * scalar};
+	Vector3 result = {FixedMul(v->x, scalar), FixedMul(v->y, scalar), FixedMul(v->z, scalar)};
 
 	return result;
 }
@@ -69,7 +69,9 @@ Vector3 Vector3Multiply(Vector3 const* const v1, Vector3 const* const v2)
 // Calculate two vectors cross product
 Vector3 Vector3CrossProduct(Vector3 const* const v1, Vector3 const* const v2)
 {
-	Vector3 result = {v1->y * v2->z - v1->z * v2->y, v1->z * v2->x - v1->x * v2->z, v1->x * v2->y - v1->y * v2->x};
+	Vector3 result = {FixedMul(v1->y, v2->z) - FixedMul(v1->z, v2->y),
+	                  FixedMul(v1->z, v2->x) - FixedMul(v1->x, v2->z),
+	                  FixedMul(v1->x, v2->y) - FixedMul(v1->y, v2->x)};
 
 	return result;
 }
@@ -79,17 +81,17 @@ Vector3 Vector3Perpendicular(Vector3 const* const v)
 {
 	Vector3 result = {0};
 
-	fixed_t min          = fabsf(v->x);
-	Vector3 cardinalAxis = {1LL, 0LL, 0LL};
+	fixed_t min          = int64_abs(v->x);
+	Vector3 cardinalAxis = {FIXED_UNIT, 0LL, 0LL};
 
-	if(fabsf(v->y) < min) {
-		min          = fabsf(v->y);
-		Vector3 tmp  = {0LL, 1LL, 0LL};
+	if(int64_abs(v->y) < min) {
+		min          = int64_abs(v->y);
+		Vector3 tmp  = {0LL, FIXED_UNIT, 0LL};
 		cardinalAxis = tmp;
 	}
 
-	if(fabsf(v->z) < min) {
-		Vector3 tmp  = {0LL, 0LL, 1LL};
+	if(int64_abs(v->z) < min) {
+		Vector3 tmp  = {0LL, 0LL, FIXED_UNIT};
 		cardinalAxis = tmp;
 	}
 
@@ -104,7 +106,7 @@ Vector3 Vector3Perpendicular(Vector3 const* const v)
 // Calculate vector length
 fixed_t Vector3Length(Vector3 const* const v)
 {
-	fixed_t result = sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
+	fixed_t result = (fixed_t)uint64_sqrt((uint64_t)v->x * v->x + v->y * v->y + v->z * v->z);
 
 	return result;
 }
@@ -112,7 +114,7 @@ fixed_t Vector3Length(Vector3 const* const v)
 // Calculate vector square length
 fixed_t Vector3LengthSqr(Vector3 const* const v)
 {
-	fixed_t result = v->x * v->x + v->y * v->y + v->z * v->z;
+	fixed_t result = FixedMul(v->x, v->x) + FixedMul(v->y, v->y) + FixedMul(v->z, v->z);
 
 	return result;
 }
@@ -120,7 +122,7 @@ fixed_t Vector3LengthSqr(Vector3 const* const v)
 // Calculate two vectors dot product
 fixed_t Vector3DotProduct(Vector3 const* const v1, Vector3 const* const v2)
 {
-	fixed_t result = (v1->x * v2->x + v1->y * v2->y + v1->z * v2->z);
+	fixed_t result = (FixedMul(v1->x, v2->x) + FixedMul(v1->y, v2->y) + FixedMul(v1->z, v2->z));
 
 	return result;
 }
@@ -133,7 +135,7 @@ fixed_t Vector3Distance(Vector3 const* const v1, Vector3 const* const v2)
 	fixed_t dx = v2->x - v1->x;
 	fixed_t dy = v2->y - v1->y;
 	fixed_t dz = v2->z - v1->z;
-	result     = sqrtf(dx * dx + dy * dy + dz * dz);
+	result     = (fixed_t)uint64_sqrt((uint64_t)(dx * dx + dy * dy + dz * dz));
 
 	return result;
 }
@@ -146,7 +148,8 @@ fixed_t Vector3DistanceSqr(Vector3 const* const v1, Vector3 const* const v2)
 	fixed_t dx = v2->x - v1->x;
 	fixed_t dy = v2->y - v1->y;
 	fixed_t dz = v2->z - v1->z;
-	result     = dx * dx + dy * dy + dz * dz;
+
+	result = dx * dx + dy * dy + dz * dz;
 
 	return result;
 }
@@ -156,10 +159,14 @@ fixed_t Vector3Angle(Vector3 const* const v1, Vector3 const* const v2)
 {
 	fixed_t result = 0LL;
 
-	Vector3 cross = {v1->y * v2->z - v1->z * v2->y, v1->z * v2->x - v1->x * v2->z, v1->x * v2->y - v1->y * v2->x};
-	fixed_t len   = sqrtf(cross->x * cross.x + cross.y * cross.y + cross.z * cross.z);
-	fixed_t dot   = (v1->x * v2->x + v1->y * v2->y + v1->z * v2->z);
-	result        = atan2f(len, dot);
+	Vector3 cross = {FixedMul(v1->y, v2->z) - FixedMul(v1->z, v2->y),
+	                 FixedMul(v1->z, v2->x) - FixedMul(v1->x, v2->z),
+	                 FixedMul(v1->x, v2->y) - FixedMul(v1->y, v2->x)};
+	fixed_t len   = (fixed_t)uint64_sqrt(
+      (uint64_t)(FixedMul(cross.x, cross.x) + FixedMul(cross.y, cross.y) + FixedMul(cross.z, cross.z)));
+	fixed_t dot = (FixedMul(v1->x, v2->x) + FixedMul(v1->y, v2->y) + FixedMul(v1->z, v2->z));
+
+	result = atan2f(len, dot);
 
 	return result;
 }
@@ -185,9 +192,9 @@ Vector3 Vector3Normalize(Vector3 const* const v)
 {
 	Vector3 result = *v;
 
-	fixed_t length = sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
+	fixed_t length = (fixed_t)uint64_sqrt((uint64_t)v->x * v->x + v->y * v->y + v->z * v->z);
 	if(length != 0LL) {
-		fixed_t ilength = 1LL / length;
+		fixed_t ilength = FIXED_UNIT / length;
 
 		result.x *= ilength;
 		result.y *= ilength;
@@ -241,10 +248,13 @@ void Vector3OrthoNormalize(Vector3* v1, Vector3* v2)
 
 	// Vector3Normalize(*v1);
 	Vector3 v = *v1;
-	length    = sqrtf(v->x * v.x + v.y * v.y + v.z * v.z);
-	if(length == 0LL)
-		length = 1LL;
-	ilength  = 1LL / length;
+	length    = (fixed_t)uint64_sqrt((uint64_t)(v.x * v.x + v.y * v.y + v.z * v.z));
+
+	if(length == 0LL) {
+		length = FIXED_UNIT;
+	}
+
+	ilength  = FIXED_UNIT / length;
 	v1->x   *= ilength;
 	v1->y   *= ilength;
 	v1->z   *= ilength;
@@ -254,10 +264,10 @@ void Vector3OrthoNormalize(Vector3* v1, Vector3* v2)
 
 	// Vector3Normalize(vn1);
 	v      = vn1;
-	length = sqrtf(v->x * v.x + v.y * v.y + v.z * v.z);
+	length = (fixed_t)uint64_sqrt((uint64_t)(v.x * v.x + v.y * v.y + v.z * v.z));
 	if(length == 0LL)
-		length = 1LL;
-	ilength  = 1LL / length;
+		length = FIXED_UNIT;
+	ilength  = FIXED_UNIT / length;
 	vn1.x   *= ilength;
 	vn1.y   *= ilength;
 	vn1.z   *= ilength;
@@ -309,12 +319,12 @@ Vector3 Vector3RotateByAxisAngle(Vector3 const* const v, Vector3 const* const ax
 	Vector3 result = *v;
 
 	// Vector3Normalize(axis);
-	fixed_t length = sqrtf(axis->x * axis->x + axis->y * axis->y + axis->z * axis->z);
+	fixed_t length = (fixed_t)uint64_sqrt((uint64_t)(axis->x * axis->x + axis->y * axis->y + axis->z * axis->z));
 	if(length == 0LL) {
-		length = 1LL;
+		length = FIXED_UNIT;
 	}
 
-	fixed_t ilength = 1LL / length;
+	fixed_t ilength = FIXED_UNIT / length;
 
 	Vector3 axisCopy  = *axis;
 	axisCopy.x       *= ilength;
@@ -370,7 +380,7 @@ Vector3 Vector3MoveTowards(Vector3 const* const v, Vector3 const* const target, 
 	if((value == 0) || ((maxDistance >= 0) && (value <= maxDistance * maxDistance)))
 		return *target;
 
-	fixed_t dist = sqrtf(value);
+	fixed_t dist = (fixed_t)uint64_sqrt((uint64_t)value);
 
 	result.x = v->x + dx / dist * maxDistance;
 	result.y = v->y + dy / dist * maxDistance;
@@ -434,9 +444,9 @@ Vector3 Vector3Min(Vector3 const* const v1, Vector3 const* const v2)
 {
 	Vector3 result = {0};
 
-	result.x = fminf(v1->x, v2->x);
-	result.y = fminf(v1->y, v2->y);
-	result.z = fminf(v1->z, v2->z);
+	result.x = int64_min(v1->x, v2->x);
+	result.y = int64_min(v1->y, v2->y);
+	result.z = int64_min(v1->z, v2->z);
 
 	return result;
 }
@@ -446,9 +456,9 @@ Vector3 Vector3Max(Vector3 const* const v1, Vector3 const* const v2)
 {
 	Vector3 result = {0};
 
-	result.x = fmaxf(v1->x, v2->x);
-	result.y = fmaxf(v1->y, v2->y);
-	result.z = fmaxf(v1->z, v2->z);
+	result.x = int64_max(v1->x, v2->x);
+	result.y = int64_max(v1->y, v2->y);
+	result.z = int64_max(v1->z, v2->z);
 
 	return result;
 }
@@ -473,7 +483,7 @@ Vector3Barycenter(Vector3 const* const p, Vector3 const* const a, Vector3 const*
 
 	result.y = (d11 * d20 - d01 * d21) / denom;
 	result.z = (d00 * d21 - d01 * d20) / denom;
-	result.x = 1LL - (result.z + result.y);
+	result.x = FIXED_UNIT - (result.z + result.y);
 
 	return result;
 }
@@ -499,10 +509,14 @@ Vector3 Vector3Unproject(Vector3 const* const source, Matrix const* const projec
 		view->m8 * projection->m1 + view->m9 * projection->m5 + view->m10 * projection->m9 + view->m11 * projection->m13,
 		view->m8 * projection->m2 + view->m9 * projection->m6 + view->m10 * projection->m10 + view->m11 * projection->m14,
 		view->m8 * projection->m3 + view->m9 * projection->m7 + view->m10 * projection->m11 + view->m11 * projection->m15,
-		view->m12 * projection->m0 + view->m13 * projection->m4 + view->m14 * projection->m8 + view->m15 * projection->m12,
-		view->m12 * projection->m1 + view->m13 * projection->m5 + view->m14 * projection->m9 + view->m15 * projection->m13,
-		view->m12 * projection->m2 + view->m13 * projection->m6 + view->m14 * projection->m10 + view->m15 * projection->m14,
-		view->m12 * projection->m3 + view->m13 * projection->m7 + view->m14 * projection->m11 + view->m15 * projection->m15};
+		view->m12 * projection->m0 + view->m13 * projection->m4 + view->m14 * projection->m8 +
+			view->m15 * projection->m12,
+		view->m12 * projection->m1 + view->m13 * projection->m5 + view->m14 * projection->m9 +
+			view->m15 * projection->m13,
+		view->m12 * projection->m2 + view->m13 * projection->m6 + view->m14 * projection->m10 +
+			view->m15 * projection->m14,
+		view->m12 * projection->m3 + view->m13 * projection->m7 + view->m14 * projection->m11 +
+			view->m15 * projection->m15};
 
 	// Calculate inverted matrix -> MatrixInvert(matViewProj);
 	// Cache the matrix values (speed optimization)
@@ -525,7 +539,7 @@ Vector3 Vector3Unproject(Vector3 const* const source, Matrix const* const projec
 	fixed_t b11 = a22 * a33 - a23 * a32;
 
 	// Calculate the invert determinant (inlined to avoid double-caching)
-	fixed_t invDet = 1LL / (b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06);
+	fixed_t invDet = FIXED_UNIT / (b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06);
 
 	Matrix matViewProjInv = {(a11 * b11 - a12 * b10 + a13 * b09) * invDet,
 	                         (-a01 * b11 + a02 * b10 - a03 * b09) * invDet,
@@ -545,7 +559,7 @@ Vector3 Vector3Unproject(Vector3 const* const source, Matrix const* const projec
 	                         (a20 * b03 - a21 * b01 + a22 * b00) * invDet};
 
 	// Create quaternion from source point
-	Quaternion quat = {source->x, source->y, source->z, 1LL};
+	Quaternion quat = {source->x, source->y, source->z, FIXED_UNIT};
 
 	// Multiply quat point by unprojecte matrix
 	Quaternion qtransformed = {// QuaternionTransform(quat, matViewProjInv)
@@ -569,39 +583,40 @@ Vector3 Vector3Unproject(Vector3 const* const source, Matrix const* const projec
 // Invert the given vector
 Vector3 Vector3Invert(Vector3 const* const v)
 {
-	Vector3 result = {1LL / v->x, 1LL / v->y, 1LL / v->z};
+	Vector3 result = {FIXED_UNIT / v->x, FIXED_UNIT / v->y, FIXED_UNIT / v->z};
 
 	return result;
 }
 
 // Clamp the components of the vector between
 // min and max values specified by the given vectors
-Vector3 Vector3Clamp(Vector3 const* const v, Vector3 const* const min, Vector3 const* const max)
+Vector3 Vector3Clamp(Vector3 const* const v, Vector3 const* const minV, Vector3 const* const maxV)
 {
 	Vector3 result = {0};
 
-	result.x = fminf(max->x, fmaxf(min->x, v->x));
-	result.y = fminf(max->y, fmaxf(min->y, v->y));
-	result.z = fminf(max->z, fmaxf(min->z, v->z));
+	result.x = int64_min(maxV->x, int64_max(minV->x, v->x));
+	result.y = int64_min(maxV->y, int64_max(minV->y, v->y));
+	result.z = int64_min(maxV->z, int64_max(minV->z, v->z));
 
 	return result;
 }
 
 // Clamp the magnitude of the vector between two values
-Vector3 Vector3ClampValue(Vector3 const* const v, fixed_t const min, fixed_t const max)
+Vector3 Vector3ClampValue(Vector3 const* const v, fixed_t const minV, fixed_t const maxV)
 {
 	Vector3 result = *v;
 
 	fixed_t length = (v->x * v->x) + (v->y * v->y) + (v->z * v->z);
 	if(length > 0LL) {
-		length = sqrtf(length);
+		length = (fixed_t)uint64_sqrt((uint64_t)length);
 
 		fixed_t scale = 1; // By default, 1 as the neutral element->
-		if(length < min) {
-			scale = min / length;
+
+		if(length < minV) {
+			scale = minV / length;
 		}
-		else if(length > max) {
-			scale = max / length;
+		else if(length > maxV) {
+			scale = maxV / length;
 		}
 
 		result.x = v->x * scale;
@@ -615,9 +630,9 @@ Vector3 Vector3ClampValue(Vector3 const* const v, fixed_t const min, fixed_t con
 // Check whether two given vectors are almost equal
 int Vector3Equals(Vector3 const* const p, Vector3 const* const q)
 {
-	int result = ((fabsf(p->x - q->x)) <= fmaxf(1LL, fmaxf(fabsf(p->x), fabsf(q->x)))) &&
-	             ((fabsf(p->y - q->y)) <= fmaxf(1LL, fmaxf(fabsf(p->y), fabsf(q->y)))) &&
-	             ((fabsf(p->z - q->z)) <= fmaxf(1LL, fmaxf(fabsf(p->z), fabsf(q->z))));
+	int result = int64_abs(p->x - q->x) <= int64_max(FIXED_UNIT, int64_max(int64_abs(p->x), int64_abs(q->x))) &&
+	             int64_abs(p->y - q->y) <= int64_max(FIXED_UNIT, int64_max(int64_abs(p->y), int64_abs(q->y))) &&
+	             int64_abs(p->z - q->z) <= int64_max(FIXED_UNIT, int64_max(int64_abs(p->z), int64_abs(q->z)));
 
 	return result;
 }
@@ -632,11 +647,11 @@ Vector3 Vector3Refract(Vector3 const* const v, Vector3 const* const n, fixed_t c
 	Vector3 result = {0};
 
 	fixed_t dot = v->x * n->x + v->y * n->y + v->z * n->z;
-	fixed_t d   = 1LL - r * r * (1LL - dot * dot);
+	fixed_t d   = FIXED_UNIT - r * r * (FIXED_UNIT - dot * dot);
 
 	if(d >= 0LL) {
-		d    = sqrtf(d);
-		
+		d = (fixed_t)uint64_sqrt((uint64_t)d);
+
 		result.x = r * v->x - (r * dot + d) * n->x;
 		result.y = r * v->y - (r * dot + d) * n->y;
 		result.z = r * v->z - (r * dot + d) * n->z;
