@@ -69,7 +69,7 @@ int Dequeue(Queue* q, void* buf)
 	}
 
 	// copy our data into the caller's buffer and zero out the memory
-	void* head = &q->data[q->head];
+	void* head = q->data + q->head;
 	memcpy(buf, head, q->cellSize);
 
 	q->count--;

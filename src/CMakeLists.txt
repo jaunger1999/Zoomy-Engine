@@ -35,7 +35,7 @@ CompilerOptions(t_dict)
 
 # Events Test
 project(t_events)
-add_executable(t_events EXCLUDE_FROM_ALL t_dict.c d_dict.c hash.c)
+add_executable(t_events EXCLUDE_FROM_ALL t_events.c g_events.c d_list.c d_queue.c)
 CompilerOptions(t_events)
 
 # Hash Generator

@@ -177,16 +177,14 @@ int main(void) {
 		E_Register(PhysProp_GetNextState, PLAYER_MOVE, 0, 5, &input, &playerAttributes, &cMesh, &obj, delta);
 
 		for(unsigned int id = 0; id < totalObjs; id++) {
-			Event* e = E_GetNext(id);
+			Event e = {0};
 
-			while(e) {
+			while(E_GetNext(id, &e)) {
 				PhysicalProperties out;
-				e->function(e->args, id, &out);
+				e.function(e.args, id, &out);
 
 				// this is hardcoded and assumes theres only one event type PLAYER_MOVE
 				obj = out;
-
-				e = E_GetNext(id);
 			}
 		}
 

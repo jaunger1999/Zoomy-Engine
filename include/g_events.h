@@ -12,7 +12,7 @@ typedef struct Event {
 	char* args;
 } Event;
 
-Event* E_GetNext(unsigned int id);
+int E_GetNext(unsigned int id, Event* e);
 
 int E_AddObj(unsigned int id);
 

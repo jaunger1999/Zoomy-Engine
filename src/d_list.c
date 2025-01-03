@@ -28,7 +28,7 @@ List* List_Create(unsigned int const itemSize) {
 }
 
 int List_Get(List const* const l, unsigned int const i, void* buf) {
-	memcpy(buf, &l->data[i * l->itemSize], l->itemSize);
+	memcpy(buf, l->data + (i * l->itemSize), l->itemSize);
 
 	return 1;
 }
