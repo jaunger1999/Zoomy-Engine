@@ -17,6 +17,8 @@ if (WIN32)
 	target_link_libraries(RaylibProject libopengl32.a)
 	target_link_libraries(RaylibProject libgdi32.a)
 	target_link_libraries(RaylibProject libwinmm.a)
+else()
+	target_link_libraries(RaylibProject m)
 endif()
 
 # CDF Test
