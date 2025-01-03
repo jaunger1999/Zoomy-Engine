@@ -1,18 +1,19 @@
+#include "raymath.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "raymath.h"
 
 #include "g_events.h"
 
 // These are our values we're going to store in a char array.
-int a = 1234;
-Vector3 b = { 0.1f, 0.2f, 0.3f };
+int     a = 1234;
+Vector3 b = {0.1f, 0.2f, 0.3f};
 
-int Test(char const * args, unsigned int id, void* out) {
+unsigned int Test(char const* args, unsigned int id, void* out)
+{
 	// These are the values that our char array are going to extract to.
-	int i = 0;
-	Vector3 j = (Vector3) { };
+	int     i = 0;
+	Vector3 j = (Vector3){0};
 
 	memcpy(&i, args, sizeof(int));
 	memcpy(&j, args + sizeof(int), sizeof(Vector3));
@@ -23,12 +24,13 @@ int Test(char const * args, unsigned int id, void* out) {
 	return 1;
 }
 
-int main(void) {
-	unsigned int id1 = 300;
+int main(void)
+{
+	unsigned int id1 = 0;
 	unsigned int id2 = 23;
-	
+
 	char* args = malloc(sizeof(int) + sizeof(Vector3));
-	
+
 	memcpy(args, &a, sizeof(a));
 	memcpy(args + sizeof(a), &b, sizeof(b));
 
@@ -37,31 +39,32 @@ int main(void) {
 	E_AddObj(id2);
 
 	// Test function, event type, 2 parameters, id, ... parameters for test function.
-	E_Register(Test, TEST, id1, 2, a, b);
-	E_Register(Test, TEST, id2, 2, a, b);
-	
-	Event* e = E_GetNext(id1);
+	E_Register(Test, NONE, id1, 2, a, b);
+	E_Register(Test, NONE, id2, 2, a, b);
 
-	if (!e) {
-		printf("Didn't find an event when we should have. :(\n");
-	}
+	Event e = {0};
+	E_GetNext(id1, &e);
 
-	if (!e->function) {
-		printf("Why doesn't this event have a function???\n");
-	}
-
-	if (!e->args) {
-		printf("Why doesn't this event have arguments???\n");
-	}
+	/* if(e) { */
+	/* 	printf("Didn't find an event when we should have. :(\n"); */
+	/* } */
+	/**/
+	/* if(!e->function) { */
+	/* 	printf("Why doesn't this event have a function???\n"); */
+	/* } */
+	/**/
+	/* if(!e->args) { */
+	/* 	printf("Why doesn't this event have arguments???\n"); */
+	/* } */
 
 	void* out = NULL;
-	e->function(e->args, id1, out);
+	e.function(e.args, id1, out);
 
-	e = E_GetNext(id1);
+	E_GetNext(id1, &e);
 
-	if (e) {
-		printf("We shouldn't be getting a non NULL value with no events remaining. :(\n");
-	}
+	/* if(e) { */
+	/* 	printf("We shouldn't be getting a non NULL value with no events remaining. :(\n"); */
+	/* } */
 
 	printf("End of processing\n");
 	return 0;

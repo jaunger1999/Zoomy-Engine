@@ -1,16 +1,15 @@
-typedef struct Node {
-	void* data;
-	struct Node* prev;
-} Node;
-
 typedef struct Queue {
-	Node* front;
-	Node* back;
+	char* data;
+
+	unsigned int size;
+	unsigned int cellSize;
 	unsigned int count;
+	unsigned int head;
+	unsigned int tail;
 } Queue;
 
-Queue* Q_Create(void);
-void Q_Destroy(Queue* q);
+Queue* Q_Create(unsigned int const cellSize);
+void   Q_Destroy(Queue* q);
 
-int   Enqueue(Queue* q, void* data);
-void* Dequeue(Queue* q);
+int Enqueue(Queue* const q, void const* const data);
+int Dequeue(Queue* const q, void* const buf);

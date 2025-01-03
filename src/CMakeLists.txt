@@ -8,7 +8,7 @@ macro(CompilerOptions name)
 	target_include_directories(${name} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 endmacro()
 
-add_executable(RaylibProject main.c d_dict.c d_queue.c g_events.c hash.c m_cylinder.c m_raytriangleintersection.c f_objparser.c)
+add_executable(RaylibProject main.c d_dict.c d_list.c d_queue.c g_events.c hash.c m_cylinder.c m_raytriangleintersection.c f_objparser.c)
 CompilerOptions(RaylibProject)
 target_link_libraries(RaylibProject ${CMAKE_SOURCE_DIR}/lib/liblua.a)
 target_link_libraries(RaylibProject ${CMAKE_SOURCE_DIR}/lib/libraylib.a)
@@ -35,7 +35,7 @@ CompilerOptions(t_dict)
 
 # Events Test
 project(t_events)
-add_executable(t_events EXCLUDE_FROM_ALL t_dict.c d_dict.c hash.c)
+add_executable(t_events EXCLUDE_FROM_ALL t_events.c g_events.c d_list.c d_queue.c)
 CompilerOptions(t_events)
 
 # Hash Generator

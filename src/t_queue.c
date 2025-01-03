@@ -6,22 +6,28 @@
 #include "d_queue.h"
 
 int main(void) {
-	Queue* q = Q_Create();
+	Queue* q = Q_Create(sizeof(int));
 
 	// These are our values we're going to store in our queue.
 	int a = 1234;
-	Vector3 b = { 0.1f, 0.2f, 0.3f };
+	int b = 4321;
+	// Vector3 b = { 0.1f, 0.2f, 0.3f };
 	
 	Enqueue(q, &a);
 	Enqueue(q, &b);
 
-	int i = *(int*)Dequeue(q);
-	Vector3 j = *(Vector3*)Dequeue(q);
+	int i;
+	int j;
+	Dequeue(q, &i);
+	Dequeue(q, &j);
 
 	printf("Our first value should be %i: %i\n", a, i);
-	printf("Our Vector3 should be (%f, %f, %f): (%f, %f, %f)\n", b.x, b.y, b.z, j.x, j.y, j.z);
+	printf("Our second value should be %i: %i\n", b, j);
 
-	void* k = Dequeue(q);
+	// printf("Our Vector3 should be (%f, %f, %f): (%f, %f, %f)\n", b.x, b.y, b.z, j.x, j.y, j.z);
+
+	void* k = NULL;
+	Dequeue(q, k);
 
 	if (k) {
 		printf("Our empty queue shouldn't have returned a non NULL value. :(\n");

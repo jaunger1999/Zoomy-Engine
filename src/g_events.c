@@ -9,6 +9,7 @@
 #include "gamestate.h"
 
 #include "d_dict.h"
+#include "d_list.h"
 #include "d_queue.h"
 
 #include <assert.h>
@@ -20,13 +21,14 @@
 
 typedef char* (*EventParameters)(unsigned int const n, va_list args);
 
-Dict* eventQs;
+List* eventQs;
 
 /*
  * TODO: Free the previously existing event handler if it exists.
  */
-int E_Init(void) {
-	eventQs = Dict_Create();
+int E_Init(void)
+{
+	eventQs = List_Create(sizeof(Queue*));
 
 	return eventQs != NULL;
 }
@@ -34,23 +36,33 @@ int E_Init(void) {
 /*
  * Creates a new Event Queue and returns the id/index in which it's stored in the array.
  */
-int E_AddObj(unsigned int const id) {
-	Queue* newEventQ = Q_Create();
+int E_AddObj(unsigned int const id)
+{
+	Queue* newEventQ = Q_Create(sizeof(Event));
 
-	Dict_Add(eventQs, id, newEventQ);
+	if(newEventQ == NULL) {
+		return 0;
+	}
 
-	return 1;
+	return List_Insert(eventQs, id, &newEventQ);
 }
 
-Event* E_GetNext(unsigned int const id) {
-	Queue* q = (Queue*)Dict_Get(eventQs, id);
+int E_GetNext(unsigned int const id, Event* e)
+{
+	Queue* q = NULL;
+	List_Get(eventQs, id, &q);
 
-	return (Event*)Dequeue(q);
+	if(q) {
+		return Dequeue(q, e);
+	}
+
+	return 0;
 }
 
 EventParameters GetParameterFunction(EventType type);
 
-int E_Register(EventFunction function, EventType type, unsigned int const id, unsigned int const n, ...) {
+int E_Register(EventFunction function, EventType type, unsigned int const id, unsigned int const n, ...)
+{
 	assert(function != NULL);
 
 	va_list ptr;
@@ -61,20 +73,12 @@ int E_Register(EventFunction function, EventType type, unsigned int const id, un
 
 	va_end(ptr);
 
+	Queue* q = NULL;
+	List_Get(eventQs, id, &q);
+
 	// Construct the event and append it to its corresponding queue.
-	Event* event = malloc(sizeof(Event));
-
-	if(event == NULL) {
-		fprintf(stderr, "Fatal: failed to allocate memory on the heap.");
-		return 0;
-	}
-
-	event->type     = type;
-	event->function = function;
-	event->args     = args;
-
-	Queue* q = Dict_Get(eventQs, id);
-	Enqueue(q, event);
+	Event event = {type, function, args};
+	Enqueue(q, &event);
 
 	return 1;
 }
@@ -82,7 +86,8 @@ int E_Register(EventFunction function, EventType type, unsigned int const id, un
 char* TestParameters(unsigned int const n, va_list args);
 char* PlayerMoveParameters(unsigned int const n, va_list args);
 
-EventParameters GetParameterFunction(EventType type) {
+EventParameters GetParameterFunction(EventType type)
+{
 	switch(type) {
 	case NONE:
 		return TestParameters;
@@ -95,7 +100,8 @@ EventParameters GetParameterFunction(EventType type) {
 	return NULL;
 }
 
-char* PlayerMoveParameters(unsigned int const n, va_list args) {
+char* PlayerMoveParameters(unsigned int const n, va_list args)
+{
 	char* packedArgs = malloc(sizeof(Input*) + sizeof(Attributes*) + sizeof(CollisionMesh*) +
 	                          sizeof(PhysicalProperties*) + sizeof(float));
 
@@ -119,7 +125,8 @@ char* PlayerMoveParameters(unsigned int const n, va_list args) {
 	return packedArgs;
 }
 
-char* TestParameters(unsigned int const n, va_list args) {
+char* TestParameters(unsigned int const n, va_list args)
+{
 	char* packedArgs = malloc(sizeof(int) + sizeof(Vector3));
 
 	if(packedArgs == NULL) {
