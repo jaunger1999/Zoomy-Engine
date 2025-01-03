@@ -79,7 +79,7 @@ int main(void) {
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 
-	int luaErrorCode = luaL_loadfile(L, "../a big jump/scripts/camera.lua");
+	int luaErrorCode = luaL_loadfile(L, "../a-big-jump/scripts/camera.lua");
 
 	if(luaErrorCode) {
 		fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
@@ -110,17 +110,17 @@ int main(void) {
 
 	InitWindow(screenWidth, screenHeight, "raylib [models] example - model animation");
 
-	Model         level = LoadModel("../a big jump/models/obj/myplane.obj");
-	CollisionMesh cMesh = GetCollisionMesh("../a big jump/models/obj/myplane.obj");
+	Model         level = LoadModel("../a-big-jump/models/obj/myplane.obj");
+	CollisionMesh cMesh = GetCollisionMesh("../a-big-jump/models/obj/myplane.obj");
 	printf("%f\n", cMesh.vertices[0].x);
 	printf("%d %d\n", cMesh.faces[0].a, cMesh.faces[0].nA);
-	Model     model   = LoadModel("../a big jump/models/iqm/guy.iqm"); // Load the animated model mesh and basic data
-	Texture2D texture = LoadTexture("../a big jump/models/iqm/guytex.png"); // Load model texture and set material
+	Model     model   = LoadModel("../a-big-jump/models/iqm/guy.iqm"); // Load the animated model mesh and basic data
+	Texture2D texture = LoadTexture("../a-big-jump/models/iqm/guytex.png"); // Load model texture and set material
 	SetMaterialTexture(&model.materials[0], MATERIAL_MAP_DIFFUSE, texture); // Set model material map texture
 
 	// Load animation data
 	int             animsCount       = 0;
-	ModelAnimation* anims            = LoadModelAnimations("../a big jump/models/iqm/guyanim.iqm", &animsCount);
+	ModelAnimation* anims            = LoadModelAnimations("../a-big-jump/models/iqm/guyanim.iqm", &animsCount);
 	int             animFrameCounter = 0;
 
 	printf("gravity: %f\n", playerAttributes.gravity);
