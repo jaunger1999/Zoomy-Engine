@@ -73,4 +73,13 @@ project(t_collision)
 add_executable(t_collision EXCLUDE_FROM_ALL t_collision.c m_raytriangleintersection.c)
 CompilerOptions(t_collision)
 target_link_libraries(t_collision        ${CMAKE_SOURCE_DIR}/lib/libraylib.a)
-target_link_libraries(t_collision libwinmm.a)
+
+if (WIN32)
+	target_link_libraries(t_collision libwinmm.a)
+endif()
+
+# Fixed Point Test
+project(t_fixed)
+add_executable(t_fixed EXCLUDE_FROM_ALL t_fixed.c m_fixed.c)
+CompilerOptions(t_fixed)
+target_link_libraries(t_fixed m)
