@@ -4,14 +4,14 @@
 #include <string.h>
 
 #include "m_fixed.h"
-#include "m_matrix.h"
-#include "m_vector2.h"
-#include "m_vector3.h"
-#include "m_vector4.h"
 
 int main(void)
 {
-	Vector2 v1 = {0, 0};
-	Vector2 v2 = {1, 1};
+	int64_t fixedSin = fpsin(FIXED_UNIT);
+
+	printf("\nFloat: sin(1) == %f\n", sin(1));
+	printf("Fixed: sin(%lldl) == %ldl\n", FIXED_UNIT, fixedSin);
+	printf("Fixed result as integer: %ldl\n", fixedSin >> 32);
+	printf("End of processing\n");
 	return 0;
 }
