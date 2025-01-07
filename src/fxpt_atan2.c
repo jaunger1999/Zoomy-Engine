@@ -25,7 +25,10 @@
 
 #include <math.h>
 #include <stdint.h>
+
+#ifdef WIN32
 #define M_1_PI 0.318309886183790671538 // 1/pi
+#endif
 
 /**
  * Convert floating point to Q15 (1.0.15 fixed point) format.
