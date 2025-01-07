@@ -44,13 +44,11 @@
 #include "d_queue.h"
 
 typedef struct OptionVector3 {
-	bool    const valid;
+	bool const    valid;
 	Vector3 const vector;
 } OptionVector3;
 
-Quaternion QuaternionFromGravityVector(Vector3* g) {
-	return QuaternionFromVector3ToVector3((Vector3){0, -1, 0}, *g);
-}
+Quaternion QuaternionFromGravityVector(Vector3* g) { return QuaternionFromVector3ToVector3((Vector3){0, -1, 0}, *g); }
 OptionVector3 WrapVector3(Vector3 const* const vector);
 
 #include "g_attributes.h"
@@ -75,7 +73,8 @@ Vector3 position = {0.0f, 0.0f, 0.0f}; // Set model position
 
 unsigned int PhysProp_GetNextState(char const* const args, unsigned int const id, void* ppOut);
 
-int main(void) {
+int main(void)
+{
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 
@@ -126,7 +125,11 @@ int main(void) {
 	printf("gravity: %f\n", playerAttributes.gravity);
 	DisableCursor();  // Catch cursor
 	SetTargetFPS(60); // Set our game to run at 60 frames-per-second
-	PhysicalProperties obj = (PhysicalProperties){(Vector3){6.5f, 7, 0}, (Vector3){0, 0, 0}, (Vector3){0, 0, 0}};
+	PhysicalProperties obj = (PhysicalProperties){
+		(Vector3){6.5f, 7, 0},
+      (Vector3){0,    0, 0},
+      (Vector3){0,    0, 0}
+   };
 
 	InputMap const inputMap = {
 		GAMEPAD_BUTTON_RIGHT_FACE_DOWN, // jump
@@ -137,18 +140,18 @@ int main(void) {
 
 	Camera const camera = {
 		(Vector3){0.0f, 10.0f, 10.0f}, // Camera position
-		(Vector3){0.0f, 0.0f, 0.0f},   // Camera looking at point
-		(Vector3){0.0f, 2.0f, 0.0f},   // Camera up vector (rotation towards target)
-		90.0f,                         // Camera field-of-view Y
-		CAMERA_PERSPECTIVE             // Camera mode type
+		(Vector3){0.0f, 0.0f,  0.0f }, // Camera looking at point
+		(Vector3){0.0f, 2.0f,  0.0f }, // Camera up vector (rotation towards target)
+		90.0f, // Camera field-of-view Y
+		CAMERA_PERSPECTIVE  // Camera mode type
 	};
 
 	CameraState cameraState = {
-		FOLLOW,               // Behaviour
+		FOLLOW, // Behaviour
 		{0.0f, 10.0f, 10.0f}, // Relative Position
-		10,                   // Radians Per Second
-		false,                // Incremented Rotations
-		camera                // Camera
+		10, // Radians Per Second
+		false, // Incremented Rotations
+		camera  // Camera
 	};
 
 	Vector2 oldMovement       = {0};
@@ -188,22 +191,22 @@ int main(void) {
 		}
 
 		// Update our camera controls
-		//luaErrorCode = lua_getglobal(L, "UpdateCameraControls");
+		// luaErrorCode = lua_getglobal(L, "UpdateCameraControls");
 
 		/*if(!luaErrorCode) {
-			lua_pushnumber(L, input.cameraMovement.x);
-			lua_pushnumber(L, input.cameraMovement.y);
-			lua_pushnumber(L, delta);
-			lua_call(L, 3, 0);
+		   lua_pushnumber(L, input.cameraMovement.x);
+		   lua_pushnumber(L, input.cameraMovement.y);
+		   lua_pushnumber(L, delta);
+		   lua_call(L, 3, 0);
 		}
 
 		// Then run our camera script
 		luaErrorCode = lua_pcall(L, 0, LUA_MULTRET, 0);
 
 		if(!luaErrorCode) {
-			float const rotation = (float)lua_tonumber(L, -1);
-			lua_pop(L, 1);
-			GetNextCameraState(&obj, &input, rotation, delta, &cameraState);
+		   float const rotation = (float)lua_tonumber(L, -1);
+		   lua_pop(L, 1);
+		   GetNextCameraState(&obj, &input, rotation, delta, &cameraState);
 		}*/
 
 		Camera const newCamera = cameraState.camera;
@@ -247,7 +250,8 @@ int main(void) {
 Input GetInputState(InputMap const* const inputMap,
                     Vector2 const* const  oldMovement,
                     Vector2 const* const  oldCameraMovement,
-                    float const           cameraYaw) {
+                    float const           cameraYaw)
+{
 	Vector2 const rawMovement      = {GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X),
 	                                  GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y)};
 	Vector2 const adjustedMovement = Vector2Rotate(rawMovement, -cameraYaw);
@@ -297,18 +301,19 @@ unsigned int GetNextCameraState(PhysicalProperties const* const playerState,
                                 Input const* const              input,
                                 float const                     rotation,
                                 float const                     delta,
-                                CameraState*                    cameraState) {
+                                CameraState*                    cameraState)
+{
 	Camera const camera = cameraState->camera;
 
 	Vector3 const newRelativePosition = Vector3RotateByAxisAngle(cameraState->relativePosition, camera.up, rotation);
 	Vector3 const newPosition         = Vector3Add(newRelativePosition, playerState->position);
 
 	Camera const newCamera = {
-		newPosition,                 // Camera position
-		playerState->position,       // Camera looking at point
+		newPosition, // Camera position
+		playerState->position, // Camera looking at point
 		(Vector3){0.0f, 1.0f, 0.0f}, // Camera up vector (rotation towards target)
-		90.0f,                       // Camera field-of-view Y
-		CAMERA_PERSPECTIVE           // Camera mode type
+		90.0f, // Camera field-of-view Y
+		CAMERA_PERSPECTIVE  // Camera mode type
 	};
 
 	cameraState->relativePosition = newRelativePosition;
@@ -319,7 +324,8 @@ unsigned int GetNextCameraState(PhysicalProperties const* const playerState,
 
 // args == Input const * const input, Attributes const * const attributes, CollisionMesh const * const mesh,
 // PhysicalProperties const * const currState, float const delta
-unsigned int PhysProp_GetNextState(char const* const args, unsigned int const id, void* ppOut) {
+unsigned int PhysProp_GetNextState(char const* const args, unsigned int const id, void* ppOut)
+{
 	// Our parameters for this function.
 	Input*              input;
 	Attributes*         attributes;
@@ -409,7 +415,8 @@ Attributes GetAttributes(float const jumpHeight,
                          float const movementSpeed,
                          float const acceleration,
                          float const terminalVelocity,
-                         float const neutralJumpDistance) {
+                         float const neutralJumpDistance)
+{
 	float const gravity       = (2 * jumpHeight) / (timeToApex * timeToApex);
 	float const initJumpSpeed = -sqrt(2 * gravity * jumpHeight);
 	// float const airSpeed = neutralJumpDistance / (2 * timeToApex);
