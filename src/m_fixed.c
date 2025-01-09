@@ -25,7 +25,7 @@ double sin(double x)
 /*
  * Implements the 5-order polynomial approximation to sin(x).
  * @param i   angle (with 2^63 units/circle)
- * @return    64 bit fixed point Sine value (4.12) (ie: +4294967296 = +1 & -4294967296 = -1)
+ * @return    64 bit fixed point Sine value (32.32) (ie: +4294967296 = +1 & -4294967296 = -1)
  *
  *The result is accurate to within +- 1 count. ie: +/-2.44e-4. What does this mean ??
  */
@@ -35,12 +35,13 @@ int64_t fpsin(int64_t i)
 	i <<= 1;
 
 	bool const c = i < 0; // set carry for output pos/neg
-
-	if(i == (i | 0x40000000)) { // flip input value to corresponding value in range [0..8192)
+	
+	// 0x40000000 is the bit that marks pi/2
+	if(i == (i | 0x4000000000000000)) { // flip input value to corresponding value in range [0..pi/2)
 		i = (1LL << 63) - i;
 	}
 
-	i = (i & 0x7FFFFFFF) >> 1; // the absolute value divided by 2
+	i = (i & 0x7FFFFFFFFFFFFFFF) >> 1; // the absolute value divided by 2
 	/* ------------------------------------------------------------------- */
 
 	/* The following section implements the formula:
